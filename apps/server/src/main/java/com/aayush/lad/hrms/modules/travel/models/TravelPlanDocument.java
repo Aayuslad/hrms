@@ -3,17 +3,21 @@ package com.aayush.lad.hrms.modules.travel.models;
 import com.aayush.lad.hrms.modules.user.models.User;
 import com.aayush.lad.hrms.shared.base_models.BaseModel;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-@Data
 @Entity
 @Table(name = "travel_plan_documents")
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class TravelPlanDocument extends BaseModel {
 
     @Column(nullable = false)

@@ -4,17 +4,21 @@ import com.aayush.lad.hrms.modules.jobs.enums.ReferralStatus;
 import com.aayush.lad.hrms.modules.user.models.User;
 import com.aayush.lad.hrms.shared.base_models.BaseModel;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-@Data
 @Entity
 @Table(name = "referral_status_audit")
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReferralStatusAudit extends BaseModel {
 
     @ManyToOne(fetch = FetchType.LAZY)

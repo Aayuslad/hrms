@@ -1,14 +1,17 @@
 package com.aayush.lad.hrms.shared.base_models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.util.UUID;
 
 
-@Data
 @MappedSuperclass
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = false)
 public abstract class BaseModel {
     @Id

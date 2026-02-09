@@ -2,13 +2,17 @@ package com.aayush.lad.hrms.modules.travel.models;
 
 import com.aayush.lad.hrms.shared.base_models.BaseModel;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
-@Data
 @Entity
 @Table(name = "travel_plan_expense_proof")
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class TravelPlanExpenseProof extends BaseModel {
 
     @Column(nullable = false)

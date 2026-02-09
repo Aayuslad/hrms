@@ -1,18 +1,27 @@
 package com.aayush.lad.hrms.modules.user.models;
 
 import com.aayush.lad.hrms.modules.games.models.Game;
+import com.aayush.lad.hrms.modules.user.dtos.user.write.UpdateUserBySelfRequest;
 import com.aayush.lad.hrms.shared.base_models.AuditableModel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
 @Entity
 @Table(name = "users")
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User extends AuditableModel {
 
     @Column(unique = true, nullable = false)
@@ -24,6 +33,7 @@ public class User extends AuditableModel {
     private String passwordHash;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Profile profile;
 
     @ManyToMany

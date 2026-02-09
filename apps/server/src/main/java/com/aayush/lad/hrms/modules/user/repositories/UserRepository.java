@@ -36,6 +36,8 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     boolean existsByUserName(String userName);
 
+    Optional<User> findByUserNameOrEmail(String userName, String email);
+
     @Query("""
         select n from Notification n
         where n.user.id = :userId

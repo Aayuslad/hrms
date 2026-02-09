@@ -1,23 +1,27 @@
 package com.aayush.lad.hrms.modules.user.mappers;
 
-import com.aayush.lad.hrms.modules.user.dtos.user.read.*;
-import com.aayush.lad.hrms.modules.user.dtos.user.read.internal.*;
-import com.aayush.lad.hrms.modules.user.dtos.user.write.*;
-import com.aayush.lad.hrms.modules.user.models.*;
+import com.aayush.lad.hrms.modules.user.dtos.user.read.NotificationResponse;
+import com.aayush.lad.hrms.modules.user.dtos.user.read.UserDetailResponse;
+import com.aayush.lad.hrms.modules.user.dtos.user.read.UserSummaryResponse;
+import com.aayush.lad.hrms.modules.user.dtos.user.write.CreateUserProfileRequest;
+import com.aayush.lad.hrms.modules.user.dtos.user.write.RegisterUserRequest;
+import com.aayush.lad.hrms.modules.user.dtos.user.write.UpdateUserBySelfRequest;
+import com.aayush.lad.hrms.modules.user.dtos.user.write.UpdateUserByAdminRequest;
+import com.aayush.lad.hrms.modules.user.models.Notification;
+import com.aayush.lad.hrms.modules.user.models.Profile;
+import com.aayush.lad.hrms.modules.user.models.User;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class UserMapper {
-    private final ModelMapper modelMapper;
+    private final ModelMapper modelMapper;  
 
-    // User mappers
     public User toEntity(RegisterUserRequest request) {
         return modelMapper.map(request, User.class);
     }
@@ -36,71 +40,29 @@ public class UserMapper {
                 .toList();
     }
 
-    public List<UserSummaryResponse> toSummaryResponseList(List<User> users) {
-        return users.stream()
-                .map(this::toSummaryResponse)
-                .toList();
+    public Page<UserSummaryResponse> toSummaryResponseList(Page<User> users) {
+        return users.map(x ->
+                modelMapper.map(x, UserSummaryResponse.class)
+        );
     }
 
-    // Profile mappers
     public Profile toEntity(CreateUserProfileRequest request) {
         return modelMapper.map(request, Profile.class);
     }
 
-    public Profile updateEntity(UpdateSelfUserRequest request, Profile profile) {
-        modelMapper.map(request, profile);
-        return profile;
+    public User updateEntity(UpdateUserBySelfRequest request, User user) {
+        modelMapper.map(request, user);
+        return user;
     }
 
-    public Profile updateEntity(UpdateUserByAdminRequest request, Profile profile) {
-        modelMapper.map(request, profile);
-        return profile;
+    public User updateEntity(UpdateUserByAdminRequest request, User user) {
+        modelMapper.map(request, user);
+        return user;
     }
 
-    public ProfileResponse toProfileResponse(Profile profile) {
-        return modelMapper.map(profile, ProfileResponse.class);
-    }
-
-    // Role mappers
-    public UserRoleResponse toUserRoleResponse(Role role) {
-        return modelMapper.map(role, UserRoleResponse.class);
-    }
-
-    public List<UserRoleResponse> toUserRoleResponseList(List<Role> roles) {
-        return roles.stream()
-                .map(this::toUserRoleResponse)
-                .toList();
-    }
-
-    // Department mappers
-    public DepartmentSummaryResponse toDepartmentSummaryResponse(Department department) {
-        return modelMapper.map(department, DepartmentSummaryResponse.class);
-    }
-
-    // Designation mappers
-    public DesignationSummaryResponse toDesignationSummaryResponse(Designation designation) {
-        return modelMapper.map(designation, DesignationSummaryResponse.class);
-    }
-
-    // Manager mappers
-    public ManagerSummaryResponse toManagerSummaryResponse(User user) {
-        return modelMapper.map(user, ManagerSummaryResponse.class);
-    }
-
-    // Notification mappers
-    public NotificationResponse toNotificationResponse(Notification notification) {
-        return modelMapper.map(notification, NotificationResponse.class);
-    }
-
-    public List<NotificationResponse> toNotificationResponseList(List<Notification> notifications) {
-        return notifications.stream()
-                .map(this::toNotificationResponse)
-                .toList();
-    }
-
-    public Set<NotificationResponse> toNotificationResponseSet(Set<Notification> notifications) {
-        return notifications.stream()
-                .map(this::toNotificationResponse)
-                .collect(Collectors.toSet());
+    public Page<NotificationResponse> toNotificationResponseList(Page<Notification> notifications) {
+        return notifications.map(x ->
+                modelMapper.map(x, NotificationResponse.class)
+        );
     }
 }

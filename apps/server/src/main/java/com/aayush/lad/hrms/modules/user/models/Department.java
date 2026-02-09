@@ -5,18 +5,21 @@ import com.aayush.lad.hrms.shared.base_models.AuditableModel;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
-@Data
 @Entity
 @Table(name = "departments")
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Department extends AuditableModel {
 
     @Column(nullable = false, unique = true)
     private String name;
-
 
     public void update(UpdateDepartmentRequest request) {
         this.name = request.getName();

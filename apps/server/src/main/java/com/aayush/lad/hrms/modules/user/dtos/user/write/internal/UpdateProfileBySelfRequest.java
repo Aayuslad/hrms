@@ -1,28 +1,19 @@
-package com.aayush.lad.hrms.modules.user.dtos.user.write;
+package com.aayush.lad.hrms.modules.user.dtos.user.write.internal;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
-
-import com.aayush.lad.hrms.modules.user.dtos.user.write.internal.GameInterestRequest;
 import com.aayush.lad.hrms.modules.user.enums.Gender;
-
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UpdateSelfUserRequest {
-
-    @NotNull(message = "User ID is required")
-    private UUID userId;
-
+public class UpdateProfileBySelfRequest {
     @NotBlank(message = "First name is required")
     private String firstName;
 
@@ -38,6 +29,4 @@ public class UpdateSelfUserRequest {
     private Gender gender;
 
     private LocalDate joiningDate;
-
-    private List<GameInterestRequest> gameInterests;
 }

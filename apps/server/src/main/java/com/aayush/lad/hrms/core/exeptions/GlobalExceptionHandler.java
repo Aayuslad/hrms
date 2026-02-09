@@ -14,6 +14,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @AllArgsConstructor
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(UnauthorisedException.class)
+    public ResponseEntity<Result<Void>> handleUnauthorised(DomainException ex) {
+        return ResultMapper.handle(
+                HttpStatus.UNAUTHORIZED,
+                ex.getMessage()
+        );
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Result<Void>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         String errorMessage = ex.getBindingResult()

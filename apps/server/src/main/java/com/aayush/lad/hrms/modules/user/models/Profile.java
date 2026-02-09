@@ -2,16 +2,23 @@ package com.aayush.lad.hrms.modules.user.models;
 
 import com.aayush.lad.hrms.modules.user.enums.Gender;
 import com.aayush.lad.hrms.shared.base_models.BaseModel;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
 
-@Data
 @Entity
 @Table(name = "profiles")
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Profile extends BaseModel {
 
     @Column(nullable = false)
@@ -34,17 +41,19 @@ public class Profile extends BaseModel {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "designation_id", nullable = false)
+    @JoinColumn(name = "designation_id", nullable = true)
     private Designation designation;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_id", nullable = false)
+    @JoinColumn(name = "department_id", nullable = true)
     private Department department;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
+    @JsonIgnoreProperties("profile")
     private User manager;
 }
