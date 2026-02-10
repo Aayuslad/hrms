@@ -5,19 +5,17 @@ import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.internal.Partic
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@NoArgsConstructor
 public class UpdateTravelPlanRequest {
 
     @NotNull(message = "Travel plan id can not be null")
@@ -37,5 +35,5 @@ public class UpdateTravelPlanRequest {
 
     private float maxExpenseAmountPerDay;
 
-    private Set<ParticipantRequest> participants = new HashSet<>();
+    private List<ParticipantRequest> participants;
 }

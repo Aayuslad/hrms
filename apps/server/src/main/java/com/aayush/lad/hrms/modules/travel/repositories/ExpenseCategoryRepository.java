@@ -9,4 +9,5 @@ import com.aayush.lad.hrms.modules.travel.models.ExpenseCategory;
 
 @Repository
 public interface ExpenseCategoryRepository extends JpaRepository<ExpenseCategory, UUID> {
+    boolean existsByName(String name);
 }

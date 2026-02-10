@@ -1,14 +1,25 @@
 package com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read;
 
 
+import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.internal.ParticipantDocumentResponse;
+import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.internal.ParticipantExpenseResponse;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-//@Data
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Builder
-//public class ParticipantResponse {
-//}
+import java.util.List;
+import java.util.UUID;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ParticipantResponse {
+
+    private UUID id;
+
+    private String userName;
+
+    private List<ParticipantDocumentResponse> documents;
+
+    private List<ParticipantExpenseResponse> expenses;
+}

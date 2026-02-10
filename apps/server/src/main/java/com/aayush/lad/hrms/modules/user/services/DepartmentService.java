@@ -67,7 +67,7 @@ public class DepartmentService {
 
     public void delete(UUID id) {
         if (!departmentRepository.existsById(id)) {
-            throw new NotFoundException("Department not found with id: " + id);
+            throw new NotFoundException("Department not found");
         }
         // TODO: soft delete
         departmentRepository.deleteById(id);

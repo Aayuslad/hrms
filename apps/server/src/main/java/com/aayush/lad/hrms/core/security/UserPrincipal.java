@@ -1,5 +1,6 @@
 package com.aayush.lad.hrms.core.security;
 
+import com.aayush.lad.hrms.core.exeptions.UnauthorisedException;
 import com.aayush.lad.hrms.modules.user.models.User;
 import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -21,12 +22,13 @@ public class UserPrincipal implements UserDetailsService {
     public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
         Optional<User> optionalUser = userRepository.findByUserName(username);
 
-        if (optionalUser.isEmpty()) {
-            throw new UsernameNotFoundException("User not found");
+       if (optionalUser.isEmpty()) {
+            throw new UnauthorisedException("User not found");
         }
 
         User user = optionalUser.get();
 
+        //TODO: add roles when endpoints are done.
         return org.springframework.security.core.userdetails.User
                 .builder()
                 .username(user.getUserName())

@@ -6,18 +6,15 @@ import com.aayush.lad.hrms.modules.travel.enums.ExpenseStatus;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.UUID;
-
+import java.util.UUID;
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@NoArgsConstructor
 public class CreateExpenseRequest {
 
     private UUID participantId;

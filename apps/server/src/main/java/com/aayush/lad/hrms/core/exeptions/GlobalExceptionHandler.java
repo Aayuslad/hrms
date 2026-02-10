@@ -63,6 +63,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Result<Void>> handleUnexpected(Exception ex) {
+        System.out.println(ex.getMessage());
+
         return ResultMapper.handle(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "Something went wrong. Please try again later."

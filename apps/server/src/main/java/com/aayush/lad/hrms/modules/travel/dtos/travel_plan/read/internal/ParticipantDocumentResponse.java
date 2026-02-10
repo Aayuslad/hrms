@@ -2,13 +2,26 @@ package com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.internal;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-//@Data
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Builder
-//public class ParticipantDocumentResponse {
-//}
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ParticipantDocumentResponse {
+
+    private UUID id;
+
+    private UUID owner;
+    
+    private String docUrl;
+
+    private String documentType;
+
+    private LocalDateTime uploadedAt;
+
+    private UUID uploadedBy;
+}
