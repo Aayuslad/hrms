@@ -8,6 +8,8 @@ import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateExpenseRe
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateTravelPlanDocumentRequest;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.UpdateExpenseRequest;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.UpdateTravelPlanDocumentRequest;
+import com.aayush.lad.hrms.modules.travel.services.TravelPlanDocumentsService;
+import com.aayush.lad.hrms.modules.travel.services.TravelPlanExpenseService;
 import com.aayush.lad.hrms.modules.travel.services.TravelPlanService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -23,6 +25,8 @@ import java.util.UUID;
 public class TravelPlanParticipantController {
 
     private final TravelPlanService travelPlanService;
+    private final TravelPlanExpenseService travelPlanExpenseService;
+    private final TravelPlanDocumentsService travelPlanDocumentsService;
 
     @GetMapping("/{travelPlanId}/participant/{participantId}")
     public ResponseEntity<Result<ParticipantResponse>> getParticipant(
@@ -39,7 +43,7 @@ public class TravelPlanParticipantController {
             @Valid @RequestBody CreateExpenseRequest request) {
         request.setTravelPlanId(travelPlanId);
         request.setParticipantId(participantId);
-        travelPlanService.createExpense(request);
+        travelPlanExpenseService.createExpense(request);
         return ResultMapper.handle(HttpStatus.CREATED);
     }
 
@@ -50,7 +54,7 @@ public class TravelPlanParticipantController {
             @Valid @RequestBody UpdateExpenseRequest request) {
         request.setId(expenseId);
         request.setTravelPlanId(travelPlanId);
-        ParticipantExpenseResponse response = travelPlanService.updateExpense(request);
+        ParticipantExpenseResponse response = travelPlanExpenseService.updateExpense(request);
         return ResultMapper.handle(HttpStatus.OK, response);
     }
 
@@ -59,7 +63,7 @@ public class TravelPlanParticipantController {
             @PathVariable UUID travelPlanId,
             @PathVariable UUID participantId,
             @PathVariable UUID expenseId) {
-        travelPlanService.deleteExpense(travelPlanId, participantId, expenseId);
+        travelPlanExpenseService.deleteExpense(travelPlanId, participantId, expenseId);
         return ResultMapper.handle(HttpStatus.NO_CONTENT);
     }
 
@@ -67,7 +71,7 @@ public class TravelPlanParticipantController {
     public ResponseEntity<Result<ParticipantExpenseResponse>> submitExpense(
             @PathVariable UUID travelPlanId,
             @PathVariable UUID expenseId) {
-        ParticipantExpenseResponse response = travelPlanService.submitExpense(travelPlanId, expenseId);
+        ParticipantExpenseResponse response = travelPlanExpenseService.submitExpense(travelPlanId, expenseId);
         return ResultMapper.handle(HttpStatus.OK, response);
     }
 
@@ -81,7 +85,7 @@ public class TravelPlanParticipantController {
         if (request.getOwnerId() == null)
             request.setOwnerId(participantId);
 
-        travelPlanService.createDocument(request);
+        travelPlanDocumentsService.createDocument(request);
         return ResultMapper.handle(HttpStatus.CREATED);
     }
 
@@ -92,7 +96,7 @@ public class TravelPlanParticipantController {
             @Valid @RequestBody UpdateTravelPlanDocumentRequest request) {
         request.setId(documentId);
         request.setTravelPlanId(travelPlanId);
-        travelPlanService.updateDocument(request);
+        travelPlanDocumentsService.updateDocument(request);
         return ResultMapper.handle(HttpStatus.OK);
     }
 
@@ -101,7 +105,7 @@ public class TravelPlanParticipantController {
             @PathVariable UUID travelPlanId,
             @PathVariable UUID participantId,
             @PathVariable UUID documentId) {
-        travelPlanService.deleteDocument(travelPlanId, participantId, documentId);
+        travelPlanDocumentsService.deleteDocument(travelPlanId, participantId, documentId);
         return ResultMapper.handle(HttpStatus.NO_CONTENT);
     }
 }

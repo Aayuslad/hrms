@@ -4,7 +4,8 @@ import com.aayush.lad.hrms.core.result.Result;
 import com.aayush.lad.hrms.core.result.ResultMapper;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.internal.ParticipantExpenseResponse;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateTravelPlanDocumentRequest;
-import com.aayush.lad.hrms.modules.travel.services.TravelPlanService;
+import com.aayush.lad.hrms.modules.travel.services.TravelPlanDocumentsService;
+import com.aayush.lad.hrms.modules.travel.services.TravelPlanExpenseService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,13 +19,14 @@ import java.util.UUID;
 @AllArgsConstructor
 public class TravelPlanParticipantHrController {
 
-    private final TravelPlanService travelPlanService;
+    private final TravelPlanExpenseService travelPlanExpenseService;
+    private final TravelPlanDocumentsService travelPlanDocumentsService;
 
     @PatchMapping("/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/approve")
     public ResponseEntity<Result<ParticipantExpenseResponse>> approveExpense(
             @PathVariable UUID travelPlanId,
             @PathVariable UUID expenseId) {
-        ParticipantExpenseResponse response = travelPlanService.approveExpense(travelPlanId, expenseId);
+        ParticipantExpenseResponse response = travelPlanExpenseService.approveExpense(travelPlanId, expenseId);
         return ResultMapper.handle(HttpStatus.OK, response);
     }
 
@@ -32,7 +34,7 @@ public class TravelPlanParticipantHrController {
     public ResponseEntity<Result<Void>> rejectExpense(
             @PathVariable UUID travelPlanId,
             @PathVariable UUID expenseId) {
-        travelPlanService.rejectExpense(travelPlanId, expenseId);
+        travelPlanExpenseService.rejectExpense(travelPlanId, expenseId);
         return ResultMapper.handle(HttpStatus.OK);
     }
 
@@ -46,7 +48,7 @@ public class TravelPlanParticipantHrController {
         if (request.getOwnerId() == null)
             request.setOwnerId(participantId);
 
-        travelPlanService.createDocument(request);
+        travelPlanDocumentsService.createDocument(request);
         return ResultMapper.handle(HttpStatus.CREATED);
     }
 }

@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-
+ 
 @Entity
 @Table(name = "referral_status_audit")
 @Getter

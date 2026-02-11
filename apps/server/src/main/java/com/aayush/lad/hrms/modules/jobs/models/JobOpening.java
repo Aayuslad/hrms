@@ -15,7 +15,7 @@ import java.util.Set;
 @Entity
 @Table(name = "job_openings")
 @Getter
-@Setter
+@Setter 
 @NoArgsConstructor
 @AllArgsConstructor
 public class JobOpening extends AuditableModel {
