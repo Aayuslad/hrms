@@ -24,7 +24,6 @@ public class TravelPlanDocumentsService {
     private final DocumentTypeRepository documentTypeRepository;
     private final UserRepository userRepository;
 
-    private final TravelPlanMapper travelPlanMapper;
     private final CurrentUserUtil currentUserUtil;
 
     public void createDocument(CreateTravelPlanDocumentRequest request) {
@@ -43,7 +42,12 @@ public class TravelPlanDocumentsService {
         String username = currentUserUtil.getUsername();
         User uploadedBy = userRepository.findByUserName(username).orElse(null);
 
-        TravelPlanDocument doc = travelPlanMapper.toDocumentEntity(request, travelPlan, owner, dt, uploadedBy);
+        TravelPlanDocument doc = new TravelPlanDocument();
+        doc.setDocUrl(request.getDocUrl());
+        doc.setOwner(owner);
+        doc.setTravelPlan(travelPlan);
+        doc.setDocumentType(dt);
+        doc.setUploadedBy(uploadedBy);
 
         travelPlan.getTravelPlanDocuments().add(doc);
         travelPlanRepository.save(travelPlan);

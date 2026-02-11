@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "travel_plan_expenses")
@@ -41,6 +42,7 @@ public class TravelPlanExpense extends BaseModel {
     private String remarks;
 
     @Column(nullable = false)
+    @CreationTimestamp
     private LocalDateTime submittedAt;
     
     @ManyToOne(fetch = FetchType.LAZY)

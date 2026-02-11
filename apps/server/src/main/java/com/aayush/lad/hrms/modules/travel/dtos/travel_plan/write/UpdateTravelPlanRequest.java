@@ -1,7 +1,6 @@
 package com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write;
 
 
-import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.internal.ParticipantRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -35,5 +34,5 @@ public class UpdateTravelPlanRequest {
 
     private float maxExpenseAmountPerDay;
 
-    private List<ParticipantRequest> participants;
+    private List<UUID> participants;
 }

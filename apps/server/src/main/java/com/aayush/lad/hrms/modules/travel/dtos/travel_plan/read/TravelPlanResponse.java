@@ -1,7 +1,7 @@
 package com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read;
 
 
-import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.internal.ParticipantSummaryResponse;
+import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.internal.UserSummaryResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,5 +29,5 @@ public class TravelPlanResponse {
 
     private float maxExpenseAmountPerDay;
 
-    private List<ParticipantSummaryResponse> participants;
+    private List<UserSummaryResponse> participants;
 }

@@ -2,7 +2,6 @@ package com.aayush.lad.hrms.modules.travel.services;
 
 import com.aayush.lad.hrms.core.exeptions.NotFoundException;
 import com.aayush.lad.hrms.core.security.CurrentUserUtil;
-import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.internal.ParticipantExpenseResponse;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateExpenseRequest;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.UpdateExpenseRequest;
 import com.aayush.lad.hrms.modules.travel.enums.ExpenseStatus;
@@ -19,7 +18,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -46,13 +44,17 @@ public class TravelPlanExpenseService {
         if (category == null)
             throw new NotFoundException("Expense category not found");
 
-        TravelPlanExpense expense = travelPlanMapper.toExpenseEntity(request, travelPlan, participant, category);
+        TravelPlanExpense expense = travelPlanMapper.toExpenseEntity(request);
+
+        expense.setTravelPlan(travelPlan);
+        expense.setExpenseCategory(category);
+        expense.setParticipant(participant);
 
         travelPlan.getExpenses().add(expense);
         travelPlanRepository.save(travelPlan);
     }
 
-    public ParticipantExpenseResponse updateExpense(UpdateExpenseRequest request) {
+    public void updateExpense(UpdateExpenseRequest request) {
         TravelPlan travelPlan = travelPlanRepository.findByIdWithAll(request.getTravelPlanId()).orElse(null);
         if (travelPlan == null)
             throw new NotFoundException("Travel plan not found");
@@ -90,8 +92,6 @@ public class TravelPlanExpenseService {
         }
 
         travelPlanRepository.save(travelPlan);
-
-        return travelPlanMapper.toExpenseResponseList(List.of(target)).get(0);
     }
 
     public void deleteExpense(UUID travelPlanId, UUID participantId, UUID expenseId) {
@@ -109,7 +109,7 @@ public class TravelPlanExpenseService {
         travelPlanRepository.save(travelPlan);
     }
 
-    public ParticipantExpenseResponse submitExpense(UUID travelPlanId, UUID expenseId) {
+    public void submitExpense(UUID travelPlanId, UUID expenseId) {
         TravelPlan travelPlan = travelPlanRepository.findByIdWithAll(travelPlanId).orElse(null);
         if (travelPlan == null)
             throw new NotFoundException("Travel plan not found");
@@ -125,11 +125,9 @@ public class TravelPlanExpenseService {
         target.setSubmittedAt(LocalDateTime.now());
 
         travelPlanRepository.save(travelPlan);
-
-        return travelPlanMapper.toExpenseResponseList(List.of(target)).get(0);
     }
 
-    public ParticipantExpenseResponse approveExpense(UUID travelPlanId, UUID expenseId) {
+    public void approveExpense(UUID travelPlanId, UUID expenseId) {
         TravelPlan travelPlan = travelPlanRepository.findByIdWithAll(travelPlanId).orElse(null);
         if (travelPlan == null)
             throw new NotFoundException("Travel plan not found");
@@ -150,8 +148,6 @@ public class TravelPlanExpenseService {
         target.setApprovedBy(approver);
 
         travelPlanRepository.save(travelPlan);
-
-        return travelPlanMapper.toExpenseResponseList(List.of(target)).get(0);
     }
 
     public void rejectExpense(UUID travelPlanId, UUID expenseId) {

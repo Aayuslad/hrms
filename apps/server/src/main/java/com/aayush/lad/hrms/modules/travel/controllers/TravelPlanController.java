@@ -36,19 +36,19 @@ public class TravelPlanController {
     }
 
     @PostMapping
-    public ResponseEntity<Result<TravelPlanResponse>> create(
+    public ResponseEntity<Result<Void>> create(
             @Valid @RequestBody CreateTravelPlanRequest request) {
-        TravelPlanResponse response = travelPlanService.create(request);
-        return ResultMapper.handle(HttpStatus.CREATED, response);
+        travelPlanService.create(request);
+        return ResultMapper.handle(HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Result<TravelPlanResponse>> update(
+    public ResponseEntity<Result<Void>> update(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateTravelPlanRequest request) {
         request.setId(id);
-        TravelPlanResponse response = travelPlanService.update(request);
-        return ResultMapper.handle(HttpStatus.OK, response);
+        travelPlanService.update(request);
+        return ResultMapper.handle(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

@@ -48,14 +48,14 @@ public class TravelPlanParticipantController {
     }
 
     @PutMapping("/{travelPlanId}/participant/{participantId}/expenses/{expenseId}")
-    public ResponseEntity<Result<ParticipantExpenseResponse>> updateExpense(
+    public ResponseEntity<Result<Void>> updateExpense(
             @PathVariable UUID expenseId,
             @PathVariable UUID travelPlanId,
             @Valid @RequestBody UpdateExpenseRequest request) {
         request.setId(expenseId);
         request.setTravelPlanId(travelPlanId);
-        ParticipantExpenseResponse response = travelPlanExpenseService.updateExpense(request);
-        return ResultMapper.handle(HttpStatus.OK, response);
+        travelPlanExpenseService.updateExpense(request);
+        return ResultMapper.handle(HttpStatus.OK);
     }
 
     @DeleteMapping("/{travelPlanId}/participant/{participantId}/expenses/{expenseId}")
@@ -68,11 +68,11 @@ public class TravelPlanParticipantController {
     }
 
     @PatchMapping("/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/submit")
-    public ResponseEntity<Result<ParticipantExpenseResponse>> submitExpense(
+    public ResponseEntity<Result<Void>> submitExpense(
             @PathVariable UUID travelPlanId,
             @PathVariable UUID expenseId) {
-        ParticipantExpenseResponse response = travelPlanExpenseService.submitExpense(travelPlanId, expenseId);
-        return ResultMapper.handle(HttpStatus.OK, response);
+        travelPlanExpenseService.submitExpense(travelPlanId, expenseId);
+        return ResultMapper.handle(HttpStatus.OK);
     }
 
     @PostMapping("/{travelPlanId}/participant/{participantId}/documents")

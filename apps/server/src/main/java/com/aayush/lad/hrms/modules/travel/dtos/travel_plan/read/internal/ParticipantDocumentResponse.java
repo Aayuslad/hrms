@@ -15,7 +15,7 @@ public class ParticipantDocumentResponse {
 
     private UUID id;
 
-    private UUID owner;
+    private UserSummaryResponse owner;
     
     private String docUrl;
 
@@ -23,5 +23,5 @@ public class ParticipantDocumentResponse {
 
     private LocalDateTime uploadedAt;
 
-    private UUID uploadedBy;
+    private UserSummaryResponse uploadedBy;
 }

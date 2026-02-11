@@ -23,7 +23,7 @@ public class JobOpening extends AuditableModel {
     @Column(nullable = false)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "designation_id", nullable = false)
     private Designation designation;
 
@@ -32,7 +32,7 @@ public class JobOpening extends AuditableModel {
 
     private String jdUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "default_hr_id")
     private User defaultHr;
 

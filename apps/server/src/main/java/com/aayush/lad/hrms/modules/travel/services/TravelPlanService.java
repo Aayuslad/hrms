@@ -27,24 +27,19 @@ public class TravelPlanService {
     private final UserRepository userRepository;
     private final TravelPlanMapper travelPlanMapper;
 
-    public TravelPlanResponse create(CreateTravelPlanRequest request) {
+    public void create(CreateTravelPlanRequest request) {
         TravelPlan travelPlan = travelPlanMapper.toEntity(request);
-
-        TravelPlan savedTravelPlan = travelPlanRepository.save(travelPlan);
-
-        return travelPlanMapper.toResponse(savedTravelPlan);
+        travelPlanRepository.save(travelPlan);
     }
 
-    public TravelPlanResponse update(UpdateTravelPlanRequest request) {
+    public void update(UpdateTravelPlanRequest request) {
         TravelPlan travelPlan = travelPlanRepository.findByIdWithParticipants(request.getId()).orElse(null);
 
         if (travelPlan == null)
             throw new NotFoundException("Travel plan not found");
 
         TravelPlan newTravelPlan = travelPlanMapper.toEntity(request);
-        TravelPlan savedTravelPlan = travelPlanRepository.save(newTravelPlan);
-
-        return travelPlanMapper.toResponse(savedTravelPlan);
+        travelPlanRepository.save(newTravelPlan);
     }
 
     public TravelPlanResponse getById(UUID id) {
