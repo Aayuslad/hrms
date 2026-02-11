@@ -40,7 +40,11 @@ public class TravelPlanMapper {
         travelPlan.getParticipants().clear();
 
         if (request.getParticipants() != null && !request.getParticipants().isEmpty()) {
-            List<User> participants = userRepository.findAllById(request.getParticipants().stream().map(ParticipantRequest::getParticipantId).toList());
+            List<User> participants = userRepository.findAllById(
+                    request.getParticipants().stream()
+                            .map(ParticipantRequest::getParticipantId)
+                            .toList()
+            );
             travelPlan.getParticipants().addAll(participants);
         }
 
@@ -72,11 +76,16 @@ public class TravelPlanMapper {
             }
 
             if (x.getApprovedBy() != null) {
-                r.setApprovedBy(new ApproverResponse(x.getApprovedBy().getId(), x.getApprovedBy().getUserName()));
+                r.setApprovedBy(new ApproverResponse(
+                        x.getApprovedBy().getId(),
+                        x.getApprovedBy().getUserName())
+                );
             }
 
             if (x.getProofs() != null) {
-                r.setProofs(x.getProofs().stream().map(p -> new ExpenseProofResponse(p.getId(), p.getDocUrl())).toList());
+                r.setProofs(x.getProofs().stream().map(p ->
+                        new ExpenseProofResponse(p.getId(), p.getDocUrl())).toList()
+                );
             }
 
             return r;

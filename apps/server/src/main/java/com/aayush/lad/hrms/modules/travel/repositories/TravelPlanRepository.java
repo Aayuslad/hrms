@@ -26,6 +26,10 @@ public interface TravelPlanRepository extends JpaRepository<TravelPlan, UUID> {
     @Query("select tp from TravelPlan tp where tp.id = :id")
     Optional<TravelPlan> findByIdWithAll(@Param("id") UUID id);
 
+    @EntityGraph(attributePaths = "participants")
+    @Query("select tp from TravelPlan tp where tp.id = :id")
+    Optional<TravelPlan> findByIdWithParticipants(@Param("id") UUID id);
+
     @Query("select d from TravelPlanDocument d "
             + "left join fetch d.documentType dt "
             + "where d.travelPlan.id = :travelPlanId and d.owner.id = :participantId")
@@ -36,16 +40,4 @@ public interface TravelPlanRepository extends JpaRepository<TravelPlan, UUID> {
             + "left join fetch e.expenseCategory ec "
             + "where e.travelPlan.id = :travelPlanId and e.participant.id = :participantId")
     List<TravelPlanExpense> findTravelPlanExpensesByIdAndParticipantId(UUID travelPlanId, UUID participantId);
-
-    @Query("select tp from TravelPlan tp "
-            + "left join fetch tp.expenses e "
-            + "left join fetch e.proofs pr "
-            + "where e.id = :expenseId")
-    TravelPlan findByExpenseId(UUID expenseId);
-
-    @Query("select tp from TravelPlan tp "
-            + "left join fetch tp.travelPlanDocuments d "
-            + "left join fetch d.documentType dt "
-            + "where d.id = :documentId")
-    TravelPlan findByDocumentId(UUID documentId);
 }

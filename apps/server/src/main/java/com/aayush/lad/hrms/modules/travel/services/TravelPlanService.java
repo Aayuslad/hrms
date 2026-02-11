@@ -45,20 +45,23 @@ public class TravelPlanService {
 
     // update
     public TravelPlanResponse update(UpdateTravelPlanRequest request) {
-        TravelPlan travelPlan = travelPlanMapper.toEntity(request);
+        TravelPlan travelPlan = travelPlanRepository.findByIdWithParticipants(request.getId()).orElse(null);
 
-        TravelPlan savedTravelPlan = travelPlanRepository.save(travelPlan);
+        if (travelPlan == null)
+            throw new NotFoundException("Travel plan not found");
+
+        TravelPlan newTravelPlan = travelPlanMapper.toEntity(request);
+        TravelPlan savedTravelPlan = travelPlanRepository.save(newTravelPlan);
 
         return travelPlanMapper.toResponse(savedTravelPlan);
     }
 
     // get one
     public TravelPlanResponse getById(UUID id) {
-        TravelPlan travelPlan = travelPlanRepository.findByIdWithAll(id).orElse(null);
+        TravelPlan travelPlan = travelPlanRepository.findByIdWithParticipants(id).orElse(null);
 
-        if (travelPlan == null) {
+        if (travelPlan == null)
             throw new NotFoundException("Travel plan not found");
-        }
 
         return travelPlanMapper.toResponse(travelPlan);
     }
@@ -124,7 +127,7 @@ public class TravelPlanService {
 
     // update expense (used by participant)
     public ParticipantExpenseResponse updateExpense(UpdateExpenseRequest request) {
-        TravelPlan travelPlan = travelPlanRepository.findByExpenseId(request.getId());
+        TravelPlan travelPlan = travelPlanRepository.findByIdWithAll(request.getTravelPlanId()).orElse(null);
         if (travelPlan == null)
             throw new NotFoundException("Travel plan not found");
 
@@ -180,14 +183,13 @@ public class TravelPlanService {
         travelPlanRepository.save(travelPlan);
     }
 
-    public ParticipantExpenseResponse submitExpense(UUID travelPlanId, UUID participantId, UUID expenseId) {
+    public ParticipantExpenseResponse submitExpense(UUID travelPlanId, UUID expenseId) {
         TravelPlan travelPlan = travelPlanRepository.findByIdWithAll(travelPlanId).orElse(null);
         if (travelPlan == null)
             throw new NotFoundException("Travel plan not found");
 
         TravelPlanExpense target = travelPlan.getExpenses().stream()
-                .filter(e -> e.getId().equals(expenseId) && e.getParticipant() != null &&
-                        e.getParticipant().getId().equals(participantId))
+                .filter(e -> e.getId().equals(expenseId))
                 .findFirst().orElse(null);
 
         if (target == null)
@@ -201,7 +203,7 @@ public class TravelPlanService {
         return travelPlanMapper.toExpenseResponseList(List.of(target)).get(0);
     }
 
-    public ParticipantExpenseResponse approveExpense(UUID travelPlanId, UUID participantId, UUID expenseId) {
+    public ParticipantExpenseResponse approveExpense(UUID travelPlanId, UUID expenseId) {
         TravelPlan travelPlan = travelPlanRepository.findByIdWithAll(travelPlanId).orElse(null);
         if (travelPlan == null)
             throw new NotFoundException("Travel plan not found");
@@ -226,7 +228,7 @@ public class TravelPlanService {
         return travelPlanMapper.toExpenseResponseList(List.of(target)).get(0);
     }
 
-    public void rejectExpense(UUID travelPlanId, UUID participantId, UUID expenseId) {
+    public void rejectExpense(UUID travelPlanId, UUID expenseId) {
         TravelPlan travelPlan = travelPlanRepository.findByIdWithAll(travelPlanId).orElse(null);
         if (travelPlan == null)
             throw new NotFoundException("Travel plan not found");
@@ -267,7 +269,7 @@ public class TravelPlanService {
     }
 
     public void updateDocument(UpdateTravelPlanDocumentRequest request) {
-        TravelPlan travelPlan = travelPlanRepository.findByDocumentId(request.getId());
+        TravelPlan travelPlan = travelPlanRepository.findByIdWithAll(request.getTravelPlanId()).orElse(null);
         if (travelPlan == null)
             throw new NotFoundException("Travel plan not found");
 

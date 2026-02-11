@@ -16,9 +16,6 @@ public class CreateTravelPlanDocumentRequest {
     @NotBlank(message = "document url can not be empty")
     private String docUrl;
 
-    @NotNull(message = "participant can not be empty")
-    private UUID participantId;
-
     @NotNull(message = "owner can not be empty")
     private UUID ownerId;
 

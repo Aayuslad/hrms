@@ -24,7 +24,7 @@ public class TravelPlanController {
     private final TravelPlanService travelPlanService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Result<TravelPlanResponse>> update(@PathVariable UUID id) {
+    public ResponseEntity<Result<TravelPlanResponse>> get(@PathVariable UUID id) {
         TravelPlanResponse response = travelPlanService.getById(id);
         return ResultMapper.handle(HttpStatus.OK, response);
     }

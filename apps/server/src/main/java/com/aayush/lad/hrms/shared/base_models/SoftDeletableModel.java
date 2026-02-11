@@ -20,7 +20,5 @@ public abstract class SoftDeletableModel extends BaseModel {
     @ManyToOne
     @JoinColumn(name = "deleted_by_id")
     @JsonIgnore
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     private User deletedBy;
 }

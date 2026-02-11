@@ -46,8 +46,10 @@ public class TravelPlanParticipantController {
     @PutMapping("/{travelPlanId}/participant/{participantId}/expenses/{expenseId}")
     public ResponseEntity<Result<ParticipantExpenseResponse>> updateExpense(
             @PathVariable UUID expenseId,
+            @PathVariable UUID travelPlanId,
             @Valid @RequestBody UpdateExpenseRequest request) {
         request.setId(expenseId);
+        request.setTravelPlanId(travelPlanId);
         ParticipantExpenseResponse response = travelPlanService.updateExpense(request);
         return ResultMapper.handle(HttpStatus.OK, response);
     }
@@ -64,9 +66,8 @@ public class TravelPlanParticipantController {
     @PatchMapping("/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/submit")
     public ResponseEntity<Result<ParticipantExpenseResponse>> submitExpense(
             @PathVariable UUID travelPlanId,
-            @PathVariable UUID participantId,
             @PathVariable UUID expenseId) {
-        ParticipantExpenseResponse response = travelPlanService.submitExpense(travelPlanId, participantId, expenseId);
+        ParticipantExpenseResponse response = travelPlanService.submitExpense(travelPlanId, expenseId);
         return ResultMapper.handle(HttpStatus.OK, response);
     }
 
@@ -87,8 +88,10 @@ public class TravelPlanParticipantController {
     @PutMapping("/{travelPlanId}/participant/{participantId}/documents/{documentId}")
     public ResponseEntity<Result<Void>> updateDocument(
             @PathVariable UUID documentId,
+            @PathVariable UUID travelPlanId,
             @Valid @RequestBody UpdateTravelPlanDocumentRequest request) {
         request.setId(documentId);
+        request.setTravelPlanId(travelPlanId);
         travelPlanService.updateDocument(request);
         return ResultMapper.handle(HttpStatus.OK);
     }

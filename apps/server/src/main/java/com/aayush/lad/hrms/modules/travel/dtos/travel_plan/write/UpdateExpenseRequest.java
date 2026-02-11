@@ -20,6 +20,9 @@ public class UpdateExpenseRequest {
     @NotNull(message = "Expense id can not be null")
     private UUID id;
 
+    @NotNull(message = "Travel plan id can not be null")
+    private UUID travelPlanId;
+
     @NotNull(message = "Expense amount can not be empty")
     @Min(value = 1, message = "Price must be at least one")
     private float amount;

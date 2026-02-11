@@ -23,18 +23,16 @@ public class TravelPlanParticipantHrController {
     @PatchMapping("/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/approve")
     public ResponseEntity<Result<ParticipantExpenseResponse>> approveExpense(
             @PathVariable UUID travelPlanId,
-            @PathVariable UUID participantId,
             @PathVariable UUID expenseId) {
-        ParticipantExpenseResponse response = travelPlanService.approveExpense(travelPlanId, participantId, expenseId);
+        ParticipantExpenseResponse response = travelPlanService.approveExpense(travelPlanId, expenseId);
         return ResultMapper.handle(HttpStatus.OK, response);
     }
 
     @PatchMapping("/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/reject")
     public ResponseEntity<Result<Void>> rejectExpense(
             @PathVariable UUID travelPlanId,
-            @PathVariable UUID participantId,
             @PathVariable UUID expenseId) {
-        travelPlanService.rejectExpense(travelPlanId, participantId, expenseId);
+        travelPlanService.rejectExpense(travelPlanId, expenseId);
         return ResultMapper.handle(HttpStatus.OK);
     }
 

@@ -1,17 +1,19 @@
 package com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write;
 
-import jakarta.validation.constraints.NotBlank;
+import java.util.UUID;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateTravelPlanDocumentRequest {
+
+    @NotNull(message = "travel plan id can not be empty")
+    private UUID travelPlanId;
 
     @NotNull(message = "document id can not be empty")
     private UUID id;
