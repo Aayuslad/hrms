@@ -60,9 +60,9 @@ public class UserMapper {
         return user;
     }
 
-    public Page<NotificationResponse> toNotificationResponseList(Page<Notification> notifications) {
-        return notifications.map(x ->
+    public List<NotificationResponse> toNotificationResponseList(List<Notification> notifications) {
+        return notifications.stream().map(x ->
                 modelMapper.map(x, NotificationResponse.class)
-        );
+        ).toList();
     }
 }

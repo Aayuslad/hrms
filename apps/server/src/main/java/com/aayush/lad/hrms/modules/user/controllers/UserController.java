@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -85,8 +86,8 @@ public class UserController {
     }
 
     @GetMapping("/me/notifications")
-    public ResponseEntity<Result<Page<NotificationResponse>>> getNotifications(Pageable pageable) {
-        Page<NotificationResponse> responseDto = userService.getRecentNotifications(pageable);
+    public ResponseEntity<Result<List<NotificationResponse>>> getNotifications() {
+        List<NotificationResponse> responseDto = userService.getRecentNotifications();
         return ResultMapper.handle(HttpStatus.OK, responseDto);
     }
 

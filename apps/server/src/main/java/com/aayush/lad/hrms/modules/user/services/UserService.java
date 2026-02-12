@@ -78,7 +78,7 @@ public class UserService {
         }
 
         Profile profile = userMapper.toEntity(request);
-        profile.setAvatarUrl(fileUploadService.uploadFile(request.getAvatar()));
+//        profile.setAvatarUrl(fileUploadService.uploadFile(request.getAvatar()));
         profile.setUser(user);
         user.setProfile(profile);
 
@@ -163,14 +163,14 @@ public class UserService {
         return userMapper.toDetailResponse(savedUser);
     }
 
-    public Page<NotificationResponse> getRecentNotifications(Pageable pageable) {
+    public List<NotificationResponse> getRecentNotifications() {
         User user = userRepository.findByUserName(currentUserUtil.getUsername()).orElse(null);
 
         if (user == null) {
             throw new UnauthorisedException("User not found");
         }
 
-        Page<Notification> notifications = userRepository.findRecentNotifications(user.getId(), pageable);
+        List<Notification> notifications = userRepository.fetchAllNotifications(user.getId());
 
         return userMapper.toNotificationResponseList(notifications);
     }

@@ -42,7 +42,4 @@ public class Game extends AuditableModel {
 
     @OneToMany(mappedBy = "game", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<UserGameStat> userGameStats = new HashSet<>();
-
-    @OneToMany(mappedBy = "game", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<InterestedPlayersQueue> interestedPlayersQueues = new HashSet<>();
 }

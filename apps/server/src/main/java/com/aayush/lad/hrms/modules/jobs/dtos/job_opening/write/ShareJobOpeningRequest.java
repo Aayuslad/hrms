@@ -18,5 +18,5 @@ public class ShareJobOpeningRequest {
 
     @NotBlank(message = "share to can not be blank")
     @Email(message = "wrong email format")
-    private String shareTo;
+    private String shareToEmail;
 }

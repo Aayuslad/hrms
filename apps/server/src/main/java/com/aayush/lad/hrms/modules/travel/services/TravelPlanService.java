@@ -13,6 +13,7 @@ import com.aayush.lad.hrms.modules.travel.models.TravelPlanExpense;
 import com.aayush.lad.hrms.modules.travel.repositories.TravelPlanRepository;
 import com.aayush.lad.hrms.modules.user.models.User;
 import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
+import com.aayush.lad.hrms.modules.user.services.NotificationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ public class TravelPlanService {
     private final TravelPlanRepository travelPlanRepository;
     private final UserRepository userRepository;
     private final TravelPlanMapper travelPlanMapper;
+    private final NotificationService notificationService;
 
     public void create(CreateTravelPlanRequest request) {
         TravelPlan travelPlan = travelPlanMapper.toEntity(request);
@@ -33,12 +35,29 @@ public class TravelPlanService {
     }
 
     public void update(UpdateTravelPlanRequest request) {
-        TravelPlan travelPlan = travelPlanRepository.findByIdWithParticipants(request.getId()).orElse(null);
+        TravelPlan oldTravelPlan = travelPlanRepository.findByIdWithParticipants(request.getId()).orElse(null);
 
-        if (travelPlan == null)
+        if (oldTravelPlan == null)
             throw new NotFoundException("Travel plan not found");
 
         TravelPlan newTravelPlan = travelPlanMapper.toEntity(request);
+
+        if (newTravelPlan.getParticipants() != null && !newTravelPlan.getParticipants().isEmpty()) {
+            for (User x : newTravelPlan.getParticipants()) {
+                if (oldTravelPlan.getParticipants().contains(x)) continue;
+
+                String content = "You are added in a travel plan by " + newTravelPlan.getUpdatedBy().getUserName();
+                notificationService.createNotification(x.getId(), content);
+            }
+        }
+
+        for (User x : oldTravelPlan.getParticipants()) {
+            if (newTravelPlan.getParticipants().contains(x)) continue;
+
+            String content = "You are removed from a travel plan by " + newTravelPlan.getUpdatedBy().getUserName();
+            notificationService.createNotification(x.getId(), content);
+        }
+
         travelPlanRepository.save(newTravelPlan);
     }
 

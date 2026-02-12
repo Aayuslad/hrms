@@ -3,6 +3,7 @@ package com.aayush.lad.hrms.modules.jobs.services;
 import com.aayush.lad.hrms.core.exeptions.NotFoundException;
 import com.aayush.lad.hrms.core.exeptions.UnauthorisedException;
 import com.aayush.lad.hrms.core.security.CurrentUserUtil;
+import com.aayush.lad.hrms.core.services.EmailService;
 import com.aayush.lad.hrms.core.services.FileUploadService;
 import com.aayush.lad.hrms.modules.jobs.dtos.job_opening.read.JobOpeningResponse;
 import com.aayush.lad.hrms.modules.jobs.dtos.job_opening.read.JobOpeningSummaryResponse;
@@ -15,6 +16,7 @@ import com.aayush.lad.hrms.modules.jobs.models.JobOpeningShareAudit;
 import com.aayush.lad.hrms.modules.jobs.repositories.JobOpeningRepository;
 import com.aayush.lad.hrms.modules.user.models.User;
 import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,7 @@ public class JobOpeningService {
 
     private final CurrentUserUtil currentUserUtil;
     private final FileUploadService fileUploadService;
+    private final EmailService emailService;
 
     private final JobOpeningMapper mapper;
 
@@ -97,8 +100,16 @@ public class JobOpeningService {
         if (sharedBy == null)
             throw new UnauthorisedException();
 
+        String content =
+                "A Job opening is shared to you by " + sharedBy.getUserName() + " from xyz company"
+                        + "Designation: " + jobOpening.getDesignation().getName()
+                        + "Description: " + jobOpening.getDescription()
+                        + "Job Description: " + jobOpening.getJdUrl();
+
+        emailService.sendSimpleEmail(request.getShareToEmail(), "Job Opportunity", content);
+
         JobOpeningShareAudit audit = JobOpeningShareAudit.builder()
-                .sharedTo(request.getShareTo())
+                .sharedToEmail(request.getShareToEmail())
                 .jobOpening(jobOpening)
                 .sharedBy(sharedBy)
                 .build();

@@ -31,5 +31,5 @@ public class JobOpeningShareAudit extends BaseModel {
     private LocalDateTime sharedAt;
 
     @Column(nullable = false)
-    private String sharedTo;
+    private String sharedToEmail;
 }

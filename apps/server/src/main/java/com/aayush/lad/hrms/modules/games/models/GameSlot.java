@@ -1,7 +1,6 @@
 package com.aayush.lad.hrms.modules.games.models;
 
 import com.aayush.lad.hrms.modules.games.enums.GameSlotStatus;
-import com.aayush.lad.hrms.modules.games.enums.GameSlotType;
 import com.aayush.lad.hrms.modules.user.models.User;
 import com.aayush.lad.hrms.shared.base_models.BaseModel;
 import jakarta.persistence.*;
@@ -12,7 +11,9 @@ import lombok.AllArgsConstructor;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,9 +29,11 @@ public class GameSlot extends BaseModel {
     @JoinColumn(name = "game_id", nullable = false)
     private Game game;
 
-    private LocalDateTime startTime;
+    private LocalTime startTime;
 
-    private LocalDateTime endTime;
+    private LocalTime endTime;
+
+    private LocalDate day;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organiser_id")
@@ -42,9 +45,6 @@ public class GameSlot extends BaseModel {
 
     @Column(nullable = false)
     private GameSlotStatus status;
-
-    @Column(nullable = false)
-    private GameSlotType type;
 
     @Column(nullable = false)
     private int cycleId;

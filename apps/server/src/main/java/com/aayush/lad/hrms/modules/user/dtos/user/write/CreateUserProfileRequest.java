@@ -33,5 +33,5 @@ public class CreateUserProfileRequest {
 
     private LocalDate joiningDate;
 
-    private MultipartFile avatar;
+//    private MultipartFile avatar;
 }
