@@ -3,6 +3,7 @@ package com.aayush.lad.hrms.modules.jobs.services;
 import com.aayush.lad.hrms.core.exeptions.NotFoundException;
 import com.aayush.lad.hrms.core.exeptions.UnauthorisedException;
 import com.aayush.lad.hrms.core.security.CurrentUserUtil;
+import com.aayush.lad.hrms.core.services.FileUploadService;
 import com.aayush.lad.hrms.modules.jobs.dtos.job_opening.read.JobOpeningResponse;
 import com.aayush.lad.hrms.modules.jobs.dtos.job_opening.read.JobOpeningSummaryResponse;
 import com.aayush.lad.hrms.modules.jobs.dtos.job_opening.write.CreateJobOpeningRequest;
@@ -26,20 +27,32 @@ public class JobOpeningService {
 
     private final JobOpeningRepository jobOpeningRepository;
     private final UserRepository userRepository;
-    private final CurrentUserUtil currentUserUtil;
 
+    private final CurrentUserUtil currentUserUtil;
+    private final FileUploadService fileUploadService;
 
     private final JobOpeningMapper mapper;
 
     // create
     public void create(CreateJobOpeningRequest request) {
         JobOpening jobOpening = mapper.toEntity(request);
+
+        if (request.getJd() != null) {
+            jobOpening.setJdUrl(fileUploadService.uploadFile(request.getJd()));
+        }
+
         jobOpeningRepository.save(jobOpening);
     }
 
     // update
     public void update(UpdateJobOpeningRequest request) {
         JobOpening jobOpening = mapper.toEntity(request);
+
+        if (request.getJd() != null) {
+            fileUploadService.deleteFileByURL(jobOpening.getJdUrl());
+            jobOpening.setJdUrl(fileUploadService.uploadFile(request.getJd()));
+        }
+
         jobOpeningRepository.save(jobOpening);
     }
 

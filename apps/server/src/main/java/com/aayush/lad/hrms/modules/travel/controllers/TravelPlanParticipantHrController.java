@@ -2,9 +2,8 @@ package com.aayush.lad.hrms.modules.travel.controllers;
 
 import com.aayush.lad.hrms.core.result.Result;
 import com.aayush.lad.hrms.core.result.ResultMapper;
-import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.internal.ParticipantExpenseResponse;
-import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateTravelPlanDocumentRequest;
-import com.aayush.lad.hrms.modules.travel.services.TravelPlanDocumentsService;
+import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateDocumentRequest;
+import com.aayush.lad.hrms.modules.travel.services.TravelPlanDocumentService;
 import com.aayush.lad.hrms.modules.travel.services.TravelPlanExpenseService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -20,7 +19,7 @@ import java.util.UUID;
 public class TravelPlanParticipantHrController {
 
     private final TravelPlanExpenseService travelPlanExpenseService;
-    private final TravelPlanDocumentsService travelPlanDocumentsService;
+    private final TravelPlanDocumentService travelPlanDocumentsService;
 
     @PatchMapping("/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/approve")
     public ResponseEntity<Result<Void>> approveExpense(
@@ -42,7 +41,7 @@ public class TravelPlanParticipantHrController {
     public ResponseEntity<Result<Void>> createDocumentByHr(
             @PathVariable UUID travelPlanId,
             @PathVariable UUID participantId,
-            @Valid @RequestBody CreateTravelPlanDocumentRequest request) {
+            @Valid @RequestBody CreateDocumentRequest request) {
 
         request.setTravelPlanId(travelPlanId);
         if (request.getOwnerId() == null)

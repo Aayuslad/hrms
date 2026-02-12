@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
@@ -31,4 +32,6 @@ public class CreateUserProfileRequest {
     private Gender gender;
 
     private LocalDate joiningDate;
+
+    private MultipartFile avatar;
 }

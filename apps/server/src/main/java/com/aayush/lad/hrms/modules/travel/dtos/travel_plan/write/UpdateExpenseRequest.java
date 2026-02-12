@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.UUID;
 import java.time.LocalDate;
 import java.util.List;
@@ -32,5 +34,5 @@ public class UpdateExpenseRequest {
     @NotNull(message = "Expense category can not be null")
     private UUID expenseCategoryId;
 
-    private List<ExpenseProofRequest> proofs;
+    private List<MultipartFile> proofs;
 }

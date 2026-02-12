@@ -2,6 +2,7 @@ package com.aayush.lad.hrms.modules.travel.services;
 
 import com.aayush.lad.hrms.core.exeptions.NotFoundException;
 import com.aayush.lad.hrms.core.security.CurrentUserUtil;
+import com.aayush.lad.hrms.core.services.FileUploadService;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateExpenseRequest;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.UpdateExpenseRequest;
 import com.aayush.lad.hrms.modules.travel.enums.ExpenseStatus;
@@ -18,6 +19,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -30,7 +32,9 @@ public class TravelPlanExpenseService {
 
     private final TravelPlanMapper travelPlanMapper;
     private final CurrentUserUtil currentUserUtil;
+    private final FileUploadService fileUploadService;
 
+    // FIX: proofs not added in expense, also, expense is also not added in travelplan
     public void createExpense(CreateExpenseRequest request) {
         TravelPlan travelPlan = travelPlanRepository.findById(request.getTravelPlanId()).orElse(null);
         if (travelPlan == null)
@@ -46,6 +50,14 @@ public class TravelPlanExpenseService {
 
         TravelPlanExpense expense = travelPlanMapper.toExpenseEntity(request);
 
+        if (request.getProofs() != null && !request.getProofs().isEmpty()) {
+            List<String> profUrls = request.getProofs().stream()
+                    .map(fileUploadService::uploadFile).toList();
+            List<TravelPlanExpenseProof> proofs = profUrls.stream()
+                    .map(x -> TravelPlanExpenseProof.builder().docUrl(x).expense(expense).build()).toList();
+            expense.getProofs().addAll(proofs);
+        }
+
         expense.setTravelPlan(travelPlan);
         expense.setExpenseCategory(category);
         expense.setParticipant(participant);
@@ -59,13 +71,9 @@ public class TravelPlanExpenseService {
         if (travelPlan == null)
             throw new NotFoundException("Travel plan not found");
 
-        TravelPlanExpense target = null;
-        for (TravelPlanExpense e : travelPlan.getExpenses()) {
-            if (e.getId().equals(request.getId())) {
-                target = e;
-                break;
-            }
-        }
+        TravelPlanExpense target = travelPlan.getExpenses().stream()
+                .filter(e -> e.getId().equals(request.getId()))
+                .findFirst().orElse(null);
 
         if (target == null)
             throw new NotFoundException("Expense not found");
@@ -79,16 +87,12 @@ public class TravelPlanExpenseService {
 
         target.setExpenseCategory(category);
 
-        target.getProofs().clear();
-        if (request.getProofs() != null) {
-            for (var p : request.getProofs()) {
-                TravelPlanExpenseProof proof = new TravelPlanExpenseProof();
-
-                proof.setDocUrl(p.getDocUrl());
-                proof.setExpense(target);
-
-                target.getProofs().add(proof);
-            }
+        if (request.getProofs() != null && !request.getProofs().isEmpty()) {
+            List<String> profUrls = request.getProofs().stream()
+                    .map(fileUploadService::uploadFile).toList();
+            List<TravelPlanExpenseProof> proofs = profUrls.stream()
+                    .map(x -> TravelPlanExpenseProof.builder().docUrl(x).expense(target).build()).toList();
+            target.getProofs().addAll(proofs);
         }
 
         travelPlanRepository.save(travelPlan);

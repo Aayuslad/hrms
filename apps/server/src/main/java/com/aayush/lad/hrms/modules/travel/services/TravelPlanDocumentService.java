@@ -2,9 +2,9 @@ package com.aayush.lad.hrms.modules.travel.services;
 
 import com.aayush.lad.hrms.core.exeptions.NotFoundException;
 import com.aayush.lad.hrms.core.security.CurrentUserUtil;
-import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateTravelPlanDocumentRequest;
-import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.UpdateTravelPlanDocumentRequest;
-import com.aayush.lad.hrms.modules.travel.mappers.TravelPlanMapper;
+import com.aayush.lad.hrms.core.services.FileUploadService;
+import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateDocumentRequest;
+import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.UpdateDocumentRequest;
 import com.aayush.lad.hrms.modules.travel.models.DocumentType;
 import com.aayush.lad.hrms.modules.travel.models.TravelPlan;
 import com.aayush.lad.hrms.modules.travel.models.TravelPlanDocument;
@@ -13,20 +13,22 @@ import com.aayush.lad.hrms.modules.travel.repositories.TravelPlanRepository;
 import com.aayush.lad.hrms.modules.user.models.User;
 import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class TravelPlanDocumentsService {
+public class TravelPlanDocumentService {
     private final TravelPlanRepository travelPlanRepository;
     private final DocumentTypeRepository documentTypeRepository;
     private final UserRepository userRepository;
+    private final FileUploadService fileUploadService;
 
     private final CurrentUserUtil currentUserUtil;
 
-    public void createDocument(CreateTravelPlanDocumentRequest request) {
+    public void createDocument(CreateDocumentRequest request) {
         TravelPlan travelPlan = travelPlanRepository.findById(request.getTravelPlanId()).orElse(null);
         if (travelPlan == null)
             throw new NotFoundException("Travel plan not found");
@@ -43,7 +45,9 @@ public class TravelPlanDocumentsService {
         User uploadedBy = userRepository.findByUserName(username).orElse(null);
 
         TravelPlanDocument doc = new TravelPlanDocument();
-        doc.setDocUrl(request.getDocUrl());
+        if (request.getDoc() != null) {
+            doc.setDocUrl(fileUploadService.uploadFile(request.getDoc()));
+        }
         doc.setOwner(owner);
         doc.setTravelPlan(travelPlan);
         doc.setDocumentType(dt);
@@ -53,7 +57,7 @@ public class TravelPlanDocumentsService {
         travelPlanRepository.save(travelPlan);
     }
 
-    public void updateDocument(UpdateTravelPlanDocumentRequest request) {
+    public void updateDocument(UpdateDocumentRequest request) {
         TravelPlan travelPlan = travelPlanRepository.findByIdWithAll(request.getTravelPlanId()).orElse(null);
         if (travelPlan == null)
             throw new NotFoundException("Travel plan not found");
@@ -72,25 +76,32 @@ public class TravelPlanDocumentsService {
         if (dt == null)
             throw new NotFoundException("Document type not found");
 
+        if (request.getDoc() != null) {
+            fileUploadService.deleteFileByURL(target.getDocUrl());
+            target.setDocUrl(fileUploadService.uploadFile(request.getDoc()));
+        }
+
         target.setOwner(owner);
         target.setDocumentType(dt);
 
         travelPlanRepository.save(travelPlan);
     }
 
-    public void deleteDocument(UUID travelPlanId, UUID participantId, UUID documentId) {
+    // FIX: document and the img on cloud both not deleting
+    public void deleteDocument(UUID travelPlanId, UUID documentId) {
         TravelPlan travelPlan = travelPlanRepository.findById(travelPlanId).orElse(null);
         if (travelPlan == null)
             throw new NotFoundException("Travel plan not found");
 
-        boolean removed = travelPlan.getTravelPlanDocuments()
-                .removeIf(d ->
-                        d.getId().equals(documentId) &&
-                                d.getOwner() != null && d.getOwner().getId().equals(participantId)
-                );
+        TravelPlanDocument target = travelPlan.getTravelPlanDocuments().stream()
+                .filter(x -> x.getId().equals(documentId)).findFirst().orElse(null);
 
-        if (!removed)
-            throw new NotFoundException("Document not found");
+        if (target == null)
+            throw new NotFoundException("Document does not exist");
+
+        fileUploadService.deleteFileByURL(target.getDocUrl());
+
+        travelPlan.getTravelPlanDocuments().remove(target);
 
         travelPlanRepository.save(travelPlan);
     }

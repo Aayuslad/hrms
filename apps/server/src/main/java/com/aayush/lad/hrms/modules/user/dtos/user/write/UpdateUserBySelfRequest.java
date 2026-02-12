@@ -1,5 +1,6 @@
 package com.aayush.lad.hrms.modules.user.dtos.user.write;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.aayush.lad.hrms.modules.user.dtos.user.write.internal.GameInterestRequest;
@@ -8,6 +9,7 @@ import com.aayush.lad.hrms.modules.user.dtos.user.write.internal.UpdateProfileBy
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
@@ -16,5 +18,7 @@ public class UpdateUserBySelfRequest {
 
     private UpdateProfileBySelfRequest profile;
 
-    private List<GameInterestRequest> gameInterests;
+//    private MultipartFile avatar;
+
+    private List<GameInterestRequest> gameInterests = new ArrayList<>();
 }

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -15,18 +16,23 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
 
-    @EntityGraph(attributePaths = {
-            "roles",
-            "interestedInGames",
-            "profile",
-            "profile.department",
-            "profile.designation",
-            "profile.manager",
-            "profile.manager.profile",
-            "profile.manager.profile.designation"
-    })
-    @Query("select u from User u where u.id = :id")
-    Optional<User> findUserFullDetails(UUID id);
+//    @EntityGraph(attributePaths = {
+//            "roles",
+//            "interestedInGames",
+//            "profile.manager",
+//            "profile.manager.profile",
+//    })
+//    @Query("select u from User u where u.id = :id")
+//    Optional<User> findUserFullDetails(@Param("id") UUID id);
+//
+//    @EntityGraph(attributePaths = {
+//            "roles",
+//            "interestedInGames",
+//            "profile.manager",
+//            "profile.manager.profile",
+//    })
+//    @Query("select u from User u where u.userName = :userName")
+//    Optional<User> findUserFullDetails(@Param("userName") String userName);
 
     Optional<User> findByEmail(String email);
 
@@ -47,5 +53,11 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             UUID userId,
             Pageable pageable
     );
+
+    @EntityGraph(attributePaths = {
+            "roles"
+    })
+    @Query("SELECT u FROM User u WHERE u.userName = :userName")
+    Optional<User> findUserByUserNameAndWithRoles(@Param("userName") String userName);
 }
 

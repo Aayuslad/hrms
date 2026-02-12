@@ -2,12 +2,9 @@ package com.aayush.lad.hrms.modules.travel.mappers;
 
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.TravelPlanResponse;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.TravelPlanSummaryResponse;
-import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.internal.ExpenseProofResponse;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.internal.ParticipantDocumentResponse;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.internal.ParticipantExpenseResponse;
-import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.internal.UserSummaryResponse;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateExpenseRequest;
-import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateTravelPlanDocumentRequest;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateTravelPlanRequest;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.UpdateTravelPlanRequest;
 import com.aayush.lad.hrms.modules.travel.models.*;
@@ -17,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -71,7 +67,6 @@ public class TravelPlanMapper {
             for (var p : req.getProofs()) {
                 TravelPlanExpenseProof proof = new TravelPlanExpenseProof();
 
-                proof.setDocUrl(p.getDocUrl());
                 proof.setExpense(expense);
 
                 expense.getProofs().add(proof);

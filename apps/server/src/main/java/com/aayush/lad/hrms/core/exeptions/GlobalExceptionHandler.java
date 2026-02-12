@@ -5,6 +5,7 @@ import com.aayush.lad.hrms.core.result.ResultMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,6 +19,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Result<Void>> handleUnauthorised(DomainException ex) {
         return ResultMapper.handle(
                 HttpStatus.UNAUTHORIZED,
+                ex.getMessage()
+        );
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Result<Void>> handleAccessDenied(AccessDeniedException ex) {
+        return ResultMapper.handle(
+                HttpStatus.FORBIDDEN,
                 ex.getMessage()
         );
     }

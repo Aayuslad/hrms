@@ -14,7 +14,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -47,6 +49,7 @@ public class UserController {
         return ResultMapper.handle(HttpStatus.CREATED, responseDto);
     }
 
+    @PreAuthorize("hasRole('Employee')")
     @GetMapping("/me")
     public ResponseEntity<Result<UserDetailResponse>> getMe() {
         UserDetailResponse responseDto = userService.getCurrentUser();
@@ -59,20 +62,23 @@ public class UserController {
         return ResultMapper.handle(HttpStatus.OK, responseDto);
     }
 
+//    @PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PostMapping("/profile")
-    public ResponseEntity<Result<UserDetailResponse>> createProfile(@Valid @RequestBody CreateUserProfileRequest request) {
+    public ResponseEntity<Result<UserDetailResponse>> createProfile(@Valid @ModelAttribute CreateUserProfileRequest request) {
         UserDetailResponse responseDto = userService.createProfile(request);
         return ResultMapper.handle(HttpStatus.CREATED, responseDto);
     }
 
-    @PutMapping("/me")
-    public ResponseEntity<Result<UserDetailResponse>> updateBySelf(@Valid @RequestBody UpdateUserBySelfRequest request) {
+//    @PutMapping(value = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping("/me")
+    public ResponseEntity<Result<UserDetailResponse>> updateBySelf(@Valid @ModelAttribute UpdateUserBySelfRequest request) {
         UserDetailResponse responseDto = userService.update(request);
         return ResultMapper.handle(HttpStatus.CREATED, responseDto);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Result<UserDetailResponse>> updateByAdmin(@PathVariable("id") UUID id, @Valid @RequestBody UpdateUserByAdminRequest request) {
+//    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping("/{id}")
+    public ResponseEntity<Result<UserDetailResponse>> updateByAdmin(@PathVariable("id") UUID id, @Valid @ModelAttribute UpdateUserByAdminRequest request) {
         request.setUserId(id);
         UserDetailResponse responseDto = userService.update(request);
         return ResultMapper.handle(HttpStatus.CREATED, responseDto);
@@ -81,7 +87,7 @@ public class UserController {
     @GetMapping("/me/notifications")
     public ResponseEntity<Result<Page<NotificationResponse>>> getNotifications(Pageable pageable) {
         Page<NotificationResponse> responseDto = userService.getRecentNotifications(pageable);
-        return  ResultMapper.handle(HttpStatus.OK, responseDto);
+        return ResultMapper.handle(HttpStatus.OK, responseDto);
     }
 
     @PostMapping("/logout")
@@ -94,5 +100,12 @@ public class UserController {
     public ResponseEntity<Page<UserSummaryResponse>> getUsersSummary(Pageable pageable) {
         Page<UserSummaryResponse> responseDto = userService.getUsersSummary(pageable);
         return ResponseEntity.ok(responseDto);
+    }
+
+    @PutMapping("/{id}/roles")
+    public ResponseEntity<Result<Void>> updateRoles(@PathVariable("id") UUID id, @Valid @RequestBody UpdateUserRolesRequest request) {
+        request.setUserId(id);
+        userService.updateUserRoles(request);
+        return ResultMapper.handle(HttpStatus.OK);
     }
 }

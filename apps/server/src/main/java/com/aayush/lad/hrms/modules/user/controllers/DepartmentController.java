@@ -7,6 +7,7 @@ import com.aayush.lad.hrms.modules.user.dtos.department.write.CreateDepartmentRe
 import com.aayush.lad.hrms.modules.user.dtos.department.write.UpdateDepartmentRequest;
 import com.aayush.lad.hrms.modules.user.services.DepartmentService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,7 @@ public class DepartmentController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('HR')")
     public ResponseEntity<Result<DepartmentResponse>> create(
             @Valid @RequestBody CreateDepartmentRequest request) {
         DepartmentResponse response = departmentService.create(request);
@@ -37,6 +39,7 @@ public class DepartmentController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('HR')")
     public ResponseEntity<Result<DepartmentResponse>> update(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateDepartmentRequest request) {
@@ -46,6 +49,7 @@ public class DepartmentController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('HR')")
     public ResponseEntity<Result<Void>> delete(@PathVariable UUID id) {
         departmentService.delete(id);
         return ResultMapper.handle(HttpStatus.NO_CONTENT);

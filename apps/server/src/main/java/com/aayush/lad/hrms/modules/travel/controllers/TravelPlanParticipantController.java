@@ -3,17 +3,17 @@ package com.aayush.lad.hrms.modules.travel.controllers;
 import com.aayush.lad.hrms.core.result.Result;
 import com.aayush.lad.hrms.core.result.ResultMapper;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.ParticipantResponse;
-import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.internal.ParticipantExpenseResponse;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateExpenseRequest;
-import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateTravelPlanDocumentRequest;
+import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateDocumentRequest;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.UpdateExpenseRequest;
-import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.UpdateTravelPlanDocumentRequest;
-import com.aayush.lad.hrms.modules.travel.services.TravelPlanDocumentsService;
+import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.UpdateDocumentRequest;
+import com.aayush.lad.hrms.modules.travel.services.TravelPlanDocumentService;
 import com.aayush.lad.hrms.modules.travel.services.TravelPlanExpenseService;
 import com.aayush.lad.hrms.modules.travel.services.TravelPlanService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +26,7 @@ public class TravelPlanParticipantController {
 
     private final TravelPlanService travelPlanService;
     private final TravelPlanExpenseService travelPlanExpenseService;
-    private final TravelPlanDocumentsService travelPlanDocumentsService;
+    private final TravelPlanDocumentService travelPlanDocumentsService;
 
     @GetMapping("/{travelPlanId}/participant/{participantId}")
     public ResponseEntity<Result<ParticipantResponse>> getParticipant(
@@ -36,22 +36,22 @@ public class TravelPlanParticipantController {
         return ResultMapper.handle(HttpStatus.OK, response);
     }
 
-    @PostMapping("/{travelPlanId}/participant/{participantId}/expenses")
+    @PostMapping(value = "/{travelPlanId}/participant/{participantId}/expenses", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Result<Void>> createExpense(
             @PathVariable UUID travelPlanId,
             @PathVariable UUID participantId,
-            @Valid @RequestBody CreateExpenseRequest request) {
+            @Valid @ModelAttribute CreateExpenseRequest request) {
         request.setTravelPlanId(travelPlanId);
         request.setParticipantId(participantId);
         travelPlanExpenseService.createExpense(request);
         return ResultMapper.handle(HttpStatus.CREATED);
     }
 
-    @PutMapping("/{travelPlanId}/participant/{participantId}/expenses/{expenseId}")
+    @PutMapping(value = "/{travelPlanId}/participant/{participantId}/expenses/{expenseId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Result<Void>> updateExpense(
             @PathVariable UUID expenseId,
             @PathVariable UUID travelPlanId,
-            @Valid @RequestBody UpdateExpenseRequest request) {
+            @Valid @ModelAttribute UpdateExpenseRequest request) {
         request.setId(expenseId);
         request.setTravelPlanId(travelPlanId);
         travelPlanExpenseService.updateExpense(request);
@@ -75,11 +75,11 @@ public class TravelPlanParticipantController {
         return ResultMapper.handle(HttpStatus.OK);
     }
 
-    @PostMapping("/{travelPlanId}/participant/{participantId}/documents")
+    @PostMapping(value = "/{travelPlanId}/participant/{participantId}/documents", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Result<Void>> createDocument(
             @PathVariable UUID travelPlanId,
             @PathVariable UUID participantId,
-            @Valid @RequestBody CreateTravelPlanDocumentRequest request) {
+            @Valid @ModelAttribute CreateDocumentRequest request) {
 
         request.setTravelPlanId(travelPlanId);
         if (request.getOwnerId() == null)
@@ -89,11 +89,11 @@ public class TravelPlanParticipantController {
         return ResultMapper.handle(HttpStatus.CREATED);
     }
 
-    @PutMapping("/{travelPlanId}/participant/{participantId}/documents/{documentId}")
+    @PutMapping(value = "/{travelPlanId}/participant/{participantId}/documents/{documentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Result<Void>> updateDocument(
             @PathVariable UUID documentId,
             @PathVariable UUID travelPlanId,
-            @Valid @RequestBody UpdateTravelPlanDocumentRequest request) {
+            @Valid @ModelAttribute UpdateDocumentRequest request) {
         request.setId(documentId);
         request.setTravelPlanId(travelPlanId);
         travelPlanDocumentsService.updateDocument(request);
@@ -103,9 +103,8 @@ public class TravelPlanParticipantController {
     @DeleteMapping("/{travelPlanId}/participant/{participantId}/documents/{documentId}")
     public ResponseEntity<Result<Void>> deleteDocument(
             @PathVariable UUID travelPlanId,
-            @PathVariable UUID participantId,
             @PathVariable UUID documentId) {
-        travelPlanDocumentsService.deleteDocument(travelPlanId, participantId, documentId);
+        travelPlanDocumentsService.deleteDocument(travelPlanId, documentId);
         return ResultMapper.handle(HttpStatus.NO_CONTENT);
     }
 }

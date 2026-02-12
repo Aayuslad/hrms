@@ -4,17 +4,16 @@ import com.aayush.lad.hrms.core.exeptions.ConflictException;
 import com.aayush.lad.hrms.core.exeptions.NotFoundException;
 import com.aayush.lad.hrms.core.exeptions.UnauthorisedException;
 import com.aayush.lad.hrms.core.security.CurrentUserUtil;
+import com.aayush.lad.hrms.core.services.FileUploadService;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.NotificationResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.UserDetailResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.UserSummaryResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.write.*;
 import com.aayush.lad.hrms.modules.user.mappers.UserMapper;
-import com.aayush.lad.hrms.modules.user.models.Department;
-import com.aayush.lad.hrms.modules.user.models.Notification;
-import com.aayush.lad.hrms.modules.user.models.Profile;
-import com.aayush.lad.hrms.modules.user.models.User;
+import com.aayush.lad.hrms.modules.user.models.*;
 import com.aayush.lad.hrms.modules.user.repositories.DepartmentRepository;
 import com.aayush.lad.hrms.modules.user.repositories.DesignationRepository;
+import com.aayush.lad.hrms.modules.user.repositories.RoleRepository;
 import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,7 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -33,6 +32,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
     private final DesignationRepository designationRepository;
+    private final RoleRepository roleRepository;
+    private final FileUploadService fileUploadService;
     private final UserMapper userMapper;
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final CurrentUserUtil currentUserUtil;
@@ -77,6 +78,7 @@ public class UserService {
         }
 
         Profile profile = userMapper.toEntity(request);
+        profile.setAvatarUrl(fileUploadService.uploadFile(request.getAvatar()));
         profile.setUser(user);
         user.setProfile(profile);
 
@@ -114,6 +116,11 @@ public class UserService {
         }
 
         User updatedUser = userMapper.updateEntity(request, user);
+//        if (request.getAvatar() != null) {
+//            fileUploadService.deleteFileByURL(user.getProfile().getAvatarUrl());
+//            updatedUser.getProfile().setAvatarUrl(fileUploadService.uploadFile(request.getAvatar()));
+//        }
+
         User savedUser = userRepository.save(updatedUser);
 
         return userMapper.toDetailResponse(savedUser);
@@ -146,6 +153,11 @@ public class UserService {
                     .ifPresent(value -> updatedUser.getProfile().setManager(value));
         }
 
+//        if (request.getAvatar() != null) {
+//            fileUploadService.deleteFileByURL(user.getProfile().getAvatarUrl());
+//            updatedUser.getProfile().setAvatarUrl(fileUploadService.uploadFile(request.getAvatar()));
+//        }
+
         User savedUser = userRepository.save(updatedUser);
 
         return userMapper.toDetailResponse(savedUser);
@@ -166,5 +178,20 @@ public class UserService {
     public Page<UserSummaryResponse> getUsersSummary(Pageable pageable) {
         Page<User> users = userRepository.findAll(pageable);
         return userMapper.toSummaryResponseList(users);
+    }
+
+    public void updateUserRoles(UpdateUserRolesRequest request) {
+        User user = userRepository.findById(request.getUserId()).orElse(null);
+
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+
+        if (request.getRoles() != null && !request.getRoles().isEmpty()) {
+            List<Role> roles = roleRepository.findAllById(request.getRoles());
+            user.getRoles().addAll(roles);
+        }
+
+        userRepository.save(user);
     }
 }

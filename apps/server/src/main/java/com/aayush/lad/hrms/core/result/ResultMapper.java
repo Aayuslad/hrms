@@ -20,8 +20,8 @@ public final class ResultMapper {
     }
 
     // Failure
-    public static ResponseEntity<Result<Void>> handle(HttpStatus status, String error) {
-        Result<Void> response = new Result<>(status.value(), error);
+    public static ResponseEntity<Result<Void>> handle(HttpStatus status, String message) {
+        Result<Void> response = new Result<>(status.value(), message);
         return new ResponseEntity<>(response, status);
     }
 }

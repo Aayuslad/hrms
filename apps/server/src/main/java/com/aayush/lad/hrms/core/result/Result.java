@@ -7,13 +7,13 @@ public class Result<T> {
 
     private final int statusCode;
     private final T data;
-    private final String error;
+    private final String message;
     private final boolean success;
 
-    public Result(int statusCode, T data, String error) {
+    public Result(int statusCode, T data, String message) {
         this.statusCode = statusCode;
         this.data = data;
-        this.error = error;
+        this.message = message;
         this.success = statusCode < 400;
     }
 
@@ -28,8 +28,8 @@ public class Result<T> {
     }
 
     // Failure
-    public Result(int statusCode, String error) {
-        this(statusCode, null, error);
+    public Result(int statusCode, String message) {
+        this(statusCode, null, message);
     }
 }
 

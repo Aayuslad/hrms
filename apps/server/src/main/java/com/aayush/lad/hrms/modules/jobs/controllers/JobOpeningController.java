@@ -11,6 +11,7 @@ import com.aayush.lad.hrms.modules.jobs.services.JobOpeningService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,14 +37,14 @@ public class JobOpeningController {
         return ResultMapper.handle(HttpStatus.OK, response);
     }
 
-    @PostMapping
-    public ResponseEntity<Result<Void>> create(@Valid @RequestBody CreateJobOpeningRequest request) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Result<Void>> create(@Valid @ModelAttribute CreateJobOpeningRequest request) {
         jobOpeningService.create(request);
         return ResultMapper.handle(HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Result<Void>> update(@PathVariable("id") UUID id, @Valid @RequestBody UpdateJobOpeningRequest request) {
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Result<Void>> update(@PathVariable("id") UUID id, @Valid @ModelAttribute UpdateJobOpeningRequest request) {
         request.setId(id);
         jobOpeningService.update(request);
         return ResultMapper.handle(HttpStatus.OK);
