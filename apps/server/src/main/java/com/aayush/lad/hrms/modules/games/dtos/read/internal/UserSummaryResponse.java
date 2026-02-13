@@ -1,0 +1,19 @@
+package com.aayush.lad.hrms.modules.games.dtos.read.internal;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.UUID;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class UserSummaryResponse {
+
+    private UUID id;
+
+    private String userName;
+}

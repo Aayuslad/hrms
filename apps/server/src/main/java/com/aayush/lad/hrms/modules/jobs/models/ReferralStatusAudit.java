@@ -26,6 +26,7 @@ public class ReferralStatusAudit extends BaseModel {
     private Referral referral;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ReferralStatus movedTo;
 
     @ManyToOne(fetch = FetchType.LAZY)

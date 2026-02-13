@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,6 +34,14 @@ public class Game extends AuditableModel {
 
     @Column(nullable = false)
     private LocalTime closeTime;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private DayOfWeek openingDayOfWeek = DayOfWeek.MONDAY;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private DayOfWeek closingDayOfWeek = DayOfWeek.FRIDAY;
 
     @Column(nullable = false)
     private int currentCycleId = 0;

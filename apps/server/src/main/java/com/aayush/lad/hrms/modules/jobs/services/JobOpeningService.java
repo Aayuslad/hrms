@@ -1,5 +1,10 @@
 package com.aayush.lad.hrms.modules.jobs.services;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
 import com.aayush.lad.hrms.core.exeptions.NotFoundException;
 import com.aayush.lad.hrms.core.exeptions.UnauthorisedException;
 import com.aayush.lad.hrms.core.security.CurrentUserUtil;
@@ -16,12 +21,8 @@ import com.aayush.lad.hrms.modules.jobs.models.JobOpeningShareAudit;
 import com.aayush.lad.hrms.modules.jobs.repositories.JobOpeningRepository;
 import com.aayush.lad.hrms.modules.user.models.User;
 import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
-import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor

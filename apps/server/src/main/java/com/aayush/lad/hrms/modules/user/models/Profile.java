@@ -33,6 +33,7 @@ public class Profile extends BaseModel {
 
     private LocalDate dateOfBirth;
 
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     private LocalDate joiningDate;

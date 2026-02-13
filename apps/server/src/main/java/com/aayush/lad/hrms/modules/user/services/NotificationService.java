@@ -10,8 +10,8 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -24,8 +24,7 @@ public class NotificationService {
 	private final UserRepository userRepository;
 	private final EmailService emailService;
 
-	@Transactional
-	public Notification createNotification(UUID userId, String content) {
+	public void createNotification(UUID userId, String content) {
 		User user = userRepository.findById(userId).orElse(null);
 
 		if (user == null) {
@@ -37,16 +36,18 @@ public class NotificationService {
 		notification.setIsRead(Boolean.FALSE);
 		notification.setUser(user);
 
-		Notification saved = notificationRepository.save(notification);
+		notificationRepository.save(notification);
 
 		try {
 			String subject = "New notification";
-			String body = content;
-			emailService.sendSimpleEmail(user.getEmail(), subject, body);
+			emailService.sendSimpleEmail(user.getEmail(), subject, content);
 		} catch (Exception ex) {
 			logger.warn("Failed to send notification email to {}: {}", user.getEmail(), ex.getMessage());
 		}
+	}
 
-		return saved;
+	public void createNotificationForAll(List<UUID> userIds, String content) {
+		if (userIds == null || userIds.isEmpty()) return;
+		for (UUID userId : userIds) this.createNotification(userId, content);
 	}
 }

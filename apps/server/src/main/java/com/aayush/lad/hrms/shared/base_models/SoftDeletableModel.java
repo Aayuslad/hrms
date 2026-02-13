@@ -1,13 +1,17 @@
 package com.aayush.lad.hrms.shared.base_models;
 
+import java.time.LocalDateTime;
+
 import com.aayush.lad.hrms.modules.user.models.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
-import lombok.*;
-
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Setter
 @Getter

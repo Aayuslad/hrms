@@ -22,6 +22,7 @@ public class FileUploadService {
             Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
             return (String) uploadResult.get("url");
         } catch (IOException e) {
+            // TODO: do soemthing here, returning "error" instead of url is not good. (throw exception)
             return "Error";
         }
     }
@@ -37,23 +38,23 @@ public class FileUploadService {
             if (publicId == null) return "Invalid URL";
             return deleteFileById(publicId);
         } catch (Exception e) {
+            // TODO: do soemthing here, returning "error" instead of url is not good. (throw exception)
             return "Error";
         }
     }
 
-    private static String extractPublicId(String imageUrl) {
-        if (imageUrl == null) return null;
+    private String extractPublicId(String fileUrl) {
+        if (fileUrl == null) return null;
 
-//        String regex = "http://res\\.cloudinary\\.com/[^/]+/image/upload(?:/v[0-9]+)?/([^/]+)\\.[a-zA-Z]{3,4}$";
         String regex = "https?://res\\.cloudinary\\.com/[^/]+/(image|video|raw)/upload(?:/v\\d+)?/(.+)\\.[a-zA-Z0-9]+$";
 
         Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(imageUrl);
+        Matcher matcher = pattern.matcher(fileUrl);
 
         if (matcher.find())
             return matcher.group(2);
         else
-            return "OK";
+            return null;
     }
 }
 

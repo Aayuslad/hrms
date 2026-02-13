@@ -4,11 +4,7 @@ import com.aayush.lad.hrms.modules.games.enums.GameSlotStatus;
 import com.aayush.lad.hrms.modules.user.models.User;
 import com.aayush.lad.hrms.shared.base_models.BaseModel;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
@@ -21,6 +17,7 @@ import java.util.Set;
 @Table(name = "game_slots")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class GameSlot extends BaseModel {
@@ -44,6 +41,7 @@ public class GameSlot extends BaseModel {
     private LocalDateTime appliedAt;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private GameSlotStatus status;
 
     @Column(nullable = false)

@@ -1,5 +1,6 @@
 package com.aayush.lad.hrms.core.services;
 
+import lombok.AllArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -9,13 +10,10 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
 @Service
+@AllArgsConstructor
 public class EmailService {
 
 	private final JavaMailSender mailSender;
-
-	public EmailService(JavaMailSender mailSender) {
-		this.mailSender = mailSender;
-	}
 
 	public void sendSimpleEmail(String to, String subject, String text) {
 		SimpleMailMessage message = new SimpleMailMessage();

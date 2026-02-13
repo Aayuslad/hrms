@@ -92,10 +92,22 @@ public class UserService {
         User user = userRepository.findByUserName(currentUserUtil.getUsername()).orElse(null);
 
         if (user == null) {
-            throw new UnauthorisedException("User not found");
+            throw new UnauthorisedException();
         }
 
         return userMapper.toDetailResponse(user);
+    }
+
+    // TODO: use this wherever u r using the repo and current user util and throwing exeption or thais
+    public User getCurrentUserEntity() {
+
+        User user = userRepository.findByUserName(currentUserUtil.getUsername()).orElse(null);
+
+        if (user == null) {
+            throw new UnauthorisedException();
+        }
+
+        return user;
     }
 
     public UserDetailResponse getUserById(UUID id) {

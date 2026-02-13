@@ -7,14 +7,7 @@ import com.aayush.lad.hrms.modules.jobs.enums.ReferralStatus;
 import com.aayush.lad.hrms.modules.user.models.User;
 import com.aayush.lad.hrms.shared.base_models.BaseModel;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn; 
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
@@ -47,6 +40,7 @@ public class Referral extends BaseModel {
     private String note;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ReferralStatus status = ReferralStatus.NEW;
 
     @OneToMany(mappedBy = "referral", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
