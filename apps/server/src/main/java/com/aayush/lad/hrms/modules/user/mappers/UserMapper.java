@@ -1,12 +1,13 @@
 package com.aayush.lad.hrms.modules.user.mappers;
 
+import com.aayush.lad.hrms.core.services.CurrentUserService;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.NotificationResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.UserDetailResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.UserSummaryResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.write.CreateUserProfileRequest;
 import com.aayush.lad.hrms.modules.user.dtos.user.write.RegisterUserRequest;
-import com.aayush.lad.hrms.modules.user.dtos.user.write.UpdateUserBySelfRequest;
 import com.aayush.lad.hrms.modules.user.dtos.user.write.UpdateUserByAdminRequest;
+import com.aayush.lad.hrms.modules.user.dtos.user.write.UpdateUserBySelfRequest;
 import com.aayush.lad.hrms.modules.user.models.Notification;
 import com.aayush.lad.hrms.modules.user.models.Profile;
 import com.aayush.lad.hrms.modules.user.models.User;
@@ -20,24 +21,16 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class UserMapper {
-    private final ModelMapper modelMapper;  
 
-    public User toEntity(RegisterUserRequest request) {
+    private final ModelMapper modelMapper;
+    public final CurrentUserService currentUserService;
+
+    public User create(RegisterUserRequest request) {
         return modelMapper.map(request, User.class);
     }
 
     public UserDetailResponse toDetailResponse(User user) {
         return modelMapper.map(user, UserDetailResponse.class);
-    }
-
-    public UserSummaryResponse toSummaryResponse(User user) {
-        return modelMapper.map(user, UserSummaryResponse.class);
-    }
-
-    public List<UserDetailResponse> toDetailResponseList(List<User> users) {
-        return users.stream()
-                .map(this::toDetailResponse)
-                .toList();
     }
 
     public Page<UserSummaryResponse> toSummaryResponseList(Page<User> users) {
@@ -46,18 +39,18 @@ public class UserMapper {
         );
     }
 
-    public Profile toEntity(CreateUserProfileRequest request) {
+    public Profile create(CreateUserProfileRequest request) {
         return modelMapper.map(request, Profile.class);
     }
 
-    public User updateEntity(UpdateUserBySelfRequest request, User user) {
-        modelMapper.map(request, user);
-        return user;
+    public void update(UpdateUserBySelfRequest request, User existing) {
+        modelMapper.map(request, existing);
+        existing.setUpdatedBy(currentUserService.getCurrentUserEntity());
     }
 
-    public User updateEntity(UpdateUserByAdminRequest request, User user) {
-        modelMapper.map(request, user);
-        return user;
+    public void update(UpdateUserByAdminRequest request, User existing) {
+        modelMapper.map(request, existing);
+        existing.setUpdatedBy(currentUserService.getCurrentUserEntity());
     }
 
     public List<NotificationResponse> toNotificationResponseList(List<Notification> notifications) {

@@ -4,7 +4,6 @@ import com.aayush.lad.hrms.modules.user.dtos.user.read.internal.GameInterestResp
 import com.aayush.lad.hrms.modules.user.dtos.user.read.internal.ProfileResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.internal.UserRoleResponse;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +14,6 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class UserDetailResponse {
 
     private UUID id;

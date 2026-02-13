@@ -17,17 +17,17 @@ public class Result<T> {
         this.success = statusCode < 400;
     }
 
-    // Success with data
+    // result with data
     public Result(int statusCode, T data) {
         this(statusCode, data, null);
     }
 
-    // Success with no data
+    // result with no data no message
     public Result(int statusCode) {
         this(statusCode, null, null);
     }
 
-    // Failure
+    // result with message
     public Result(int statusCode, String message) {
         this(statusCode, null, message);
     }

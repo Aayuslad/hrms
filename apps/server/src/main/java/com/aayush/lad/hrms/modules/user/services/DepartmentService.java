@@ -21,15 +21,12 @@ public class DepartmentService {
     private final DepartmentRepository departmentRepository;
     private final DepartmentMapper departmentMapper;
 
-    public DepartmentResponse create(CreateDepartmentRequest request) {
-        if (departmentRepository.existsByName(request.getName())) {
+    public void create(CreateDepartmentRequest request) {
+        if (departmentRepository.existsByName(request.getName()))
             throw new ConflictException("Department with name '" + request.getName() + "' already exists");
-        }
 
-        Department department = departmentMapper.toEntity(request);
-        Department savedDepartment = departmentRepository.save(department);
-
-        return departmentMapper.toResponse(savedDepartment);
+        Department department = departmentMapper.create(request);
+        departmentRepository.save(department);
     }
 
     public List<DepartmentResponse> getAll() {
@@ -37,22 +34,9 @@ public class DepartmentService {
         return departmentMapper.toResponseList(departments);
     }
 
-    public DepartmentResponse getById(UUID id) {
-        Department department = departmentRepository.findById(id).orElse(null);
-
-        if (department == null) {
-            throw new NotFoundException("Department not found");
-        }
-
-        return departmentMapper.toResponse(department);
-    }
-
-    public DepartmentResponse update(UpdateDepartmentRequest request) {
+    public void update(UpdateDepartmentRequest request) {
         Department department = departmentRepository.findById(request.getId()).orElse(null);
-
-        if (department == null) {
-            throw new NotFoundException("Department not found");
-        }
+        if (department == null) throw new NotFoundException("Department not found");
 
         if (!department.getName().equals(request.getName()) &&
                 departmentRepository.existsByName(request.getName())) {
@@ -60,15 +44,11 @@ public class DepartmentService {
         }
 
         department.update(request);
-        Department updatedDepartment = departmentRepository.save(department);
-
-        return departmentMapper.toResponse(updatedDepartment);
+        departmentRepository.save(department);
     }
 
     public void delete(UUID id) {
-        if (!departmentRepository.existsById(id)) {
-            throw new NotFoundException("Department not found");
-        }
+        if (!departmentRepository.existsById(id)) throw new NotFoundException("Department not found");
         // TODO: soft delete
         departmentRepository.deleteById(id);
     }

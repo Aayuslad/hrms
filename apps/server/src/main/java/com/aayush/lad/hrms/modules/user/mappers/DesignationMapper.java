@@ -1,5 +1,6 @@
 package com.aayush.lad.hrms.modules.user.mappers;
 
+import com.aayush.lad.hrms.core.services.CurrentUserService;
 import com.aayush.lad.hrms.modules.user.dtos.designation.read.DesignationResponse;
 import com.aayush.lad.hrms.modules.user.dtos.designation.write.CreateDesignationRequest;
 import com.aayush.lad.hrms.modules.user.dtos.designation.write.UpdateDesignationRequest;
@@ -15,13 +16,17 @@ import java.util.List;
 public class DesignationMapper {
 
     private final ModelMapper modelMapper;
+    private final CurrentUserService currentUserService;
     
-    public Designation toEntity(CreateDesignationRequest request) {
-        return modelMapper.map(request, Designation.class);
+    public Designation create(CreateDesignationRequest request) {
+        Designation designation = modelMapper.map(request, Designation.class);
+        designation.setCreatedBy(currentUserService.getCurrentUserEntity());
+        return designation;
     }
 
-    public Designation toEntity(UpdateDesignationRequest request) {
-        return modelMapper.map(request, Designation.class);
+    public void update(UpdateDesignationRequest request, Designation existing) {
+        modelMapper.map(request, existing);
+        existing.setUpdatedBy(currentUserService.getCurrentUserEntity());
     }
 
     public DesignationResponse toResponse(Designation designation) {

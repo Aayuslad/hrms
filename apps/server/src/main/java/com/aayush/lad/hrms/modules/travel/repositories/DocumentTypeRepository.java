@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
-@Repository
+
 public interface DocumentTypeRepository extends JpaRepository<DocumentType, UUID> {
     boolean existsByName(String name);
 }

@@ -2,7 +2,6 @@ package com.aayush.lad.hrms.modules.user.dtos.user.read.internal;
 
 import com.aayush.lad.hrms.modules.user.enums.Gender;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +10,6 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class ProfileResponse {
 
     private String firstName;

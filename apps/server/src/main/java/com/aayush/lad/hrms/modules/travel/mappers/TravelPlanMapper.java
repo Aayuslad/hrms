@@ -1,7 +1,7 @@
 package com.aayush.lad.hrms.modules.travel.mappers;
 
 import com.aayush.lad.hrms.core.exeptions.UnauthorisedException;
-import com.aayush.lad.hrms.core.security.CurrentUserUtil;
+import com.aayush.lad.hrms.core.services.CurrentUserService;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.TravelPlanResponse;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.TravelPlanSummaryResponse;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.internal.ParticipantDocumentResponse;
@@ -24,12 +24,12 @@ public class TravelPlanMapper {
 
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
-    private final CurrentUserUtil currentUserUtil;
+    private final CurrentUserService currentUserService;
 
     public TravelPlan toEntity(CreateTravelPlanRequest request) {
         TravelPlan travelPlan = modelMapper.map(request, TravelPlan.class);
 
-        User createdBy = userRepository.findByUserName(currentUserUtil.getUsername()).orElse(null);
+        User createdBy = userRepository.findByUserName(currentUserService.getUsername()).orElse(null);
         if (createdBy == null)
             throw new UnauthorisedException();
 
@@ -41,7 +41,7 @@ public class TravelPlanMapper {
     public TravelPlan toEntity(UpdateTravelPlanRequest request) {
         TravelPlan travelPlan = modelMapper.map(request, TravelPlan.class);
 
-        User updatedBy = userRepository.findByUserName(currentUserUtil.getUsername()).orElse(null);
+        User updatedBy = userRepository.findByUserName(currentUserService.getUsername()).orElse(null);
         if (updatedBy == null)
             throw new UnauthorisedException();
 

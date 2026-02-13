@@ -1,11 +1,7 @@
 package com.aayush.lad.hrms.modules.user.models;
 
 import com.aayush.lad.hrms.modules.games.models.Game;
-import com.aayush.lad.hrms.modules.user.dtos.user.write.UpdateUserBySelfRequest;
 import com.aayush.lad.hrms.shared.base_models.AuditableModel;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,7 +15,6 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class User extends AuditableModel {
 
     @Column(unique = true, nullable = false)

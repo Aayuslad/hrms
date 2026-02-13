@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.aayush.lad.hrms.core.exeptions.NotFoundException;
 import com.aayush.lad.hrms.core.exeptions.UnauthorisedException;
-import com.aayush.lad.hrms.core.security.CurrentUserUtil;
+import com.aayush.lad.hrms.core.services.CurrentUserService;
 import com.aayush.lad.hrms.core.services.EmailService;
 import com.aayush.lad.hrms.core.services.FileUploadService;
 import com.aayush.lad.hrms.modules.jobs.dtos.job_opening.read.JobOpeningResponse;
@@ -31,7 +31,7 @@ public class JobOpeningService {
     private final JobOpeningRepository jobOpeningRepository;
     private final UserRepository userRepository;
 
-    private final CurrentUserUtil currentUserUtil;
+    private final CurrentUserService currentUserService;
     private final FileUploadService fileUploadService;
     private final EmailService emailService;
 
@@ -97,7 +97,7 @@ public class JobOpeningService {
 
         //TODO: send an email here, complete when the mail service is there
 
-        User sharedBy = userRepository.findByUserName(currentUserUtil.getUsername()).orElse(null);
+        User sharedBy = userRepository.findByUserName(currentUserService.getUsername()).orElse(null);
         if (sharedBy == null)
             throw new UnauthorisedException();
 

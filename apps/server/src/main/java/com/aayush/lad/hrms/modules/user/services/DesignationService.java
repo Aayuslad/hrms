@@ -21,15 +21,12 @@ public class DesignationService {
     private final DesignationRepository designationRepository;
     private final DesignationMapper designationMapper;
 
-    public DesignationResponse create(CreateDesignationRequest request) {
-        if (designationRepository.existsByName(request.getName())) {
+    public void create(CreateDesignationRequest request) {
+        if (designationRepository.existsByName(request.getName()))
             throw new ConflictException("Designation with name '" + request.getName() + "' already exists");
-        }
 
-        Designation designation = designationMapper.toEntity(request);
-        Designation savedDesignation = designationRepository.save(designation);
-
-        return designationMapper.toResponse(savedDesignation);
+        Designation designation = designationMapper.create(request);
+        designationRepository.save(designation);
     }
 
     public List<DesignationResponse> getAll() {
@@ -37,38 +34,21 @@ public class DesignationService {
         return designationMapper.toResponseList(designations);
     }
 
-    public DesignationResponse getById(UUID id) {
-        Designation designation = designationRepository.findById(id).orElse(null);
-
-        if (designation == null) {
-            throw new NotFoundException("Designation not found");
-        }
-
-        return designationMapper.toResponse(designation);
-    }
-
-    public DesignationResponse update(UpdateDesignationRequest request) {
+    public void update(UpdateDesignationRequest request) {
         Designation designation = designationRepository.findById(request.getId()).orElse(null);
+        if (designation == null) throw new NotFoundException("Designation not found");
 
-        if (designation == null) {
-            throw new NotFoundException("Designation not found");
-        }
-
-        if (!designation.getName().equals(request.getName()) && 
-            designationRepository.existsByName(request.getName())) {
+        if (!designation.getName().equals(request.getName()) &&
+                designationRepository.existsByName(request.getName())) {
             throw new ConflictException("Designation with name '" + request.getName() + "' already exists");
         }
 
         designation.update(request);
-        Designation updatedDesignation = designationRepository.save(designation);
-
-        return designationMapper.toResponse(updatedDesignation);
+        designationRepository.save(designation);
     }
 
     public void delete(UUID id) {
-        if (!designationRepository.existsById(id)) {
-            throw new NotFoundException("Designation not found");
-        }
+        if (!designationRepository.existsById(id)) throw new NotFoundException("Designation not found");
         // TODO: soft delete
         designationRepository.deleteById(id);
     }

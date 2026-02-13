@@ -1,7 +1,7 @@
 package com.aayush.lad.hrms.modules.travel.services;
 
 import com.aayush.lad.hrms.core.exeptions.NotFoundException;
-import com.aayush.lad.hrms.core.security.CurrentUserUtil;
+import com.aayush.lad.hrms.core.services.CurrentUserService;
 import com.aayush.lad.hrms.core.services.FileUploadService;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateExpenseRequest;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.UpdateExpenseRequest;
@@ -31,7 +31,7 @@ public class TravelPlanExpenseService {
     private final UserRepository userRepository;
 
     private final TravelPlanMapper travelPlanMapper;
-    private final CurrentUserUtil currentUserUtil;
+    private final CurrentUserService currentUserService;
     private final FileUploadService fileUploadService;
 
     // FIX: proofs not added in expense, also, expense is also not added in travelplan
@@ -143,7 +143,7 @@ public class TravelPlanExpenseService {
         if (target == null)
             throw new NotFoundException("Expense not found");
 
-        User approver = userRepository.findByUserName(currentUserUtil.getUsername()).orElse(null);
+        User approver = userRepository.findByUserName(currentUserService.getUsername()).orElse(null);
 
         if (approver == null)
             throw new NotFoundException("Approver not found");

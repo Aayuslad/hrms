@@ -30,24 +30,24 @@ public class DesignationController {
     }
 
     @PostMapping
-    public ResponseEntity<Result<DesignationResponse>> create(
+    public ResponseEntity<Result<Void>> create(
             @Valid @RequestBody CreateDesignationRequest request) {
-        DesignationResponse response = designationService.create(request);
-        return ResultMapper.handle(HttpStatus.CREATED, response);
+        designationService.create(request);
+        return ResultMapper.handle(HttpStatus.CREATED, "Designation created");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Result<DesignationResponse>> update(
+    public ResponseEntity<Result<Void>> update(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateDesignationRequest request) {
         request.setId(id);
-        DesignationResponse response = designationService.update(request);
-        return ResultMapper.handle(HttpStatus.OK, response);
+        designationService.update(request);
+        return ResultMapper.handle(HttpStatus.OK, "Designation updated");
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Result<Void>> delete(@PathVariable UUID id) {
         designationService.delete(id);
-        return ResultMapper.handle(HttpStatus.NO_CONTENT);
+        return ResultMapper.handle(HttpStatus.NO_CONTENT, "Designation deleted");
     }
 }

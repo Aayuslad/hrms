@@ -1,6 +1,7 @@
-package com.aayush.lad.hrms.modules.user.dtos.user.read.internal;
+package com.aayush.lad.hrms.shared.dtos;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,9 +10,10 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GameInterestResponse {
+@Builder
+public class GlobalUserResponseSummary {
 
     private UUID id;
 
-    private String name;
+    private String userName;
 }

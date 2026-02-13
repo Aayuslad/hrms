@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository
+
 public interface TravelPlanRepository extends JpaRepository<TravelPlan, UUID> {
 
     @EntityGraph(attributePaths = {

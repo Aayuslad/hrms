@@ -1,7 +1,7 @@
 package com.aayush.lad.hrms.modules.travel.services;
 
 import com.aayush.lad.hrms.core.exeptions.NotFoundException;
-import com.aayush.lad.hrms.core.security.CurrentUserUtil;
+import com.aayush.lad.hrms.core.services.CurrentUserService;
 import com.aayush.lad.hrms.core.services.FileUploadService;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateDocumentRequest;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.UpdateDocumentRequest;
@@ -13,7 +13,6 @@ import com.aayush.lad.hrms.modules.travel.repositories.TravelPlanRepository;
 import com.aayush.lad.hrms.modules.user.models.User;
 import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -26,7 +25,7 @@ public class TravelPlanDocumentService {
     private final UserRepository userRepository;
     private final FileUploadService fileUploadService;
 
-    private final CurrentUserUtil currentUserUtil;
+    private final CurrentUserService currentUserService;
 
     public void createDocument(CreateDocumentRequest request) {
         TravelPlan travelPlan = travelPlanRepository.findById(request.getTravelPlanId()).orElse(null);
@@ -41,7 +40,7 @@ public class TravelPlanDocumentService {
         if (dt == null)
             throw new NotFoundException("Document type not found");
 
-        String username = currentUserUtil.getUsername();
+        String username = currentUserService.getUsername();
         User uploadedBy = userRepository.findByUserName(username).orElse(null);
 
         TravelPlanDocument doc = new TravelPlanDocument();

@@ -3,7 +3,6 @@ package com.aayush.lad.hrms.modules.user.dtos.user.write.internal;
 import com.aayush.lad.hrms.modules.user.enums.Gender;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +12,6 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class UpdateUserProfileByAdminRequest {
     @NotBlank(message = "First name is required")
     private String firstName;

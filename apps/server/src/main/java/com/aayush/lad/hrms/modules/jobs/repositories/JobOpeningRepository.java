@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository //TODO: is this @Repository annotation required here ?
+ //TODO: is this  annotation required here ?
 public interface JobOpeningRepository extends JpaRepository<JobOpening, UUID> {
 
     @EntityGraph(attributePaths = {

@@ -2,7 +2,7 @@ package com.aayush.lad.hrms.modules.jobs.services;
 
 import com.aayush.lad.hrms.core.exeptions.NotFoundException;
 import com.aayush.lad.hrms.core.exeptions.UnauthorisedException;
-import com.aayush.lad.hrms.core.security.CurrentUserUtil;
+import com.aayush.lad.hrms.core.services.CurrentUserService;
 import com.aayush.lad.hrms.modules.jobs.dtos.referral.write.CreateJobOpeningReferralRequest;
 import com.aayush.lad.hrms.modules.jobs.dtos.referral.write.UpdateJobOpeningReferralRequest;
 import com.aayush.lad.hrms.modules.jobs.mappers.JobOpeningMapper;
@@ -21,14 +21,14 @@ public class JobOpeningReferralService {
     private final JobOpeningRepository jobOpeningRepository;
     private final JobOpeningMapper jobOpeningMapper;
     private final UserRepository userRepository;
-    private final CurrentUserUtil currentUserUtil;
+    private final CurrentUserService currentUserService;
 
     public void create(CreateJobOpeningReferralRequest request) {
         JobOpening jobOpening = jobOpeningRepository.findById(request.getJobOpeningId()).orElse(null);
         if (jobOpening == null)
             throw new NotFoundException("Job opening not found");
 
-        User referredBy = userRepository.findByUserName(currentUserUtil.getUsername()).orElse(null);
+        User referredBy = userRepository.findByUserName(currentUserService.getUsername()).orElse(null);
         if (referredBy == null)
             throw new UnauthorisedException();
 

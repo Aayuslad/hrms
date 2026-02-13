@@ -4,6 +4,7 @@ import com.aayush.lad.hrms.core.exeptions.ConflictException;
 import com.aayush.lad.hrms.core.exeptions.DomainException;
 import com.aayush.lad.hrms.core.exeptions.NotFoundException;
 import com.aayush.lad.hrms.core.exeptions.UnauthorisedException;
+import com.aayush.lad.hrms.core.services.CurrentUserService;
 import com.aayush.lad.hrms.core.services.DateService;
 import com.aayush.lad.hrms.modules.games.dtos.read.GameResponse;
 import com.aayush.lad.hrms.modules.games.dtos.read.GameSummaryResponse;
@@ -18,7 +19,6 @@ import com.aayush.lad.hrms.modules.games.repositories.GameSlotRepository;
 import com.aayush.lad.hrms.modules.user.models.User;
 import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
 import com.aayush.lad.hrms.modules.user.services.NotificationService;
-import com.aayush.lad.hrms.modules.user.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +36,7 @@ public class GameService {
 
     private final GameMapper gameMapper;
 
-    private final UserService userService;
+    private final CurrentUserService currentUserService;
     private final NotificationService notificationService;
     private final DateService dateService;
 
@@ -127,7 +127,7 @@ public class GameService {
         Game game = gameRepository.findById(request.getGameId()).orElse(null);
         if (game == null) throw new NotFoundException("Game not found");
 
-        User currentUser = userService.getCurrentUserEntity();
+        User currentUser = currentUserService.getCurrentUserEntity();
 
         // step 1: validate start time based on game config
         boolean isAnyMatched = false;
@@ -218,7 +218,7 @@ public class GameService {
         GameSlot target = gameSlotRepository.findByGameIdAndSlotId(request.getGameId(), request.getSlotId()).orElse(null);
         if (target == null) throw new NotFoundException("Target slot not found");
 
-        User currentUser = userService.getCurrentUserEntity();
+        User currentUser = currentUserService.getCurrentUserEntity();
 
         // step 1: Only allow waitlist for slots that are currently confirmed
         if (!target.getStatus().equals(GameSlotStatus.CONFIRMED))
@@ -267,7 +267,7 @@ public class GameService {
         Game game = gameRepository.findById(request.getGameId()).orElse(null);
         if (game == null) throw new NotFoundException("Game not found");
 
-        User currentUser = userService.getCurrentUserEntity();
+        User currentUser = currentUserService.getCurrentUserEntity();
 
         // step 1: check if selected players are exiting the limit
         if (request.getPlayerIds().size() > game.getMaxSlotPlayers() - 1)
@@ -313,7 +313,7 @@ public class GameService {
         GameSlot slot = gameSlotRepository.findByGameIdAndSlotId(gameId, slotId).orElse(null);
         if (slot == null) throw new NotFoundException("Slot not found");
 
-        User currentUser = userService.getCurrentUserEntity();
+        User currentUser = currentUserService.getCurrentUserEntity();
 
         // step 1: enforce that only organiser can cancel the slot
         if (!slot.getOrganiser().getId().equals(currentUser.getId())) {
@@ -342,7 +342,7 @@ public class GameService {
 
     // for option 2, if user has opted for "i would like to wait for any slot if it gets canceled, at xyz day"
     public void slotAction(QueuedSlotActionRequest request) {
-        User currentUser = userService.getCurrentUserEntity();
+        User currentUser = currentUserService.getCurrentUserEntity();
 
         // step 1: get the users entry from queue (the pending slot)
         GameSlot pendingSlot = gameSlotRepository.findById(request.getQueuedSlotId()).orElse(null);

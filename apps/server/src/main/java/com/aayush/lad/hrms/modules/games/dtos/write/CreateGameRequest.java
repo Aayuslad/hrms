@@ -36,10 +36,10 @@ public class CreateGameRequest {
     private LocalTime closeTime;
 
     @NotNull(message = "Opening day of week can not be empty")
-    @Pattern(regexp = "SUNDAY|MONDAY", message = "Only SUNDAY and MONDAY are allowed as closing day")
+//    @Pattern(regexp = "^(SUNDAY|MONDAY)$", message = "Only SUNDAY and MONDAY are allowed as closing day")
     private DayOfWeek openingDayOfWeek;
 
     @NotNull(message = "Closing day of week can not be empty")
-    @Pattern(regexp = "FRIDAY|SATURDAY", message = "Only FRIDAY and SATURDAY are allowed as closing day")
+//    @Pattern(regexp = "^(FRIDAY|SATURDAY)$", message = "Only FRIDAY and SATURDAY are allowed as closing day")
     private DayOfWeek closingDayOfWeek;
 }

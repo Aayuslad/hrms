@@ -1,5 +1,6 @@
 package com.aayush.lad.hrms.modules.user.dtos.designation.read;
 
+import com.aayush.lad.hrms.shared.dtos.GlobalUserResponseSummary;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,9 +19,9 @@ public class DesignationResponse {
 
     private String name;
 
-    private String createdBy;
+    private GlobalUserResponseSummary createdBy;
 
-    private String updatedBy;
+    private GlobalUserResponseSummary updatedBy;
 
     private LocalDateTime createdAt;
 

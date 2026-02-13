@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository
+
 public interface GameSlotRepository extends JpaRepository<GameSlot, UUID> {
 
     @Query(value = "SELECT * FROM GameSlot as s " +
