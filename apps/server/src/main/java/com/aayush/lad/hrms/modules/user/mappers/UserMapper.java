@@ -33,10 +33,10 @@ public class UserMapper {
         return modelMapper.map(user, UserDetailResponse.class);
     }
 
-    public Page<UserSummaryResponse> toSummaryResponseList(Page<User> users) {
-        return users.map(x ->
+    public List<UserSummaryResponse> toSummaryResponseList(List<User> users) {
+        return users.stream().map(x ->
                 modelMapper.map(x, UserSummaryResponse.class)
-        );
+        ).toList();
     }
 
     public Profile create(CreateUserProfileRequest request) {

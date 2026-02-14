@@ -1,6 +1,10 @@
 package com.aayush.lad.hrms.modules.travel.mappers;
 
-import com.aayush.lad.hrms.core.exeptions.UnauthorisedException;
+import java.util.List;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
+
 import com.aayush.lad.hrms.core.services.CurrentUserService;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.TravelPlanResponse;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.TravelPlanSummaryResponse;
@@ -9,14 +13,14 @@ import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.internal.Partici
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateExpenseRequest;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateTravelPlanRequest;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.UpdateTravelPlanRequest;
-import com.aayush.lad.hrms.modules.travel.models.*;
+import com.aayush.lad.hrms.modules.travel.models.TravelPlan;
+import com.aayush.lad.hrms.modules.travel.models.TravelPlanDocument;
+import com.aayush.lad.hrms.modules.travel.models.TravelPlanExpense;
+import com.aayush.lad.hrms.modules.travel.models.TravelPlanExpenseProof;
 import com.aayush.lad.hrms.modules.user.models.User;
 import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
@@ -26,37 +30,23 @@ public class TravelPlanMapper {
     private final UserRepository userRepository;
     private final CurrentUserService currentUserService;
 
-    public TravelPlan toEntity(CreateTravelPlanRequest request) {
+    public TravelPlan create(CreateTravelPlanRequest request) {
         TravelPlan travelPlan = modelMapper.map(request, TravelPlan.class);
-
-        User createdBy = userRepository.findByUserName(currentUserService.getUsername()).orElse(null);
-        if (createdBy == null)
-            throw new UnauthorisedException();
-
-        travelPlan.setCreatedBy(createdBy);
-
+        travelPlan.setCreatedBy(currentUserService.getCurrentUserEntity());
         return travelPlan;
     }
 
-    public TravelPlan toEntity(UpdateTravelPlanRequest request) {
-        TravelPlan travelPlan = modelMapper.map(request, TravelPlan.class);
+    public void update(UpdateTravelPlanRequest request, TravelPlan existing) {
+        modelMapper.map(request, existing);
 
-        User updatedBy = userRepository.findByUserName(currentUserService.getUsername()).orElse(null);
-        if (updatedBy == null)
-            throw new UnauthorisedException();
+        existing.setUpdatedBy(currentUserService.getCurrentUserEntity());
 
-        travelPlan.setUpdatedBy(updatedBy);
-
-        travelPlan.getParticipants().clear();
+        existing.getParticipants().clear();
 
         if (request.getParticipants() != null && !request.getParticipants().isEmpty()) {
-            List<User> participants = userRepository.findAllById(
-                    request.getParticipants()
-            );
-            travelPlan.getParticipants().addAll(participants);
+            List<User> participants = userRepository.findAllById(request.getParticipants());
+            existing.getParticipants().addAll(participants);
         }
-
-        return travelPlan;
     }
 
     public TravelPlanResponse toResponse(TravelPlan travelPlan) {
@@ -78,19 +68,7 @@ public class TravelPlanMapper {
     }
 
     public TravelPlanExpense toExpenseEntity(CreateExpenseRequest req) {
-        TravelPlanExpense expense = modelMapper.map(req, TravelPlanExpense.class);
-
-        if (req.getProofs() != null) {
-            for (var p : req.getProofs()) {
-                TravelPlanExpenseProof proof = new TravelPlanExpenseProof();
-
-                proof.setExpense(expense);
-
-                expense.getProofs().add(proof);
-            }
-        }
-
-        return expense;
+        return modelMapper.map(req, TravelPlanExpense.class);
     }
 
     public List<ParticipantDocumentResponse> toDocumentResponseList(List<TravelPlanDocument> documents) {

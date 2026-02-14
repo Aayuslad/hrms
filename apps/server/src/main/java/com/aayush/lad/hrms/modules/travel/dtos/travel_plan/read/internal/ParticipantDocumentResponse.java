@@ -1,6 +1,7 @@
 package com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.internal;
 
 
+import com.aayush.lad.hrms.shared.dtos.GlobalUserResponseSummary;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ public class ParticipantDocumentResponse {
 
     private UUID id;
 
-    private UserSummaryResponse owner;
+    private GlobalUserResponseSummary owner;
     
     private String docUrl;
 
@@ -23,5 +24,5 @@ public class ParticipantDocumentResponse {
 
     private LocalDateTime uploadedAt;
 
-    private UserSummaryResponse uploadedBy;
+    private GlobalUserResponseSummary uploadedBy;
 }

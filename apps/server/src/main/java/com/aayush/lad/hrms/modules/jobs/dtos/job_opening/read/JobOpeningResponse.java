@@ -2,7 +2,7 @@ package com.aayush.lad.hrms.modules.jobs.dtos.job_opening.read;
 
 import com.aayush.lad.hrms.modules.jobs.dtos.job_opening.read.internal.DesignationSummaryResponse;
 import com.aayush.lad.hrms.modules.jobs.dtos.job_opening.read.internal.JobOpeningReferralResponse;
-import com.aayush.lad.hrms.modules.jobs.dtos.job_opening.read.internal.UserSummaryResponse;
+import com.aayush.lad.hrms.shared.dtos.GlobalUserResponseSummary;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,15 +28,19 @@ public class JobOpeningResponse {
 
     private String jdUrl;
 
-    private UserSummaryResponse defaultHr;
+    private GlobalUserResponseSummary defaultHr;
 
     private boolean isClosed;
 
-    private List<UserSummaryResponse> hrs = new ArrayList<>();
+    private List<GlobalUserResponseSummary> hrs = new ArrayList<>();
 
-    private List<UserSummaryResponse> reviewers = new ArrayList<>();
+    private List<GlobalUserResponseSummary> reviewers = new ArrayList<>();
 
     private List<JobOpeningReferralResponse> referrals = new ArrayList<>();
+
+    private GlobalUserResponseSummary createdBy;
+    
+    private GlobalUserResponseSummary updatedBy;
 
     // TODO: add share audit later on
 }

@@ -95,10 +95,11 @@ public class GameController {
     // to Perform action (accept/reject) on empty slot notification received by a user. (for option 2)
     @PostMapping("/{gameId}/slots/{queuedSlotId}/{action}")
     public ResponseEntity<Result<Void>> slotAction(
-            @PathVariable UUID gameId,
             @PathVariable UUID queuedSlotId,
-            @PathVariable String action) {
-        gameService.slotAction(QueuedSlotActionRequest.builder().build());
+            @PathVariable String action, @RequestBody QueuedSlotActionRequest request) {
+        request.setQueuedSlotId(queuedSlotId);
+        request.setAction(action);
+        gameService.slotAction(request);
         return ResultMapper.handle(HttpStatus.OK);
     }
 }

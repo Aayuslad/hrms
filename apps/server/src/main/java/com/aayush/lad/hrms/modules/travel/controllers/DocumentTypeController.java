@@ -29,19 +29,19 @@ public class DocumentTypeController {
     }
 
     @PostMapping
-    public ResponseEntity<Result<DocumentTypeResponse>> create(
+    public ResponseEntity<Result<Void>> create(
             @Valid @RequestBody CreateDocumentTypeRequest request) {
-        DocumentTypeResponse response = documentTypeService.create(request);
-        return ResultMapper.handle(HttpStatus.CREATED, response);
+        documentTypeService.create(request);
+        return ResultMapper.handle(HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Result<DocumentTypeResponse>> update(
+    public ResponseEntity<Result<Void>> update(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateDocumentTypeRequest request) {
         request.setId(id);
-        DocumentTypeResponse response = documentTypeService.update(request);
-        return ResultMapper.handle(HttpStatus.OK, response);
+        documentTypeService.update(request);
+        return ResultMapper.handle(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

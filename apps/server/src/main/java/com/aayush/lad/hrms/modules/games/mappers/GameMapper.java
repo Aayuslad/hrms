@@ -33,14 +33,12 @@ public class GameMapper {
         game.setUpdatedBy(currentUserService.getCurrentUserEntity());
     }
 
-    // summary list of all
     public List<GameSummaryResponse> toResponseList(List<Game> games) {
         return games.stream()
                 .map(x -> mapper.map(x, GameSummaryResponse.class))
                 .toList();
     }
 
-    // detaild for one
     public GameResponse toResponse(Game game) {
         return mapper.map(game, GameResponse.class);
     }

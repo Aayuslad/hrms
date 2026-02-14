@@ -2,6 +2,7 @@ package com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.internal;
 
 
 import com.aayush.lad.hrms.modules.travel.enums.ExpenseStatus;
+import com.aayush.lad.hrms.shared.dtos.GlobalUserResponseSummary;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,7 +32,7 @@ public class ParticipantExpenseResponse {
 
     private String expenseCategory;
 
-    private UserSummaryResponse approvedBy;
+    private GlobalUserResponseSummary approvedBy;
 
     private List<ExpenseProofResponse> proofs = new ArrayList<>();
 }

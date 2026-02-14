@@ -21,15 +21,12 @@ public class DocumentTypeService {
     private final DocumentTypeRepository documentTypeRepository;
     private final DocumentTypeMapper documentTypeMapper;
 
-    public DocumentTypeResponse create(CreateDocumentTypeRequest request) {
-        if (documentTypeRepository.existsByName(request.getName())) {
+    public void create(CreateDocumentTypeRequest request) {
+        if (documentTypeRepository.existsByName(request.getName()))
             throw new ConflictException("Document type with name '" + request.getName() + "' already exists");
-        }
 
-        DocumentType documentType = documentTypeMapper.toEntity(request);
-        DocumentType savedDocumentType = documentTypeRepository.save(documentType);
-
-        return documentTypeMapper.toResponse(savedDocumentType);
+        DocumentType documentType = documentTypeMapper.create(request);
+        documentTypeRepository.save(documentType);
     }
 
     public List<DocumentTypeResponse> getAll() {
@@ -37,27 +34,25 @@ public class DocumentTypeService {
         return documentTypeMapper.toResponseList(documentTypes);
     }
 
-    public DocumentTypeResponse update(UpdateDocumentTypeRequest request) {
+    public void update(UpdateDocumentTypeRequest request) {
         DocumentType documentType = documentTypeRepository.findById(request.getId()).orElse(null);
 
-        if (documentType == null) {
+        if (documentType == null)
             throw new NotFoundException("Document type not found");
-        }
 
-        if (!documentType.getName().equals(request.getName()) && documentTypeRepository.existsByName(request.getName())) {
+        if (!documentType.getName().equals(request.getName())
+                && documentTypeRepository.existsByName(request.getName())) {
             throw new ConflictException("document type with name '" + request.getName() + "' already exists");
         }
 
-        DocumentType newDocumentType = documentTypeMapper.toEntity(request);
-        DocumentType savedDocumentType = documentTypeRepository.save(newDocumentType);
-
-        return documentTypeMapper.toResponse(savedDocumentType);
+        documentTypeMapper.update(request, documentType);
+        documentTypeRepository.save(documentType);
     }
 
     public void delete(UUID id) {
-        if (!documentTypeRepository.existsById(id)) {
+        if (!documentTypeRepository.existsById(id))
             throw new NotFoundException("Document type not found");
-        }
+
         // TODO: soft delete
         documentTypeRepository.deleteById(id);
     }

@@ -21,15 +21,12 @@ public class ExpenseCategoryService {
     private final ExpenseCategoryRepository expenseCategoryRepository;
     private final ExpenseCategoryMapper expenseCategoryMapper;
 
-    public ExpenseCategoryResponse create(CreateExpenseCategoryRequest request) {
-        if (expenseCategoryRepository.existsByName(request.getName())) {
+    public void create(CreateExpenseCategoryRequest request) {
+        if (expenseCategoryRepository.existsByName(request.getName()))
             throw new ConflictException("Expense category with name '" + request.getName() + "' already exists");
-        }
 
-        ExpenseCategory expenseCategory = expenseCategoryMapper.toEntity(request);
-        ExpenseCategory savedExpenseCategory = expenseCategoryRepository.save(expenseCategory);
-
-        return expenseCategoryMapper.toResponse(savedExpenseCategory);
+        ExpenseCategory expenseCategory = expenseCategoryMapper.create(request);
+        expenseCategoryRepository.save(expenseCategory);
     }
 
     public List<ExpenseCategoryResponse> getAll() {
@@ -37,27 +34,25 @@ public class ExpenseCategoryService {
         return expenseCategoryMapper.toResponseList(expenseCategories);
     }
 
-    public ExpenseCategoryResponse update(UpdateExpenseCategoryRequest request) {
+    public void update(UpdateExpenseCategoryRequest request) {
         ExpenseCategory expenseCategory = expenseCategoryRepository.findById(request.getId()).orElse(null);
 
-        if (expenseCategory == null) {
+        if (expenseCategory == null)
             throw new NotFoundException("Expense category type not found");
-        }
 
-        if (!expenseCategory.getName().equals(request.getName()) && expenseCategoryRepository.existsByName(request.getName())) {
+        if (!expenseCategory.getName().equals(request.getName())
+                && expenseCategoryRepository.existsByName(request.getName())) {
             throw new ConflictException("Expense category with name '" + request.getName() + "' already exists");
         }
 
-        ExpenseCategory newDocumentType = expenseCategoryMapper.toEntity(request);
-        ExpenseCategory savedDocumentType = expenseCategoryRepository.save(newDocumentType);
-
-        return expenseCategoryMapper.toResponse(savedDocumentType);
+        expenseCategoryMapper.update(request, expenseCategory);
+        expenseCategoryRepository.save(expenseCategory);
     }
 
     public void delete(UUID id) {
-        if (!expenseCategoryRepository.existsById(id)) {
+        if (!expenseCategoryRepository.existsById(id))
             throw new NotFoundException("Expense category not found");
-        }
+
         // TODO: soft delete
         expenseCategoryRepository.deleteById(id);
     }

@@ -27,21 +27,29 @@ public class TravelPlanDocumentService {
 
     private final CurrentUserService currentUserService;
 
+    private TravelPlan requirePlan(UUID id, boolean withAll) {
+        return withAll
+                ? travelPlanRepository.findByIdWithAll(id).orElseThrow(() -> new NotFoundException("Travel plan not found"))
+                : travelPlanRepository.findById(id).orElseThrow(() -> new NotFoundException("Travel plan not found"));
+    }
+
+    private TravelPlanDocument requireDocument(TravelPlan plan, UUID docId) {
+        return plan.getTravelPlanDocuments().stream()
+                .filter(d -> d.getId().equals(docId))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Document not found"));
+    }
+
     public void createDocument(CreateDocumentRequest request) {
-        TravelPlan travelPlan = travelPlanRepository.findById(request.getTravelPlanId()).orElse(null);
-        if (travelPlan == null)
-            throw new NotFoundException("Travel plan not found");
+        TravelPlan travelPlan = requirePlan(request.getTravelPlanId(), false);
 
-        User owner = userRepository.findById(request.getOwnerId()).orElse(null);
-        if (owner == null)
-            throw new NotFoundException("Owner not found");
+        User owner = userRepository.findById(request.getOwnerId())
+                .orElseThrow(() -> new NotFoundException("Owner not found"));
 
-        DocumentType dt = documentTypeRepository.findById(request.getDocumentTypeId()).orElse(null);
-        if (dt == null)
-            throw new NotFoundException("Document type not found");
+        DocumentType dt = documentTypeRepository.findById(request.getDocumentTypeId())
+                .orElseThrow(() -> new NotFoundException("Document type not found"));
 
-        String username = currentUserService.getUsername();
-        User uploadedBy = userRepository.findByUserName(username).orElse(null);
+        User uploadedBy = currentUserService.getCurrentUserEntity();
 
         TravelPlanDocument doc = new TravelPlanDocument();
         if (request.getDoc() != null) {
@@ -57,23 +65,14 @@ public class TravelPlanDocumentService {
     }
 
     public void updateDocument(UpdateDocumentRequest request) {
-        TravelPlan travelPlan = travelPlanRepository.findByIdWithAll(request.getTravelPlanId()).orElse(null);
-        if (travelPlan == null)
-            throw new NotFoundException("Travel plan not found");
+        TravelPlan travelPlan = requirePlan(request.getTravelPlanId(), true);
+        TravelPlanDocument target = requireDocument(travelPlan, request.getId());
 
-        TravelPlanDocument target = travelPlan.getTravelPlanDocuments().stream()
-                .filter(d -> d.getId().equals(request.getId()))
-                .findFirst().orElse(null);
-        if (target == null)
-            throw new NotFoundException("Document not found");
+        User owner = userRepository.findById(request.getOwnerId())
+                .orElseThrow(() -> new NotFoundException("Owner not found"));
 
-        User owner = userRepository.findById(request.getOwnerId()).orElse(null);
-        if (owner == null)
-            throw new NotFoundException("Owner not found");
-
-        DocumentType dt = documentTypeRepository.findById(request.getDocumentTypeId()).orElse(null);
-        if (dt == null)
-            throw new NotFoundException("Document type not found");
+        DocumentType dt = documentTypeRepository.findById(request.getDocumentTypeId())
+                .orElseThrow(() -> new NotFoundException("Document type not found"));
 
         if (request.getDoc() != null) {
             fileUploadService.deleteFileByURL(target.getDocUrl());

@@ -1,7 +1,8 @@
 package com.aayush.lad.hrms.modules.jobs.services;
 
+import org.springframework.stereotype.Service;
+
 import com.aayush.lad.hrms.core.exeptions.NotFoundException;
-import com.aayush.lad.hrms.core.exeptions.UnauthorisedException;
 import com.aayush.lad.hrms.core.services.CurrentUserService;
 import com.aayush.lad.hrms.modules.jobs.dtos.referral.write.CreateJobOpeningReferralRequest;
 import com.aayush.lad.hrms.modules.jobs.dtos.referral.write.UpdateJobOpeningReferralRequest;
@@ -10,9 +11,8 @@ import com.aayush.lad.hrms.modules.jobs.models.JobOpening;
 import com.aayush.lad.hrms.modules.jobs.models.Referral;
 import com.aayush.lad.hrms.modules.jobs.repositories.JobOpeningRepository;
 import com.aayush.lad.hrms.modules.user.models.User;
-import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
+
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
@@ -20,7 +20,6 @@ public class JobOpeningReferralService {
 
     private final JobOpeningRepository jobOpeningRepository;
     private final JobOpeningMapper jobOpeningMapper;
-    private final UserRepository userRepository;
     private final CurrentUserService currentUserService;
 
     public void create(CreateJobOpeningReferralRequest request) {
@@ -28,9 +27,7 @@ public class JobOpeningReferralService {
         if (jobOpening == null)
             throw new NotFoundException("Job opening not found");
 
-        User referredBy = userRepository.findByUserName(currentUserService.getUsername()).orElse(null);
-        if (referredBy == null)
-            throw new UnauthorisedException();
+        User referredBy = currentUserService.getCurrentUserEntity();
 
         Referral referral = jobOpeningMapper.toEntity(request);
         referral.setJobOpening(jobOpening);

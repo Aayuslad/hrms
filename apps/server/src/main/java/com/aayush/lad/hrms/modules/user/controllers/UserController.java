@@ -98,8 +98,8 @@ public class UserController {
     }
 
     @GetMapping("/summary")
-    public ResponseEntity<Page<UserSummaryResponse>> getUsersSummary(Pageable pageable) {
-        Page<UserSummaryResponse> responseDto = userService.getUsersSummary(pageable);
+    public ResponseEntity<List<UserSummaryResponse>> getUsersSummary() {
+        List<UserSummaryResponse> responseDto = userService.getUsersSummary();
         return ResponseEntity.ok(responseDto);
     }
 

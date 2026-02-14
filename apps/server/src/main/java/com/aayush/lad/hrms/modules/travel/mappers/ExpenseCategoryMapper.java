@@ -1,29 +1,34 @@
 package com.aayush.lad.hrms.modules.travel.mappers;
 
-import com.aayush.lad.hrms.modules.travel.dtos.document_type.write.CreateDocumentTypeRequest;
-import com.aayush.lad.hrms.modules.travel.dtos.document_type.write.UpdateDocumentTypeRequest;
+import java.util.List;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
+
+import com.aayush.lad.hrms.core.services.CurrentUserService;
 import com.aayush.lad.hrms.modules.travel.dtos.expense_category.read.ExpenseCategoryResponse;
 import com.aayush.lad.hrms.modules.travel.dtos.expense_category.write.CreateExpenseCategoryRequest;
 import com.aayush.lad.hrms.modules.travel.dtos.expense_category.write.UpdateExpenseCategoryRequest;
 import com.aayush.lad.hrms.modules.travel.models.ExpenseCategory;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class ExpenseCategoryMapper {
 
     private final ModelMapper modelMapper;
+    private final CurrentUserService currentUserService;
 
-    public ExpenseCategory toEntity(CreateExpenseCategoryRequest request) {
-        return modelMapper.map(request, ExpenseCategory.class);
+    public ExpenseCategory create(CreateExpenseCategoryRequest request) {
+        ExpenseCategory category = modelMapper.map(request, ExpenseCategory.class);
+        category.setCreatedBy(currentUserService.getCurrentUserEntity());
+        return category;
     }
 
-    public ExpenseCategory toEntity(UpdateExpenseCategoryRequest request) {
-        return modelMapper.map(request, ExpenseCategory.class);
+    public void update(UpdateExpenseCategoryRequest request, ExpenseCategory existing) {
+        modelMapper.map(request, existing);
+        existing.setUpdatedBy(currentUserService.getCurrentUserEntity());
     }
 
     public ExpenseCategoryResponse toResponse(ExpenseCategory expenseCategory) {

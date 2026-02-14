@@ -1,6 +1,7 @@
 package com.aayush.lad.hrms.modules.travel.mappers;
 
 import com.aayush.lad.hrms.modules.travel.dtos.document_type.read.DocumentTypeResponse;
+import com.aayush.lad.hrms.core.services.CurrentUserService;
 import com.aayush.lad.hrms.modules.travel.dtos.document_type.write.CreateDocumentTypeRequest;
 import com.aayush.lad.hrms.modules.travel.dtos.document_type.write.UpdateDocumentTypeRequest;
 import com.aayush.lad.hrms.modules.travel.models.DocumentType;
@@ -16,13 +17,17 @@ import java.util.List;
 public class DocumentTypeMapper {
 
     private final ModelMapper modelMapper;
+    private final CurrentUserService currentUserService;
 
-    public DocumentType toEntity(CreateDocumentTypeRequest request) {
-        return modelMapper.map(request, DocumentType.class);
+    public DocumentType create(CreateDocumentTypeRequest request) {
+        DocumentType dt = modelMapper.map(request, DocumentType.class);
+        dt.setCreatedBy(currentUserService.getCurrentUserEntity());
+        return dt;
     }
 
-    public DocumentType toEntity(UpdateDocumentTypeRequest request) {
-        return modelMapper.map(request, DocumentType.class);
+    public void update(UpdateDocumentTypeRequest request, DocumentType existing) {
+        modelMapper.map(request, existing);
+        existing.setUpdatedBy(currentUserService.getCurrentUserEntity());
     }
 
     public DocumentTypeResponse toResponse(DocumentType documentType) {

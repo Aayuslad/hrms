@@ -30,43 +30,42 @@ public class TravelPlanService {
     private final NotificationService notificationService;
 
     public void create(CreateTravelPlanRequest request) {
-        TravelPlan travelPlan = travelPlanMapper.toEntity(request);
+        TravelPlan travelPlan = travelPlanMapper.create(request);
         travelPlanRepository.save(travelPlan);
     }
 
     public void update(UpdateTravelPlanRequest request) {
-        TravelPlan oldTravelPlan = travelPlanRepository.findByIdWithParticipants(request.getId()).orElse(null);
+        TravelPlan travelPlan = getTravelPlanEntityById(request.getId());
 
-        if (oldTravelPlan == null)
-            throw new NotFoundException("Travel plan not found");
+        List<User> oldParticipants = List.copyOf(travelPlan.getParticipants());
 
-        TravelPlan newTravelPlan = travelPlanMapper.toEntity(request);
+        travelPlanMapper.update(request, travelPlan);
 
-        if (newTravelPlan.getParticipants() != null && !newTravelPlan.getParticipants().isEmpty()) {
-            for (User x : newTravelPlan.getParticipants()) {
-                if (oldTravelPlan.getParticipants().contains(x)) continue;
-
-                String content = "You are added in a travel plan by " + newTravelPlan.getUpdatedBy().getUserName();
-                notificationService.createNotification(x.getId(), content);
+        // notifiy the ones who are added
+        if (travelPlan.getParticipants() != null) {
+            for (User u : travelPlan.getParticipants()) {
+                if (oldParticipants.contains(u))
+                    continue;
+                String content = "You are added in a travel plan by " +
+                        travelPlan.getUpdatedBy().getUserName();
+                notificationService.createNotification(u.getId(), content);
             }
         }
 
-        for (User x : oldTravelPlan.getParticipants()) {
-            if (newTravelPlan.getParticipants().contains(x)) continue;
-
-            String content = "You are removed from a travel plan by " + newTravelPlan.getUpdatedBy().getUserName();
-            notificationService.createNotification(x.getId(), content);
+        // notify the ones who are removed
+        for (User u : oldParticipants) {
+            if (travelPlan.getParticipants() != null && travelPlan.getParticipants().contains(u))
+                continue;
+            String content = "You are removed from a travel plan by " +
+                    travelPlan.getUpdatedBy().getUserName();
+            notificationService.createNotification(u.getId(), content);
         }
 
-        travelPlanRepository.save(newTravelPlan);
+        travelPlanRepository.save(travelPlan);
     }
 
     public TravelPlanResponse getById(UUID id) {
-        TravelPlan travelPlan = travelPlanRepository.findByIdWithParticipants(id).orElse(null);
-
-        if (travelPlan == null)
-            throw new NotFoundException("Travel plan not found");
-
+        TravelPlan travelPlan = getTravelPlanEntityById(id);
         return travelPlanMapper.toResponse(travelPlan);
     }
 
@@ -77,13 +76,12 @@ public class TravelPlanService {
     }
 
     public void delete(UUID id) {
-        if (!travelPlanRepository.existsById(id)) {
+        if (!travelPlanRepository.existsById(id))
             throw new NotFoundException("Travel plan not found");
-        }
+
         // TODO: soft delete
         travelPlanRepository.deleteById(id);
     }
-
 
     public ParticipantResponse getTravelParticipant(UUID travelPlanId, UUID participantId) {
         User participant = userRepository.findById(participantId).orElse(null);
@@ -104,5 +102,12 @@ public class TravelPlanService {
         response.setExpenses(travelPlanMapper.toExpenseResponseList(expenses));
 
         return response;
+    }
+
+    private TravelPlan getTravelPlanEntityById(UUID id) {
+        TravelPlan travelPlan = travelPlanRepository.findByIdWithParticipants(id).orElse(null);
+        if (travelPlan == null)
+            throw new NotFoundException("Travel plan not found");
+        return travelPlan;
     }
 }

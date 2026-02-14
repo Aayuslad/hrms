@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.aayush.lad.hrms.core.exeptions.NotFoundException;
-import com.aayush.lad.hrms.core.exeptions.UnauthorisedException;
 import com.aayush.lad.hrms.core.services.CurrentUserService;
 import com.aayush.lad.hrms.core.services.EmailService;
 import com.aayush.lad.hrms.core.services.FileUploadService;
@@ -20,7 +19,6 @@ import com.aayush.lad.hrms.modules.jobs.models.JobOpening;
 import com.aayush.lad.hrms.modules.jobs.models.JobOpeningShareAudit;
 import com.aayush.lad.hrms.modules.jobs.repositories.JobOpeningRepository;
 import com.aayush.lad.hrms.modules.user.models.User;
-import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
 
 import lombok.AllArgsConstructor;
 
@@ -29,28 +27,25 @@ import lombok.AllArgsConstructor;
 public class JobOpeningService {
 
     private final JobOpeningRepository jobOpeningRepository;
-    private final UserRepository userRepository;
-
     private final CurrentUserService currentUserService;
     private final FileUploadService fileUploadService;
     private final EmailService emailService;
 
     private final JobOpeningMapper mapper;
 
-    // create
     public void create(CreateJobOpeningRequest request) {
-        JobOpening jobOpening = mapper.toEntity(request);
+        JobOpening jobOpening = mapper.create(request);
 
-        if (request.getJd() != null) {
+        if (request.getJd() != null)
             jobOpening.setJdUrl(fileUploadService.uploadFile(request.getJd()));
-        }
 
         jobOpeningRepository.save(jobOpening);
     }
 
-    // update
     public void update(UpdateJobOpeningRequest request) {
-        JobOpening jobOpening = mapper.toEntity(request);
+        JobOpening jobOpening = requireJobOpening(request.getId());
+
+        mapper.update(request, jobOpening);
 
         if (request.getJd() != null) {
             fileUploadService.deleteFileByURL(jobOpening.getJdUrl());
@@ -60,52 +55,31 @@ public class JobOpeningService {
         jobOpeningRepository.save(jobOpening);
     }
 
-    // get one
     public JobOpeningResponse getOne(UUID jobOpeningId) {
-        JobOpening jobOpening = jobOpeningRepository.findByIdWithAll(jobOpeningId).orElse(null);
-
-        if (jobOpening == null)
-            throw new NotFoundException("Job opening not found");
-
+        JobOpening jobOpening = requireJobOpening(jobOpeningId);
         return mapper.toResponse(jobOpening);
     }
 
-    // get all
     public List<JobOpeningSummaryResponse> getAll() {
         List<JobOpening> jobOpenings = jobOpeningRepository.findAll();
         return mapper.toResponseList(jobOpenings);
     }
 
-    // close
     public void close(UUID id) {
-        JobOpening jobOpening = jobOpeningRepository.findById(id).orElse(null);
-
-        if (jobOpening == null)
-            throw new NotFoundException("Job opening not found");
-
+        JobOpening jobOpening = requireJobOpening(id);
         jobOpening.setClosed(true);
-
         jobOpeningRepository.save(jobOpening);
     }
 
-    // share
     public void share(ShareJobOpeningRequest request) {
-        JobOpening jobOpening = jobOpeningRepository.findById(request.getJobOpeningId()).orElse(null);
+        JobOpening jobOpening = requireJobOpening(request.getJobOpeningId());
 
-        if (jobOpening == null)
-            throw new NotFoundException("Job opening not found");
+        User sharedBy = currentUserService.getCurrentUserEntity();
 
-        //TODO: send an email here, complete when the mail service is there
-
-        User sharedBy = userRepository.findByUserName(currentUserService.getUsername()).orElse(null);
-        if (sharedBy == null)
-            throw new UnauthorisedException();
-
-        String content =
-                "A Job opening is shared to you by " + sharedBy.getUserName() + " from xyz company"
-                        + "Designation: " + jobOpening.getDesignation().getName()
-                        + "Description: " + jobOpening.getDescription()
-                        + "Job Description: " + jobOpening.getJdUrl();
+        String content = "A Job opening is shared to you by " + sharedBy.getUserName() + " from xyz company"
+                + "Designation: " + jobOpening.getDesignation().getName()
+                + "Description: " + jobOpening.getDescription()
+                + "Job Description: " + jobOpening.getJdUrl();
 
         emailService.sendSimpleEmail(request.getShareToEmail(), "Job Opportunity", content);
 
@@ -118,5 +92,12 @@ public class JobOpeningService {
         jobOpening.getShareAudits().add(audit);
 
         jobOpeningRepository.save(jobOpening);
+    }
+
+    private JobOpening requireJobOpening(UUID id) {
+        JobOpening jobOpening = jobOpeningRepository.findByIdWithAll(id).orElse(null);
+        if (jobOpening == null)
+            throw new NotFoundException("Job opening not found");
+        return jobOpening;
     }
 }

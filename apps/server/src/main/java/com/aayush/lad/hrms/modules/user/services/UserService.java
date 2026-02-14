@@ -142,8 +142,8 @@ public class UserService {
         return userMapper.toNotificationResponseList(notifications);
     }
 
-    public Page<UserSummaryResponse> getUsersSummary(Pageable pageable) {
-        Page<User> users = userRepository.findAll(pageable);
+    public List<UserSummaryResponse> getUsersSummary() {
+        List<User> users = userRepository.findAll();
         return userMapper.toSummaryResponseList(users);
     }
 

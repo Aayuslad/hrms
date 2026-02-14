@@ -34,11 +34,23 @@ public class TravelPlanExpenseService {
     private final CurrentUserService currentUserService;
     private final FileUploadService fileUploadService;
 
-    // FIX: proofs not added in expense, also, expense is also not added in travelplan
+    // utility helpers used by multiple endpoints
+    private TravelPlan requirePlan(UUID id, boolean withAll) {
+        return withAll
+                ? travelPlanRepository.findByIdWithAll(id)
+                        .orElseThrow(() -> new NotFoundException("Travel plan not found"))
+                : travelPlanRepository.findById(id).orElseThrow(() -> new NotFoundException("Travel plan not found"));
+    }
+
+    private TravelPlanExpense requireExpense(TravelPlan plan, UUID expenseId) {
+        return plan.getExpenses().stream()
+                .filter(e -> e.getId().equals(expenseId))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Expense not found"));
+    }
+
     public void createExpense(CreateExpenseRequest request) {
-        TravelPlan travelPlan = travelPlanRepository.findById(request.getTravelPlanId()).orElse(null);
-        if (travelPlan == null)
-            throw new NotFoundException("Travel plan not found");
+        TravelPlan travelPlan = requirePlan(request.getTravelPlanId(), false);
 
         User participant = userRepository.findById(request.getParticipantId()).orElse(null);
         if (participant == null)
@@ -53,8 +65,11 @@ public class TravelPlanExpenseService {
         if (request.getProofs() != null && !request.getProofs().isEmpty()) {
             List<String> profUrls = request.getProofs().stream()
                     .map(fileUploadService::uploadFile).toList();
+
             List<TravelPlanExpenseProof> proofs = profUrls.stream()
                     .map(x -> TravelPlanExpenseProof.builder().docUrl(x).expense(expense).build()).toList();
+
+            expense.getProofs().clear();
             expense.getProofs().addAll(proofs);
         }
 
@@ -67,16 +82,8 @@ public class TravelPlanExpenseService {
     }
 
     public void updateExpense(UpdateExpenseRequest request) {
-        TravelPlan travelPlan = travelPlanRepository.findByIdWithAll(request.getTravelPlanId()).orElse(null);
-        if (travelPlan == null)
-            throw new NotFoundException("Travel plan not found");
-
-        TravelPlanExpense target = travelPlan.getExpenses().stream()
-                .filter(e -> e.getId().equals(request.getId()))
-                .findFirst().orElse(null);
-
-        if (target == null)
-            throw new NotFoundException("Expense not found");
+        TravelPlan travelPlan = requirePlan(request.getTravelPlanId(), true);
+        TravelPlanExpense target = requireExpense(travelPlan, request.getId());
 
         target.setAmount(request.getAmount());
         target.setDate(request.getDate());
@@ -87,21 +94,25 @@ public class TravelPlanExpenseService {
 
         target.setExpenseCategory(category);
 
+        // TODO: delete the old proofs
         if (request.getProofs() != null && !request.getProofs().isEmpty()) {
             List<String> profUrls = request.getProofs().stream()
                     .map(fileUploadService::uploadFile).toList();
+
             List<TravelPlanExpenseProof> proofs = profUrls.stream()
-                    .map(x -> TravelPlanExpenseProof.builder().docUrl(x).expense(target).build()).toList();
+                    .map(x -> TravelPlanExpenseProof.builder().docUrl(x).expense(target).build())
+                    .toList();
+            
+            target.getProofs().clear();
             target.getProofs().addAll(proofs);
         }
 
         travelPlanRepository.save(travelPlan);
     }
 
+    // TODO: delete the proofs from cloud as well
     public void deleteExpense(UUID travelPlanId, UUID participantId, UUID expenseId) {
-        TravelPlan travelPlan = travelPlanRepository.findById(travelPlanId).orElse(null);
-        if (travelPlan == null)
-            throw new NotFoundException("Travel plan not found");
+        TravelPlan travelPlan = requirePlan(travelPlanId, false);
 
         boolean removed = travelPlan.getExpenses()
                 .removeIf(e -> e.getId().equals(expenseId) && e.getParticipant() != null &&
@@ -114,16 +125,8 @@ public class TravelPlanExpenseService {
     }
 
     public void submitExpense(UUID travelPlanId, UUID expenseId) {
-        TravelPlan travelPlan = travelPlanRepository.findByIdWithAll(travelPlanId).orElse(null);
-        if (travelPlan == null)
-            throw new NotFoundException("Travel plan not found");
-
-        TravelPlanExpense target = travelPlan.getExpenses().stream()
-                .filter(e -> e.getId().equals(expenseId))
-                .findFirst().orElse(null);
-
-        if (target == null)
-            throw new NotFoundException("Expense not found");
+        TravelPlan travelPlan = requirePlan(travelPlanId, true);
+        TravelPlanExpense target = requireExpense(travelPlan, expenseId);
 
         target.setStatus(ExpenseStatus.SUBMITTED);
         target.setSubmittedAt(LocalDateTime.now());
@@ -132,42 +135,20 @@ public class TravelPlanExpenseService {
     }
 
     public void approveExpense(UUID travelPlanId, UUID expenseId) {
-        TravelPlan travelPlan = travelPlanRepository.findByIdWithAll(travelPlanId).orElse(null);
-        if (travelPlan == null)
-            throw new NotFoundException("Travel plan not found");
-
-        TravelPlanExpense target = travelPlan.getExpenses().stream()
-                .filter(e -> e.getId().equals(expenseId))
-                .findFirst().orElse(null);
-
-        if (target == null)
-            throw new NotFoundException("Expense not found");
-
-        User approver = userRepository.findByUserName(currentUserService.getUsername()).orElse(null);
-
-        if (approver == null)
-            throw new NotFoundException("Approver not found");
+        TravelPlan travelPlan = requirePlan(travelPlanId, true);
+        TravelPlanExpense target = requireExpense(travelPlan, expenseId);
 
         target.setStatus(ExpenseStatus.APPROVED);
-        target.setApprovedBy(approver);
+        target.setApprovedBy(currentUserService.getCurrentUserEntity());
 
         travelPlanRepository.save(travelPlan);
     }
 
     public void rejectExpense(UUID travelPlanId, UUID expenseId) {
-        TravelPlan travelPlan = travelPlanRepository.findByIdWithAll(travelPlanId).orElse(null);
-        if (travelPlan == null)
-            throw new NotFoundException("Travel plan not found");
-
-        TravelPlanExpense target = travelPlan.getExpenses().stream()
-                .filter(e -> e.getId().equals(expenseId))
-                .findFirst().orElse(null);
-
-        if (target == null)
-            throw new NotFoundException("Expense not found");
+        TravelPlan travelPlan = requirePlan(travelPlanId, true);
+        TravelPlanExpense target = requireExpense(travelPlan, expenseId);
 
         // TODO: add who rejected here, update schema for it.
-
         target.setStatus(ExpenseStatus.REJECTED);
 
         travelPlanRepository.save(travelPlan);

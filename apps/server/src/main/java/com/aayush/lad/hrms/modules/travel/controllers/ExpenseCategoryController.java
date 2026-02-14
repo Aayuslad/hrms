@@ -29,19 +29,19 @@ public class ExpenseCategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Result<ExpenseCategoryResponse>> create(
+    public ResponseEntity<Result<Void>> create(
             @Valid @RequestBody CreateExpenseCategoryRequest request) {
-        ExpenseCategoryResponse response = expenseCategoryService.create(request);
-        return ResultMapper.handle(HttpStatus.CREATED, response);
+        expenseCategoryService.create(request);
+        return ResultMapper.handle(HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Result<ExpenseCategoryResponse>> update(
+    public ResponseEntity<Result<Void>> update(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateExpenseCategoryRequest request) {
         request.setId(id);
-        ExpenseCategoryResponse response = expenseCategoryService.update(request);
-        return ResultMapper.handle(HttpStatus.OK, response);
+        expenseCategoryService.update(request);
+        return ResultMapper.handle(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
