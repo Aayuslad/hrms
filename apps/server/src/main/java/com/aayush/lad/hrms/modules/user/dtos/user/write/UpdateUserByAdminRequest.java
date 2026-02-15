@@ -1,0 +1,22 @@
+package com.aayush.lad.hrms.modules.user.dtos.user.write;
+
+import com.aayush.lad.hrms.modules.user.dtos.user.write.internal.UpdateUserProfileByAdminRequest;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.UUID;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UpdateUserByAdminRequest {
+
+    @NotNull(message = "User ID is required")
+    private UUID userId;
+
+//    private MultipartFile avatar;
+
+    private UpdateUserProfileByAdminRequest profile;
+}

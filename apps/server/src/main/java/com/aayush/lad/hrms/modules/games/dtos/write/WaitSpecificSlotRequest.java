@@ -1,0 +1,25 @@
+package com.aayush.lad.hrms.modules.games.dtos.write;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.UUID;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class WaitSpecificSlotRequest {
+
+    @NotNull(message = "Game can not be empty")
+    private UUID gameId;
+
+    @NotNull(message = "Game slot can not be empty")
+    private UUID slotId;
+
+    private List<UUID> playerIds;
+}
