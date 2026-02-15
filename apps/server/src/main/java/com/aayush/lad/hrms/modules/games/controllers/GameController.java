@@ -4,6 +4,7 @@ import com.aayush.lad.hrms.core.result.Result;
 import com.aayush.lad.hrms.core.result.ResultMapper;
 import com.aayush.lad.hrms.modules.games.dtos.read.GameResponse;
 import com.aayush.lad.hrms.modules.games.dtos.read.GameSummaryResponse;
+import com.aayush.lad.hrms.modules.games.dtos.read.QueuedSlotOfferResponse;
 import com.aayush.lad.hrms.modules.games.dtos.write.*;
 import com.aayush.lad.hrms.modules.games.services.GameService;
 import jakarta.validation.Valid;
@@ -81,6 +82,13 @@ public class GameController {
         request.setGameId(id);
         gameService.waitForAnySlot(request);
         return ResultMapper.handle(HttpStatus.CREATED);
+    }
+
+    // Get all offers where current user is organiser
+    @GetMapping("/offers")
+    public ResponseEntity<Result<List<QueuedSlotOfferResponse>>> getOffers() {
+        List<QueuedSlotOfferResponse> offers = gameService.getOffersForOrganiser();
+        return ResultMapper.handle(HttpStatus.OK, offers);
     }
 
     // Cancel a confirmed slot. Only organiser can cancel.

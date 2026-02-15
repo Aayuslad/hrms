@@ -43,7 +43,7 @@ public class JobOpeningService {
     }
 
     public void update(UpdateJobOpeningRequest request) {
-        JobOpening jobOpening = requireJobOpening(request.getId());
+        JobOpening jobOpening = getJobOpeningEntityById(request.getId());
 
         mapper.update(request, jobOpening);
 
@@ -56,7 +56,7 @@ public class JobOpeningService {
     }
 
     public JobOpeningResponse getOne(UUID jobOpeningId) {
-        JobOpening jobOpening = requireJobOpening(jobOpeningId);
+        JobOpening jobOpening = getJobOpeningEntityById(jobOpeningId);
         return mapper.toResponse(jobOpening);
     }
 
@@ -66,13 +66,13 @@ public class JobOpeningService {
     }
 
     public void close(UUID id) {
-        JobOpening jobOpening = requireJobOpening(id);
+        JobOpening jobOpening = getJobOpeningEntityById(id);
         jobOpening.setClosed(true);
         jobOpeningRepository.save(jobOpening);
     }
 
     public void share(ShareJobOpeningRequest request) {
-        JobOpening jobOpening = requireJobOpening(request.getJobOpeningId());
+        JobOpening jobOpening = getJobOpeningEntityById(request.getJobOpeningId());
 
         User sharedBy = currentUserService.getCurrentUserEntity();
 
@@ -94,7 +94,7 @@ public class JobOpeningService {
         jobOpeningRepository.save(jobOpening);
     }
 
-    private JobOpening requireJobOpening(UUID id) {
+    private JobOpening getJobOpeningEntityById(UUID id) {
         JobOpening jobOpening = jobOpeningRepository.findByIdWithAll(id).orElse(null);
         if (jobOpening == null)
             throw new NotFoundException("Job opening not found");

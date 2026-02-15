@@ -9,11 +9,13 @@ import com.aayush.lad.hrms.core.services.DateService;
 import com.aayush.lad.hrms.modules.games.dtos.read.GameResponse;
 import com.aayush.lad.hrms.modules.games.dtos.read.GameSummaryResponse;
 import com.aayush.lad.hrms.modules.games.dtos.read.internal.GameSlotResponse;
+import com.aayush.lad.hrms.modules.games.dtos.read.QueuedSlotOfferResponse;
 import com.aayush.lad.hrms.modules.games.dtos.write.*;
 import com.aayush.lad.hrms.modules.games.enums.GameSlotStatus;
 import com.aayush.lad.hrms.modules.games.mappers.GameMapper;
 import com.aayush.lad.hrms.modules.games.models.Game;
 import com.aayush.lad.hrms.modules.games.models.GameSlot;
+import com.aayush.lad.hrms.modules.games.models.QueuedSlotOffer;
 import com.aayush.lad.hrms.modules.games.repositories.GameRepository;
 import com.aayush.lad.hrms.modules.games.repositories.GameSlotRepository;
 import com.aayush.lad.hrms.modules.user.models.User;
@@ -22,7 +24,9 @@ import com.aayush.lad.hrms.modules.user.services.NotificationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -40,18 +44,17 @@ public class GameService {
     private final NotificationService notificationService;
     private final DateService dateService;
 
+    private final QueueAllocationService queueAllocationService;
+    private final com.aayush.lad.hrms.modules.games.repositories.QueuedSlotOfferRepository queuedSlotOfferRepository;
+
     public void create(CreateGameRequest request) {
         Game game = gameMapper.create(request);
         gameRepository.save(game);
     }
 
     public void update(UpdateGameRequest request) {
-        Game game = gameRepository.findById(request.getId()).orElse(null);
-        if (game == null)
-            throw new NotFoundException("Game not found");
-
+        Game game = getGameEntityById(request.getId());
         gameMapper.update(request, game);
-
         gameRepository.save(game);
     }
 
@@ -125,9 +128,7 @@ public class GameService {
     }
 
     public void bookSlot(BookSlotRequest request) {
-        Game game = gameRepository.findById(request.getGameId()).orElse(null);
-        if (game == null)
-            throw new NotFoundException("Game not found");
+        Game game = getGameEntityById(request.getGameId());
 
         User currentUser = currentUserService.getCurrentUserEntity();
 
@@ -143,38 +144,30 @@ public class GameService {
         if (!isAnyMatched)
             throw new DomainException("Invalid start time");
 
-        // TOOD: validate the date and time so user can not book in past time slots
+        // step 2: ensure user is not booking an already passed slot (check end time)
+        LocalDateTime requestedEnd = LocalDateTime.of(request.getDay(),
+                request.getStartTime().plusMinutes(game.getSlotDuration()));
+        if (requestedEnd.isBefore(LocalDateTime.now())) {
+            throw new DomainException("Cannot book a slot that has already ended");
+        }
 
-        // step 2: calculate start and end dates of current week based on games, custom
-        // week
+        // step 3: calculate start and end dates of current week based on games, custom week
         Map<String, LocalDate> currentWeekDateRange = dateService
                 .getCurrentWeekDateRange(game.getOpeningDayOfWeek(), game.getClosingDayOfWeek());
         LocalDate weekStartDate = currentWeekDateRange.get(DateService.getSTART_DATE_KEY());
         LocalDate weekEndDate = currentWeekDateRange.get(DateService.getEND_DATE_KEY());
 
-        // step 3: throw if user tries to book out of current week
+        // step 4: throw if user tries to book out of current week
         if (request.getDay().isBefore(weekStartDate) || request.getDay().isAfter(weekEndDate))
             throw new ConflictException("Can only book slots within current week");
 
-        // step 4: throw if slot already booked.
-        // TODO: implement priority-based preemption (cancel confirmed if incoming user
-        // has higher priority per cycle rules).
-        boolean booked = gameSlotRepository.findByGameIdDayStartTimeAndStatus(
-                request.getGameId(),
-                request.getDay(),
-                request.getStartTime(),
-                GameSlotStatus.CONFIRMED).isPresent();
-        if (booked)
-            throw new ConflictException("Slot already booked");
-
-        // step 6: check if selected players are exiting the limit
+        // step 5: check if selected players are exceeding the limit and build set
         if (request.getPlayerIds().size() > game.getMaxSlotPlayers() - 1)
             throw new DomainException("Maximum " + game.getMaxSlotPlayers() + " are allowed");
 
         Set<User> players = new HashSet<>(userRepository.findAllById(request.getPlayerIds()));
 
-        // step 5: check if user already has an active booking (confirmed or pending) on
-        // the same day
+        // step 6: check if user already has an active booking (confirmed or pending) on the same day
         boolean hasActive = !gameSlotRepository.findActiveSlotsForUserOnDayByGameId(
                 request.getGameId(),
                 request.getDay(),
@@ -192,7 +185,56 @@ public class GameService {
                 throw new ConflictException(player.getUserName() + "already has an active booking for the day");
         }
 
-        // step 8: create and book the slot
+        // step 8: find any booked slot in same time as user wants.
+        Optional<GameSlot> existingOpt = gameSlotRepository.findByGameIdDayStartTimeAndStatus(
+                request.getGameId(),
+                request.getDay(),
+                request.getStartTime(),
+                GameSlotStatus.CONFIRMED);
+
+        // step 9: if any slot exists, decide whether to keep that slot or cancel and giv to current user as
+        // per their completed slots.
+        if (existingOpt.isPresent()) {
+            GameSlot existing = existingOpt.get();
+
+            // step 9.1: only allowed if request comes at least one hour before slot start
+            LocalDateTime slotStart = LocalDateTime.of(request.getDay(), request.getStartTime());
+            if (slotStart.isBefore(LocalDateTime.now().plusHours(1))) {
+                throw new ConflictException("Slot already booked");
+            }
+
+            // step 9.2: compute averages for both teams
+            Set<UUID> existingTeam = new HashSet<>();
+            existingTeam.add(existing.getOrganiser().getId());
+            existing.getPlayers().forEach(u -> existingTeam.add(u.getId()));
+
+            Set<UUID> newTeam = new HashSet<>();
+            newTeam.add(currentUser.getId());
+            players.forEach(u -> newTeam.add(u.getId()));
+
+            double existingTeamAvg = computeAverageCompletedSlots(game.getId(), game.getCurrentCycleId(), existingTeam);
+            double newTeamAvg = computeAverageCompletedSlots(game.getId(), game.getCurrentCycleId(), newTeam);
+
+            // step 9.3: cancel existing slot if the new team has less slot played
+            if (newTeamAvg < existingTeamAvg) {
+                existing.setStatus(GameSlotStatus.CANCELLED);
+                gameSlotRepository.save(existing);
+
+                // notify cancelled participants
+                List<UUID> cancelIds = new ArrayList<>();
+                cancelIds.add(existing.getOrganiser().getId());
+                existing.getPlayers().forEach(u -> cancelIds.add(u.getId()));
+                notificationService.createNotificationForAll(
+                        cancelIds,
+                        "Your " + game.getName() + " slot on " + existing.getDay() + " "
+                                + existing.getStartTime() + " has been cancelled due to priority rules");
+                // continue to book new slot for new team.
+            } else {
+                throw new ConflictException("Slot already booked");
+            }
+        }
+
+        // step 10: create and book the slot
         GameSlot slot = GameSlot.builder()
                 .game(game)
                 .day(request.getDay())
@@ -206,7 +248,7 @@ public class GameService {
 
         gameSlotRepository.save(slot);
 
-        // step 9: notify organizer and players
+        // step 11: notify organizer and players
         notificationService.createNotification(
                 currentUser.getId(),
                 "Your " + game.getName() + " slot has been booked for " + request.getDay() + " "
@@ -219,9 +261,7 @@ public class GameService {
     }
 
     public void waitForSpecificSlot(WaitSpecificSlotRequest request) {
-        Game game = gameRepository.findById(request.getGameId()).orElse(null);
-        if (game == null)
-            throw new NotFoundException("Game not found");
+        Game game = getGameEntityById(request.getGameId());
 
         GameSlot target = gameSlotRepository.findByGameIdAndSlotId(request.getGameId(), request.getSlotId())
                 .orElse(null);
@@ -267,6 +307,7 @@ public class GameService {
                 .startTime(target.getStartTime())
                 .endTime(target.getEndTime())
                 .organiser(currentUser)
+                .players(players)
                 .status(GameSlotStatus.PENDING)
                 .cycleId(game.getCurrentCycleId())
                 .build();
@@ -275,9 +316,7 @@ public class GameService {
     }
 
     public void waitForAnySlot(WaitAnySlotRequest request) {
-        Game game = gameRepository.findById(request.getGameId()).orElse(null);
-        if (game == null)
-            throw new NotFoundException("Game not found");
+        Game game = getGameEntityById(request.getGameId());
 
         User currentUser = currentUserService.getCurrentUserEntity();
 
@@ -306,11 +345,23 @@ public class GameService {
                 throw new ConflictException(player.getUserName() + "already has an active booking for the day");
         }
 
-        // step 4: create an entry in queue
+        // step 4: check if any slot empty today (only allow when all slots of that day is booked)
+        List<GameSlot> dayBooked = gameSlotRepository.findGameSlotsByGameIdSlotStatusAndDateRange(
+                game.getId(),
+                List.of(GameSlotStatus.CONFIRMED, GameSlotStatus.COMPLETED),
+                request.getDay(),
+                request.getDay());
+        int possible = calculateDailySlotCount(game);
+        if (dayBooked.size() < possible) {
+            throw new ConflictException("Slots still available for today; cannot join queue");
+        }
+
+        // step 5: create an entry in queue
         GameSlot queueSlot = GameSlot.builder()
                 .game(game)
                 .day(request.getDay())
                 .organiser(currentUser)
+                .players(players)
                 .status(GameSlotStatus.PENDING)
                 .cycleId(game.getCurrentCycleId())
                 .build();
@@ -318,10 +369,23 @@ public class GameService {
         gameSlotRepository.save(queueSlot);
     }
 
+    public List<QueuedSlotOfferResponse> getOffersForOrganiser() {
+        User currentUser = currentUserService.getCurrentUserEntity();
+
+        List<QueuedSlotOffer> offers = queuedSlotOfferRepository.
+                findByQueueSlotOrganiserId(currentUser.getId());
+
+        return offers.stream().map(o -> QueuedSlotOfferResponse.builder()
+                .id(o.getId())
+                .queueSlotId(o.getQueueSlot().getId())
+                .cancelledSlotId(o.getCancelledSlot().getId())
+                .status(o.getStatus())
+                .expiresAt(o.getExpiresAt())
+                .build()).toList();
+    }
+
     public void cancelSlot(UUID gameId, UUID slotId) {
-        Game game = gameRepository.findById(gameId).orElse(null);
-        if (game == null)
-            throw new NotFoundException("Game not found");
+        Game game = getGameEntityById(gameId);
 
         GameSlot slot = gameSlotRepository.findByGameIdAndSlotId(gameId, slotId).orElse(null);
         if (slot == null)
@@ -337,20 +401,21 @@ public class GameService {
         // step 2: cancel the slot
         slot.setStatus(GameSlotStatus.CANCELLED);
 
-        // step 3 : notify organiser about the cancellation
+        // step 3 : notify organiser and players about the cancellation
         notificationService.createNotification(
                 currentUser.getId(),
-                "Your " + game.getName() + " slot has been canceled for " + slot.getDay() + " " + slot.getStartTime());
+                "Your " + game.getName() + " slot has been canceled for " + slot.getDay() + " " + slot.getStartTime()
+        );
 
-        // step 4 : notify all players about the cancellation
         notificationService.createNotificationForAll(
                 slot.getPlayers().stream().map(x -> x.getId()).toList(),
-                "You were added to a " + game.getName() + " slot on " + slot.getDay() + " " + slot.getStartTime());
-
-        // TODO: check qeueue and allocate pending slots if any (specific slot waiters
-        // first, then any-slot waiters)
+                "You were added to a " + game.getName() + " slot on " + slot.getDay() + " " + slot.getStartTime()
+        );
 
         gameSlotRepository.save(slot);
+
+        // step 4: check queue and allocate pending slots if any
+        queueAllocationService.handleSlotCancellation(slot);
     }
 
     // for option 2, if user has opted for "i would like to wait for any slot if it
@@ -368,9 +433,7 @@ public class GameService {
         if (cancelledSlot == null)
             throw new NotFoundException("cancelledSlot slot not found");
 
-        Game game = gameRepository.findById(pendingSlot.getGame().getId()).orElse(null);
-        if (game == null)
-            throw new NotFoundException("Game not found");
+        getGameEntityById(pendingSlot.getGame().getId());
 
         // step 3: check in case if the users queue entry is not more an entry in queue.
         if (!pendingSlot.getStatus().equals(GameSlotStatus.PENDING)) {
@@ -388,36 +451,47 @@ public class GameService {
             throw new UnauthorisedException("Only the organiser can perform this action");
         }
 
-        // step 6: accept the offered slot
-        if ("accept".equalsIgnoreCase(request.getAction())) {
-            // step 6.1: check in case if user has another active booking while taking
-            // action (someone other might have added him just seconds before)
-            boolean already = gameSlotRepository.findByGameIdDayStartTimeAndStatus(
-                    game.getId(),
-                    pendingSlot.getDay(),
-                    cancelledSlot.getStartTime(),
-                    GameSlotStatus.CONFIRMED).isPresent();
+        // locate the offer record associated with this pending entry & canceled slot
+        QueuedSlotOffer offer = queueAllocationService
+                .findOffer(pendingSlot.getId(), cancelledSlot.getId())
+                .orElseThrow(() -> new ConflictException("No active offer found for this queue entry"));
 
-            if (already) {
-                // TODO: move to notify anoher waiting entry (when this thing is implemented)
-                throw new ConflictException("Another slot already booked");
-            }
+        queueAllocationService.handleOfferResponse(offer, request.getAction());
+    }
 
-            // step 6.2: confiem the slot for user
-            pendingSlot.setStatus(GameSlotStatus.CONFIRMED);
-            pendingSlot.setStartTime(cancelledSlot.getStartTime());
-            pendingSlot.setEndTime(cancelledSlot.getEndTime());
 
-            gameSlotRepository.save(pendingSlot);
-            return;
+    /**
+     * compute average number of completed slots in the given cycle for the given team players.
+     *
+     * @param gameId
+     * @param cycleId
+     * @param userIds
+     * @return average completed slots of that team
+     */
+    private double computeAverageCompletedSlots(UUID gameId, int cycleId, Set<UUID> userIds) {
+        if (userIds == null || userIds.isEmpty()) return 0;
+        long total = 0;
+        for (UUID uid : userIds) {
+            total += gameSlotRepository.countCompletedSlotsForUser(gameId, cycleId, uid);
         }
+        return (double) total / userIds.size();
+    }
 
-        // step 7:
-        if ("reject".equalsIgnoreCase(request.getAction())) {
-            // TODO: move to notify anoher waiting entry (when this thing is implemented)
-            // current user will still be in queue.
-        }
+    /**
+     * calculate how many slots are there in a day for the game based on its open and close time and slot duration.
+     *
+     * @param game
+     * @return number of slots in a day
+     */
+    private int calculateDailySlotCount(Game game) {
+        long minutes = Duration.between(game.getOpenTime(), game.getCloseTime()).toMinutes();
+        return (int) (minutes / game.getSlotDuration());
+    }
 
-        throw new ConflictException("Invalid action");
+    private Game getGameEntityById(UUID id) {
+        Game game = gameRepository.findById(id).orElse(null);
+        if (game == null)
+            throw new NotFoundException("Game not found");
+        return game;
     }
 }
