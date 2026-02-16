@@ -1,24 +1,39 @@
 package com.aayush.lad.hrms.modules.user.controllers;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.aayush.lad.hrms.core.result.Result;
 import com.aayush.lad.hrms.core.result.ResultMapper;
 import com.aayush.lad.hrms.core.security.JwtUtil;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.NotificationResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.UserDetailResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.UserSummaryResponse;
-import com.aayush.lad.hrms.modules.user.dtos.user.write.*;
+import com.aayush.lad.hrms.modules.user.dtos.user.write.CreateUserProfileRequest;
+import com.aayush.lad.hrms.modules.user.dtos.user.write.LoginUserRequest;
+import com.aayush.lad.hrms.modules.user.dtos.user.write.RegisterUserRequest;
+import com.aayush.lad.hrms.modules.user.dtos.user.write.UpdateUserByAdminRequest;
+import com.aayush.lad.hrms.modules.user.dtos.user.write.UpdateUserBySelfRequest;
+import com.aayush.lad.hrms.modules.user.dtos.user.write.UpdateUserRolesRequest;
 import com.aayush.lad.hrms.modules.user.services.UserService;
+
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
@@ -62,7 +77,7 @@ public class UserController {
     //    @PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PostMapping("/profile")
     public ResponseEntity<Result<Void>> createProfile(
-            @Valid @ModelAttribute CreateUserProfileRequest request) {
+            @Valid @RequestBody CreateUserProfileRequest request) {
         userService.createProfile(request);
         return ResultMapper.handle(HttpStatus.CREATED, "Profile created");
     }
@@ -70,7 +85,7 @@ public class UserController {
     //    @PutMapping(value = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PostMapping("/me")
     public ResponseEntity<Result<Void>> updateBySelf(
-            @Valid @ModelAttribute UpdateUserBySelfRequest request) {
+            @Valid @RequestBody UpdateUserBySelfRequest request) {
         userService.update(request);
         return ResultMapper.handle(HttpStatus.CREATED, "User updated");
     }
@@ -79,7 +94,7 @@ public class UserController {
     @PostMapping("/{id}")
     public ResponseEntity<Result<Void>> updateByAdmin(
             @PathVariable("id") UUID id,
-            @Valid @ModelAttribute UpdateUserByAdminRequest request) {
+            @Valid @RequestBody UpdateUserByAdminRequest request) {
         request.setUserId(id);
         userService.update(request);
         return ResultMapper.handle(HttpStatus.CREATED, "User updated");

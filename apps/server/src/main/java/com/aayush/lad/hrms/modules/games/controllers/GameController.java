@@ -1,20 +1,34 @@
 package com.aayush.lad.hrms.modules.games.controllers;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.aayush.lad.hrms.core.result.Result;
 import com.aayush.lad.hrms.core.result.ResultMapper;
 import com.aayush.lad.hrms.modules.games.dtos.read.GameResponse;
 import com.aayush.lad.hrms.modules.games.dtos.read.GameSummaryResponse;
 import com.aayush.lad.hrms.modules.games.dtos.read.QueuedSlotOfferResponse;
-import com.aayush.lad.hrms.modules.games.dtos.write.*;
+import com.aayush.lad.hrms.modules.games.dtos.write.BookSlotRequest;
+import com.aayush.lad.hrms.modules.games.dtos.write.CreateGameRequest;
+import com.aayush.lad.hrms.modules.games.dtos.write.QueuedSlotActionRequest;
+import com.aayush.lad.hrms.modules.games.dtos.write.UpdateGameRequest;
+import com.aayush.lad.hrms.modules.games.dtos.write.WaitAnySlotRequest;
+import com.aayush.lad.hrms.modules.games.dtos.write.WaitSpecificSlotRequest;
 import com.aayush.lad.hrms.modules.games.services.GameService;
+
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
