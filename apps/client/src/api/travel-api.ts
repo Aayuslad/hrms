@@ -4,11 +4,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import { toast } from 'sonner';
 
-type TravelPlanSummary = components['schemas']['TravelPlanSummaryResponse'];
-type TravelPlan = components['schemas']['TravelPlanResponse'];
+export type TravelPlanSummary = components['schemas']['TravelPlanSummaryResponse'];
+export type TravelPlan = components['schemas']['TravelPlanResponse'];
 
-type CreateTravelPlanRequest = components['schemas']['CreateTravelPlanRequest'];
-type UpdateTravelPlanRequest = components['schemas']['UpdateTravelPlanRequest'];
+export type CreateTravelPlanRequest = components['schemas']['CreateTravelPlanRequest'];
+export type UpdateTravelPlanRequest = components['schemas']['UpdateTravelPlanRequest'];
 
 export function useGetTravelPlans() {
     return useQuery({

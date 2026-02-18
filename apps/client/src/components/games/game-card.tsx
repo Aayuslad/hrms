@@ -13,22 +13,21 @@ import { useNavigate } from 'react-router-dom';
 
 type Props = {
     game: GameSummary;
-    isReversed?: boolean;
 };
 
-const GameCard = ({ game, isReversed = false }: Props) => {
+const GameCard = ({ game }: Props) => {
     const navigate = useNavigate();
 
     return (
         <Card
-            className={`max-w-3xl py-0 cursor-pointer hover:shadow-lg transition-shadow sm:flex sm:gap-0 ${isReversed ? 'sm:flex-row-reverse' : 'sm:flex-row'}`}
+            className={`max-w-3xl py-0 cursor-pointer hover:shadow-lg transition-shadow sm:flex sm:gap-0 sm:flex-row`}
             onClick={() => navigate(`${game.id}`)}
         >
             <CardContent className="px-0 sm:w-64">
                 <img
                     src="https://cdn.shadcnstudio.com/ss-assets/components/card/image-3.png"
                     alt="Game Banner"
-                    className={`h-full w-full object-cover ${isReversed ? 'sm:rounded-r-xl' : 'sm:rounded-l-xl'}`}
+                    className={`h-full w-full object-cover sm:rounded-l-xl`}
                 />
             </CardContent>
 

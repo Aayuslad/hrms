@@ -23,6 +23,7 @@ import { GameDetailsPage } from '@/pages/games/game-details-page';
 // loaders / query client for prefetching
 import { queryClient } from '@/lib/query-client';
 import { gamesLoader, gameLoader } from '@/api/games-api';
+import { TravelPlanDetailsPage } from '@/pages/travelPlans/travel-plan-details-page';
 
 const router = createBrowserRouter([
     {
@@ -55,17 +56,21 @@ const router = createBrowserRouter([
             },
             {
                 path: 'games',
-                element: <GamesPage />,   
+                element: <GamesPage />,
                 loader: gamesLoader(queryClient),
             },
             {
                 path: 'games/:gameId',
-                element: <GameDetailsPage />,   
+                element: <GameDetailsPage />,
                 loader: gameLoader(queryClient),
             },
             {
                 path: 'travel-plans',
                 element: <TravelPlans />,
+            },
+            {
+                path: 'travel-plans/:travelPlanId',
+                element: <TravelPlanDetailsPage />,
             },
             {
                 path: 'org-chart',
