@@ -521,6 +521,35 @@
             }
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "game-controller"
+        ],
+        "operationId": "delete_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/expense-categories/{id}": {
@@ -567,7 +596,7 @@
         "tags": [
           "expense-category-controller"
         ],
-        "operationId": "delete_1",
+        "operationId": "delete_2",
         "parameters": [
           {
             "name": "id",
@@ -637,7 +666,7 @@
         "tags": [
           "document-type-controller"
         ],
-        "operationId": "delete_2",
+        "operationId": "delete_3",
         "parameters": [
           {
             "name": "id",
@@ -707,7 +736,7 @@
         "tags": [
           "designation-controller"
         ],
-        "operationId": "delete_3",
+        "operationId": "delete_4",
         "parameters": [
           {
             "name": "id",
@@ -777,7 +806,7 @@
         "tags": [
           "department-controller"
         ],
-        "operationId": "delete_4",
+        "operationId": "delete_5",
         "parameters": [
           {
             "name": "id",
@@ -847,16 +876,18 @@
               "type": "string",
               "format": "uuid"
             }
-          },
-          {
-            "name": "request",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/UpdateUserByAdminRequest"
-            }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserByAdminRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -907,16 +938,16 @@
           "user-controller"
         ],
         "operationId": "createProfile",
-        "parameters": [
-          {
-            "name": "request",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/CreateUserProfileRequest"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserProfileRequest"
+              }
             }
-          }
-        ],
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -955,16 +986,16 @@
           "user-controller"
         ],
         "operationId": "updateBySelf",
-        "parameters": [
-          {
-            "name": "request",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/UpdateUserBySelfRequest"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserBySelfRequest"
+              }
             }
-          }
-        ],
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -1967,10 +1998,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UserSummaryResponse"
-                  }
+                  "$ref": "#/components/schemas/ResultListUserSummaryResponse"
                 }
               }
             }
@@ -1991,6 +2019,26 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ResultListNotificationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/details": {
+      "get": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "getAllUsersDetails",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultListUserDetailResponse"
                 }
               }
             }
@@ -3226,6 +3274,27 @@
           }
         }
       },
+      "ResultListUserSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserSummaryResponse"
+            }
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
       "UserSummaryResponse": {
         "type": "object",
         "properties": {
@@ -3280,6 +3349,27 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/NotificationResponse"
+            }
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ResultListUserDetailResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserDetailResponse"
             }
           },
           "message": {

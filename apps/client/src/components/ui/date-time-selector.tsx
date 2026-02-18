@@ -19,11 +19,18 @@ interface Props {
     name: string;
     setDateTime: (dateTime: Date) => void;
     label?: string;
+    defaultDate?: Date;
     disabled?: boolean;
 }
 
-const DateTimeSelector = ({ name, label, disabled, setDateTime }: Props) => {
-    const [date, setDate] = React.useState<Date>();
+const DateTimeSelector = ({
+    name,
+    label,
+    disabled,
+    defaultDate,
+    setDateTime,
+}: Props) => {
+    const [date, setDate] = React.useState(defaultDate);
     const [isOpen, setIsOpen] = React.useState(false);
 
     const hours = Array.from({ length: 24 }, (_, i) => i);

@@ -1,3 +1,5 @@
+import { RolesTable } from '@/components/configurations/roles/roles-table';
+
 export function RolePage() {
     return (
         <div className=" h-full">
@@ -10,14 +12,13 @@ export function RolePage() {
                     </p>
                 </div>
                 <div className="w-[230px] mb-4">
-                    {/* <CreateJobOpeningSheet visibleTo={['Admin', 'Recruiter']} /> */}
                 </div>
             </div>
 
             <div className="w-full flex justify-evenly pt-10">
                 <div className="w-full flex flex-col items-center">
                     <div className="mr-12 w-fit">
-                        {/* <JobOpeningsTable /> */}
+                        <RolesTable />
                     </div>
                 </div>
             </div>

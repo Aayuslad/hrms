@@ -16,7 +16,7 @@ import { Loader2 } from 'lucide-react';
 import {
     useUpdateTravelPlan,
     type TravelPlan,
-    type UpdateTravelPlanRequest
+    type UpdateTravelPlanRequest,
 } from '@/api/travel-api';
 import { useGetUserList, type UserSummary } from '@/api/user-api';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -46,7 +46,7 @@ type Props = {
     travelPlan: TravelPlan;
 };
 
-const CreateTravelPlanDialog = ({ travelPlan }: Props) => {
+const UpdateTravelPlanDialog = ({ travelPlan }: Props) => {
     const updateTravelPlanMutation = useUpdateTravelPlan();
     const { data: users = [] } = useGetUserList();
     const [selected, setSelected] = useState<string[]>([]);
@@ -96,7 +96,9 @@ const CreateTravelPlanDialog = ({ travelPlan }: Props) => {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button>Update</Button>
+                <Button variant="ghost" className="w-full">
+                    Update
+                </Button>
             </DialogTrigger>
 
             <DialogContent className="flex max-h-[min(700px,85vh)] flex-col gap-0 p-0 sm:max-w-lg">
@@ -143,6 +145,13 @@ const CreateTravelPlanDialog = ({ travelPlan }: Props) => {
                                     <DateTimeSelector
                                         name="startDate"
                                         label="Start Date"
+                                        defaultDate={
+                                            new Date(
+                                                form.getValues(
+                                                    'startAt'
+                                                ) as string
+                                            )
+                                        }
                                         setDateTime={(date: Date) =>
                                             form.setValue(
                                                 'startAt',
@@ -153,6 +162,13 @@ const CreateTravelPlanDialog = ({ travelPlan }: Props) => {
                                     <DateTimeSelector
                                         name="endDate"
                                         label="End Date"
+                                        defaultDate={
+                                            new Date(
+                                                form.getValues(
+                                                    'endAt'
+                                                ) as string
+                                            )
+                                        }
                                         setDateTime={(date: Date) =>
                                             form.setValue(
                                                 'endAt',
@@ -167,7 +183,7 @@ const CreateTravelPlanDialog = ({ travelPlan }: Props) => {
                                         name={'maxExpenseAmountPerDay'}
                                         control={form.control}
                                         label="Max expense amount / Day (INR)"
-                                        maxValue={0}
+                                        // maxValue={}
                                         step={100}
                                     />
                                 </div>
@@ -277,4 +293,4 @@ const CreateTravelPlanDialog = ({ travelPlan }: Props) => {
     );
 };
 
-export default CreateTravelPlanDialog;
+export default UpdateTravelPlanDialog;

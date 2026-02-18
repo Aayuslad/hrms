@@ -1,3 +1,7 @@
+import { CreateDesignationDialog } from '@/components/configurations/designations/create-designation-dialog';
+import { DesignationsTable } from '@/components/configurations/designations/designations-table';
+import { Outlet } from 'react-router';
+
 export function DesignationPage() {
     return (
         <div className=" h-full">
@@ -10,14 +14,15 @@ export function DesignationPage() {
                     </p>
                 </div>
                 <div className="w-[230px] mb-4">
-                    {/* <CreateJobOpeningSheet visibleTo={['Admin', 'Recruiter']} /> */}
+                    <CreateDesignationDialog visibleTo={['Admin', 'HR']} />
                 </div>
             </div>
 
             <div className="w-full flex justify-evenly pt-10">
                 <div className="w-full flex flex-col items-center">
                     <div className="mr-12 w-fit">
-                        {/* <JobOpeningsTable /> */}
+                        <DesignationsTable />
+                        <Outlet />
                     </div>
                 </div>
             </div>

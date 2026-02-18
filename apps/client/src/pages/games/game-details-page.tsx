@@ -10,21 +10,37 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Spinner } from '@/components/ui/spinner';
 import { Calendar, Clock, Dot, Users } from 'lucide-react';
-import { useLoaderData, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 export function GameDetailsPage() {
     const { gameId } = useParams<{ gameId?: string }>();
-    const initialData = useLoaderData<Game | null>();
-    const { data: game } = useGetGame(gameId, { initialData });
+    const { data: game, isLoading, isError } = useGetGame(gameId);
 
-    if (!game) {
-        return <p>Game not found.</p>;
+    if (isLoading) {
+        return (
+            <div className="w-full h-[80vh] flex items-center justify-center">
+                <Spinner className="size-8" />
+            </div>
+        );
     }
 
-    const handleEdit = () => {};
+    if (isError) {
+        return (
+            <div className="w-full h-[80vh] flex items-center justify-center">
+                Error fetching data...!
+            </div>
+        );
+    }
 
-    const handleDelete = () => {};
+    if (!isLoading && !isError && !game) {
+        return (
+            <div className="w-full h-[80vh] flex items-center justify-center">
+                404 - Not found...!
+            </div>
+        );
+    }
 
     return (
         <div className=" h-full">
@@ -37,14 +53,14 @@ export function GameDetailsPage() {
                                 <span>
                                     <Clock className="h-3 w-3 stroke-2 font-bold" />
                                 </span>
-                                <span>{game.slotDuration} mins / slot</span>
+                                <span>{game?.slotDuration} mins / slot</span>
                             </span>
 
                             <Dot />
 
                             <span className="flex items-center gap-2">
                                 <Users className="h-3 w-3" />
-                                <span>Max {game.maxSlotPlayers} players</span>
+                                <span>Max {game?.maxSlotPlayers} players</span>
                             </span>
 
                             <Dot />
@@ -52,7 +68,7 @@ export function GameDetailsPage() {
                             <span className="flex items-center gap-2">
                                 <Clock className="h-3 w-3 stroke-2 font-bold" />
                                 <span>
-                                    {game.openTime} – {game.closeTime}
+                                    {game?.openTime} – {game?.closeTime}
                                 </span>
                             </span>
 
@@ -61,24 +77,27 @@ export function GameDetailsPage() {
                             <span className="flex items-center gap-2">
                                 <Calendar className="h-3 w-3" />
                                 <span>
-                                    {game.openingDayOfWeek} –{' '}
-                                    {game.closingDayOfWeek}
+                                    {game?.openingDayOfWeek} –{' '}
+                                    {game?.closingDayOfWeek}
                                 </span>
                             </span>
                         </div>
                     </div>
                 </div>
                 <div className="mr-10 mb-4 flex gap-2">
-                    <BookSlotDialog gameId={game.id ?? ''} maxPlayers={game.maxSlotPlayers ?? 1} />
+                    <BookSlotDialog
+                        gameId={game?.id ?? ''}
+                        maxPlayers={game?.maxSlotPlayers ?? 1}
+                    />
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline">Other Actions</Button>
                         </DropdownMenuTrigger>
 
                         <DropdownMenuContent align="end">
-                            <UpdateGameDialog game={game} />
+                            <UpdateGameDialog game={game as Game} />
                             <DropdownMenuSeparator />
-                            <DeleteGameDialog gameId={game.id ?? ''} />
+                            <DeleteGameDialog gameId={game?.id ?? ''} />
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

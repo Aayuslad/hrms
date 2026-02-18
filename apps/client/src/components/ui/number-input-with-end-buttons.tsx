@@ -28,8 +28,8 @@ export function NumberInputWithEndButtons({
     maxValue,
     step = 1,
     placeholder,
-    disabled,
     className,
+    disabled = false,
 }: NumberInputWithEndButtonsProps) {
     return (
         <Controller

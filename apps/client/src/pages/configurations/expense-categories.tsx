@@ -1,3 +1,7 @@
+import { CreateExpenseCatrgoryDialog } from '@/components/configurations/expenseCategories/create-expense-category-dialog';
+import { ExpenseCatrgoriesTable } from '@/components/configurations/expenseCategories/expense-categories-table';
+import { Outlet } from 'react-router';
+
 export function ExpenseCatrgoryPage() {
     return (
         <div className=" h-full">
@@ -10,14 +14,15 @@ export function ExpenseCatrgoryPage() {
                     </p>
                 </div>
                 <div className="w-[230px] mb-4">
-                    {/* <CreateJobOpeningSheet visibleTo={['Admin', 'Recruiter']} /> */}
+                    <CreateExpenseCatrgoryDialog visibleTo={['Admin', 'HR']} />
                 </div>
             </div>
 
             <div className="w-full flex justify-evenly pt-10">
                 <div className="w-full flex flex-col items-center">
                     <div className="mr-12 w-fit">
-                        {/* <JobOpeningsTable /> */}
+                        <ExpenseCatrgoriesTable />
+                        <Outlet />
                     </div>
                 </div>
             </div>

@@ -13,25 +13,27 @@ import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
 
-    Optional<User> findByUserName(String userName);
+        Optional<User> findByUserName(String userName);
 
-    boolean existsByEmail(String email);
+        boolean existsByEmail(String email);
 
-    boolean existsByUserName(String userName);
+        boolean existsByUserName(String userName);
 
-    Optional<User> findByUserNameOrEmail(String userName, String email);
+        Optional<User> findByUserNameOrEmail(String userName, String email);
 
-    @Query("select n from Notification n " +
-            " where n.user.id = :userId " +
-            " order by n.createdAt desc")
-    List<Notification> fetchAllNotifications(
-            UUID userId
-    );
+        @Query("select n from Notification n " +
+                        " where n.user.id = :userId " +
+                        " order by n.createdAt desc")
+        List<Notification> fetchAllNotifications(
+                        UUID userId);
 
-    @EntityGraph(attributePaths = {
-            "roles"
-    })
-    @Query("SELECT u FROM User u WHERE u.userName = :userName")
-    Optional<User> findUserByUserNameAndWithRoles(@Param("userName") String userName);
+        @EntityGraph(attributePaths = {
+                        "roles"
+        })
+        @Query("SELECT u FROM User u WHERE u.userName = :userName")
+        Optional<User> findUserByUserNameAndWithRoles(@Param("userName") String userName);
+
+        @EntityGraph(attributePaths = { "roles" })
+        @Query("SELECT u FROM User u")
+        List<User> findAllWithRoles();
 }
-

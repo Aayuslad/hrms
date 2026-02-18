@@ -1,4 +1,9 @@
 import { useGetTravelPlan } from '@/api/travel-api';
+import DeleteTravelPlanDialog from '@/components/travelPlans/delete-travel-plan-dialog';
+import { MyDocuments } from '@/components/travelPlans/my-documents';
+import { MyExpenses } from '@/components/travelPlans/my-expenses';
+import { Participants } from '@/components/travelPlans/participants';
+import UpdateTravelPlanDialog from '@/components/travelPlans/update-travel-plan-dialog';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -7,8 +12,27 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Spinner } from '@/components/ui/spinner';
-import { Calendar, Dot, MapPin } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Calendar, MapPin } from 'lucide-react';
 import { useParams } from 'react-router-dom';
+
+const tabs = [
+    {
+        name: 'My Expenses',
+        value: 'my-expenses',
+        content: <MyExpenses />,
+    },
+    {
+        name: 'My Documents',
+        value: 'my-documents',
+        content: <MyDocuments />,
+    },
+    {
+        name: 'Participants',
+        value: 'participants',
+        content: <Participants />,
+    },
+];
 
 export function TravelPlanDetailsPage() {
     const { travelPlanId } = useParams<{ travelPlanId?: string }>();
@@ -59,11 +83,11 @@ export function TravelPlanDetailsPage() {
                                 <span>
                                     {new Date(
                                         travelPlan.startAt as string
-                                    ).toLocaleDateString()}{' '}
+                                    ).toLocaleString()}{' '}
                                     –{' '}
                                     {new Date(
                                         travelPlan.endAt as string
-                                    ).toLocaleDateString()}
+                                    ).toLocaleString()}
                                 </span>
                             </span>
                         </div>
@@ -81,16 +105,42 @@ export function TravelPlanDetailsPage() {
                         </DropdownMenuTrigger>
 
                         <DropdownMenuContent align="end">
-                            {/* <UpdateGameDialog game={game} /> */}
+                            <UpdateTravelPlanDialog travelPlan={travelPlan} />
                             <DropdownMenuSeparator />
-                            {/* <DeleteGameDialog gameId={game.id ?? ''} /> */}
+                            <DeleteTravelPlanDialog
+                                travelPlanId={travelPlan.id}
+                            />
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
             </div>
 
             <div className="w-full flex justify-evenly pt-2 pb-10">
-                <div className="w-full flex flex-col items-center px-5"></div>
+                <div className="w-full flex flex-col items-center px-8">
+                    <div className="w-[700px]">
+                        <Tabs defaultValue="explore" className="gap-4">
+                            <TabsList className="bg-background rounded-none border-b p-0">
+                                {tabs.map((tab) => (
+                                    <TabsTrigger
+                                        key={tab.value}
+                                        value={tab.value}
+                                        className="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+                                    >
+                                        {tab.name}
+                                    </TabsTrigger>
+                                ))}
+                            </TabsList>
+
+                            {tabs.map((tab) => (
+                                <TabsContent key={tab.value} value={tab.value}>
+                                    <p className="text-muted-foreground text-sm">
+                                        {tab.content}
+                                    </p>
+                                </TabsContent>
+                            ))}
+                        </Tabs>
+                    </div>
+                </div>
             </div>
         </div>
     );

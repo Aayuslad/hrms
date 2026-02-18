@@ -18,8 +18,8 @@ import com.aayush.lad.hrms.modules.user.repositories.DesignationRepository;
 import com.aayush.lad.hrms.modules.user.repositories.RoleRepository;
 import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -144,16 +144,22 @@ public class UserService {
 
     public List<UserSummaryResponse> getUsersSummary() {
         List<User> users = userRepository.findAll();
+
         return users.stream().map(x -> UserSummaryResponse
                 .builder()
                 .id(x.getId())
                 .email(x.getEmail())
                 .userName(x.getUserName())
-//                .firstName(x.getProfile().getFirstName())
-//                .lastName(x.getProfile().getLastName())
-//                .avatarUrl(x.getProfile().getLastName())
+                .firstName(x.getProfile() != null ? x.getProfile().getFirstName() : null)
+                .lastName(x.getProfile() != null ? x.getProfile().getLastName() : null)
+                .avatarUrl(x.getProfile() != null ? x.getProfile().getAvatarUrl() : null)
                 .build()
         ).toList();
+    }
+
+    public List<UserDetailResponse> getAllUsersDetails() {
+        List<User> users = userRepository.findAllWithRoles();
+        return users.stream().map(userMapper::toDetailResponse).toList();
     }
 
     public void updateUserRoles(UpdateUserRolesRequest request) {

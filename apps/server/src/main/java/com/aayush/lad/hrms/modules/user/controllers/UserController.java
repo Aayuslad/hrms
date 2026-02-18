@@ -118,6 +118,12 @@ public class UserController {
         return ResultMapper.handle(HttpStatus.OK, responseDto);
     }
 
+    @GetMapping("/details")
+    public ResponseEntity<Result<List<UserDetailResponse>>> getAllUsersDetails() {
+        List<UserDetailResponse> responseDto = userService.getAllUsersDetails();
+        return ResultMapper.handle(HttpStatus.OK, responseDto);
+    }
+
     @PutMapping("/{id}/roles")
     public ResponseEntity<Result<Void>> updateRoles(
             @PathVariable("id") UUID id,

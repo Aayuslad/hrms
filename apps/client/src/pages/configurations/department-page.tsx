@@ -1,3 +1,7 @@
+import { CreateDepartmentDialog } from '@/components/configurations/departments/create-department-dialog';
+import { DepartmentsTable } from '@/components/configurations/departments/departments-table';
+import { Outlet } from 'react-router';
+
 export function DepartmentPage() {
     return (
         <div className=" h-full">
@@ -10,14 +14,15 @@ export function DepartmentPage() {
                     </p>
                 </div>
                 <div className="w-[230px] mb-4">
-                    {/* <CreateJobOpeningSheet visibleTo={['Admin', 'Recruiter']} /> */}
+                    <CreateDepartmentDialog visibleTo={['Admin', 'HR']} />
                 </div>
             </div>
 
             <div className="w-full flex justify-evenly pt-10">
                 <div className="w-full flex flex-col items-center">
                     <div className="mr-12 w-fit">
-                        {/* <JobOpeningsTable /> */}
+                        <DepartmentsTable />
+                        <Outlet />
                     </div>
                 </div>
             </div>

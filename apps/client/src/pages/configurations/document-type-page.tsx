@@ -1,3 +1,7 @@
+import { CreateDocumentTypeDialog } from '@/components/configurations/documentTypes/create-document-type-dialog';
+import { DocumentTypesTable } from '@/components/configurations/documentTypes/document-types-table';
+import { Outlet } from 'react-router';
+
 export function DocumentTypePage() {
     return (
         <div className=" h-full">
@@ -10,14 +14,15 @@ export function DocumentTypePage() {
                     </p>
                 </div>
                 <div className="w-[230px] mb-4">
-                    {/* <CreateJobOpeningSheet visibleTo={['Admin', 'Recruiter']} /> */}
+                    <CreateDocumentTypeDialog visibleTo={['Admin', 'HR']} />
                 </div>
             </div>
 
             <div className="w-full flex justify-evenly pt-10">
                 <div className="w-full flex flex-col items-center">
                     <div className="mr-12 w-fit">
-                        {/* <JobOpeningsTable /> */}
+                        <DocumentTypesTable />
+                        <Outlet />
                     </div>
                 </div>
             </div>

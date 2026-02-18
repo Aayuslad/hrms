@@ -30,7 +30,7 @@ const TravelPlanCard = ({ travelPlan }: Props) => {
                 </div>
             </CardHeader>
             <CardContent className="space-y-1">
-                <div className="flex gap-6 text-sm  text-muted-foreground">
+                <div className="flex flex-col gap-2 text-sm  text-muted-foreground">
                     <div className="flex items-center gap-2">
                         <span>
                             <MapPin className="h-4 w-4" />
@@ -45,11 +45,11 @@ const TravelPlanCard = ({ travelPlan }: Props) => {
                         <span>
                             {new Date(
                                 travelPlan.startAt as string
-                            ).toLocaleDateString()}{' '}
+                            ).toLocaleString()}{' '}
                             –{' '}
                             {new Date(
                                 travelPlan.endAt as string
-                            ).toLocaleDateString()}
+                            ).toLocaleString()}
                         </span>
                     </div>
                 </div>

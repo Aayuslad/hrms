@@ -1,18 +1,10 @@
-import { useLoaderData } from 'react-router-dom';
-import { useGetGames, type GameSummary } from '@/api/games-api';
+import { useGetGames } from '@/api/games-api';
+import CreateGameDialog from '@/components/games/create-game-dialog';
 import GameCard from '@/components/games/game-card';
 import { Spinner } from '@/components/ui/spinner';
-import CreateGameDialog from '@/components/games/create-game-dialog';
 
 export function Index() {
-    const initialData = useLoaderData<GameSummary[]>();
-    const {
-        data = initialData,
-        isLoading,
-        isError,
-    } = useGetGames({
-        initialData,
-    });
+    const { data: games, isLoading, isError } = useGetGames();
 
     if (isLoading) {
         return (
@@ -25,7 +17,15 @@ export function Index() {
     if (isError) {
         return (
             <div className="w-full h-[80vh] flex items-center justify-center">
-                Error fetching data
+                Error fetching data...!
+            </div>
+        );
+    }
+
+    if (!isLoading && !isError && !games) {
+        return (
+            <div className="w-full h-[80vh] flex items-center justify-center">
+                404 - Not found...!
             </div>
         );
     }
@@ -48,7 +48,7 @@ export function Index() {
             <div className="w-full flex justify-evenly py-5 px-8">
                 <div className="w-full flex flex-col items-center">
                     <div className="mx-auto max-w-7xl px-5 py-12 grid gap-8 md:grid-cols-2">
-                        {data?.map((game) => (
+                        {games?.map((game) => (
                             <GameCard key={game.id} game={game} />
                         ))}
                     </div>

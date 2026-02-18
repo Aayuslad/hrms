@@ -1,9 +1,12 @@
 import { axiosClient } from '@/lib/axios-client';
+import { queryClient } from '@/lib/query-client';
+import { useAppStore } from '@/store';
 import type { components } from '@/types/generated/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { useShallow } from 'zustand/react/shallow';
 
 export type User = components['schemas']['UserDetailResponse'];
 export type UserSummary = components['schemas']['UserSummaryResponse'];
@@ -16,6 +19,7 @@ export type UpdateUserByAdminRequest =
     components['schemas']['UpdateUserByAdminRequest'];
 export type UpdateUserRolesRequest =
     components['schemas']['UpdateUserRolesRequest'];
+export type Notification = components['schemas']['NotificationResponse'];
 
 export function useGetUserById(id?: string) {
     return useQuery({
@@ -32,6 +36,11 @@ export function useGetUserById(id?: string) {
 
 export function useGetMe() {
     const navigate = useNavigate();
+    const { setUserRoles } = useAppStore(
+        useShallow((s) => ({
+            setUserRoles: s.setUserRoles,
+        }))
+    );
 
     return useQuery({
         queryKey: ['me'],
@@ -39,6 +48,11 @@ export function useGetMe() {
             try {
                 const { data } = await axiosClient.get<{ data?: User }>(
                     '/users/me'
+                );
+                setUserRoles(
+                    data?.data?.roles?.length
+                        ? data?.data?.roles?.map((roles) => roles.name ?? '')
+                        : []
                 );
                 if (!data.data?.profile) {
                     navigate('/create-user-profile');
@@ -63,6 +77,24 @@ export function useGetUserList() {
         },
     });
 }
+
+const notificationsQuery = {
+    queryKey: ['notifications'] as const,
+    queryFn: async (): Promise<Notification[]> => {
+        const { data } = await axiosClient.get<{ data?: Notification[] }>(
+            '/notifications'
+        );
+        return data.data || [];
+    },
+};
+
+export function useGetNotificationns() {
+    return useQuery<Notification[], AxiosError>(notificationsQuery);
+}
+
+export const notificationsLoader = async () => {
+    return await queryClient.ensureQueryData(notificationsQuery);
+};
 
 export function useLoginUser() {
     const queryClient = useQueryClient();
@@ -210,6 +242,19 @@ export function useEditUserRoles() {
                     'Failed to update user roles'
             );
             console.error('update roles failed', error);
+        },
+    });
+}
+
+/// all the employees details, for admin use only
+export function useGetAllUsersDetails() {
+    return useQuery({
+        queryKey: ['users-details'],
+        queryFn: async (): Promise<User[]> => {
+            const { data } = await axiosClient.get<{ data?: User[] }>(
+                '/users/details'
+            );
+            return data.data ?? [];
         },
     });
 }
