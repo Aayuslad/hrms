@@ -144,7 +144,16 @@ public class UserService {
 
     public List<UserSummaryResponse> getUsersSummary() {
         List<User> users = userRepository.findAll();
-        return userMapper.toSummaryResponseList(users);
+        return users.stream().map(x -> UserSummaryResponse
+                .builder()
+                .id(x.getId())
+                .email(x.getEmail())
+                .userName(x.getUserName())
+//                .firstName(x.getProfile().getFirstName())
+//                .lastName(x.getProfile().getLastName())
+//                .avatarUrl(x.getProfile().getLastName())
+                .build()
+        ).toList();
     }
 
     public void updateUserRoles(UpdateUserRolesRequest request) {

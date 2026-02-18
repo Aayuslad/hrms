@@ -1,7 +1,7 @@
 export function Index() {
     return (
         <div className=" h-full">
-            <div className="bg-muted dark:bg-slate-800/40 h-[100px] w-full flex items-center">
+            <div className="bg-muted  h-[100px] w-full flex items-center">
                 <div className="px-10 flex-1">
                     <h1 className="text-2xl font-bold">Travel Plans</h1>
                     <p>

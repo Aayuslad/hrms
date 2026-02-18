@@ -12,11 +12,13 @@ import java.util.UUID;
 
 public interface GameRepository extends JpaRepository<Game, UUID> {
 
+    boolean existsByName(String name);
+
     /**
      * Find a game with all its associated user stats eager-loaded.
-     * 
+     * <p>
      * Used by GameService.getOne() to fetch game details along with stats.
-     * 
+     *
      * @param id game ID
      * @return Optional containing game with stats if found
      */
@@ -26,10 +28,10 @@ public interface GameRepository extends JpaRepository<Game, UUID> {
 
     /**
      * Count CONFIRMED or PENDING slots for a game.
-     * 
+     * <p>
      * Used by QueueAllocationService to determine if a cycle should advance.
      * A game is ready for new cycle only when this count is zero (queue empty, all slots completed/cancelled).
-     * 
+     *
      * @param gameId the game ID
      * @return count of active (unresolved) slots
      */

@@ -1,42 +1,85 @@
 import { axiosClient } from '@/lib/axios-client';
 import type { components } from '@/types/generated/api';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+    useMutation,
+    useQuery,
+    useQueryClient,
+    type QueryClient,
+    type UseQueryOptions,
+} from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-type GameSummary = components['schemas']['GameSummaryResponse'];
-type Game = components['schemas']['GameResponse'];
+export type GameSummary = components['schemas']['GameSummaryResponse'];
+export type Game = components['schemas']['GameResponse'];
 
-type CreateGameRequest = components['schemas']['CreateGameRequest'];
-type WaitAnySlotRequest = components['schemas']['WaitAnySlotRequest'];
-type BookSlotRequest = components['schemas']['BookSlotRequest'];
-type WaitSpecificSlotRequest = components['schemas']['WaitSpecificSlotRequest'];
-type QueuedSlotActionRequest = components['schemas']['QueuedSlotActionRequest'];
+export type CreateGameRequest = components['schemas']['CreateGameRequest'];
+export type UpdateGameRequest = components['schemas']['UpdateGameRequest'];
+export type WaitAnySlotRequest = components['schemas']['WaitAnySlotRequest'];
+export type BookSlotRequest = components['schemas']['BookSlotRequest'];
+export type WaitSpecificSlotRequest =
+    components['schemas']['WaitSpecificSlotRequest'];
+export type QueuedSlotActionRequest =
+    components['schemas']['QueuedSlotActionRequest'];
 
-export function useGetGames() {
-    return useQuery({
-        queryKey: ['games'],
-        queryFn: async (): Promise<GameSummary[]> => {
-            const { data } = await axiosClient.get<{ data?: GameSummary[] }>(
-                '/games'
-            );
-            return data.data || [];
-        },
+export const gamesQuery = () => ({
+    queryKey: ['games'] as const,
+    queryFn: async (): Promise<GameSummary[]> => {
+        const { data } = await axiosClient.get<{ data?: GameSummary[] }>(
+            '/games'
+        );
+        return data.data || [];
+    },
+});
+
+export const gameQuery = (id: string) => ({
+    queryKey: ['game', id] as const,
+    queryFn: async (): Promise<Game | null> => {
+        const { data } = await axiosClient.get<{ data?: Game }>(`/games/${id}`);
+        return data.data ?? null;
+    },
+});
+
+export function useGetGames(
+    options?: Omit<
+        UseQueryOptions<GameSummary[], AxiosError>,
+        'queryKey' | 'queryFn'
+    >
+) {
+    return useQuery<GameSummary[], AxiosError>({
+        ...gamesQuery(),
+        ...options,
     });
 }
 
-export function useGetGame(id?: string) {
-    return useQuery({
-        queryKey: ['game', id],
-        queryFn: async (): Promise<Game | null> => {
-            const { data } = await axiosClient.get<{ data?: Game }>(
-                `/games/${id}`
-            );
-            return data.data ?? null;
-        },
+export function useGetGame(
+    id?: string,
+    options?: Omit<
+        UseQueryOptions<Game | null, AxiosError>,
+        'queryKey' | 'queryFn' | 'enabled'
+    >
+) {
+    return useQuery<Game | null, AxiosError>({
+        ...gameQuery(id ?? ''),
         enabled: !!id,
+        ...options,
     });
 }
+
+export const gamesLoader = (queryClient: QueryClient) => async () => {
+    return await queryClient.ensureQueryData(gamesQuery());
+};
+
+export const gameLoader =
+    (queryClient: QueryClient) =>
+    async ({ params }: { params: { gameId?: string } }) => {
+        const id = params.gameId;
+        if (!id) {
+            throw new Response('Game not found', { status: 404 });
+        }
+        return await queryClient.ensureQueryData(gameQuery(id));
+    };
 
 export function useCreateGame() {
     const queryClient = useQueryClient();
@@ -49,13 +92,60 @@ export function useCreateGame() {
             toast.success('Game created');
             queryClient.invalidateQueries({ queryKey: ['games'] });
         },
-        onError: (error: AxiosError<{ error: string }>) => {
+        onError: (error: AxiosError<{ message: string }>) => {
             toast.error(
-                error.response?.data?.error ||
+                error.response?.data?.message ||
                     error.message ||
                     'Failed to create game'
             );
             console.error('Failed to create game', error);
+        },
+    });
+}
+
+export function useUpdateGame() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (payload: UpdateGameRequest): Promise<void> => {
+            await axiosClient.put(`/games/${payload.id}`, payload);
+        },
+        onSuccess: (_, payload) => {
+            toast.success('Game updated');
+            queryClient.invalidateQueries({ queryKey: ['games'] });
+            queryClient.invalidateQueries({ queryKey: ['game', payload.id] });
+        },
+        onError: (error: AxiosError<{ message: string }>) => {
+            toast.error(
+                error.response?.data?.message ||
+                    error.message ||
+                    'Failed to update game'
+            );
+            console.error('Failed to update game', error);
+        },
+    });
+}
+
+export function useDeleteGame() {
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+
+    return useMutation({
+        mutationFn: async (gameId: string): Promise<void> => {
+            await axiosClient.delete(`/games/${gameId}`);
+        },
+        onSuccess: (_, gameId) => {
+            queryClient.invalidateQueries({ queryKey: ['games'] });
+            queryClient.invalidateQueries({ queryKey: ['game', gameId] });
+            navigate('/games');
+        },
+        onError: (error: AxiosError<{ message: string }>) => {
+            toast.error(
+                error.response?.data?.message ||
+                    error.message ||
+                    'Failed to delete game'
+            );
+            console.error('Failed to delete game', error);
         },
     });
 }
@@ -71,9 +161,9 @@ export function useWaitForAnySlot(gameId: string) {
             toast.success('Waiting for any slot');
             queryClient.invalidateQueries({ queryKey: ['games'] });
         },
-        onError: (error: AxiosError<{ error: string }>) => {
+        onError: (error: AxiosError<{ message: string }>) => {
             toast.error(
-                error.response?.data?.error ||
+                error.response?.data?.message ||
                     error.message ||
                     'Failed to wait for slot'
             );
@@ -82,20 +172,23 @@ export function useWaitForAnySlot(gameId: string) {
     });
 }
 
-export function useBookSlot(gameId: string) {
+export function useBookSlot() {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async (payload: BookSlotRequest): Promise<void> => {
-            await axiosClient.post(`/games/${gameId}/slots/book`, payload);
+            await axiosClient.post(
+                `/games/${payload.gameId}/slots/book`,
+                payload
+            );
         },
         onSuccess: () => {
             toast.success('Slot booked');
             queryClient.invalidateQueries({ queryKey: ['games'] });
         },
-        onError: (error: AxiosError<{ error: string }>) => {
+        onError: (error: AxiosError<{ message: string }>) => {
             toast.error(
-                error.response?.data?.error ||
+                error.response?.data?.message ||
                     error.message ||
                     'Booking slot failed'
             );
@@ -118,9 +211,9 @@ export function useWaitForSpecificSlot(gameId: string, slotId: string) {
             toast.success('Waiting for specific slot');
             queryClient.invalidateQueries({ queryKey: ['games'] });
         },
-        onError: (error: AxiosError<{ error: string }>) => {
+        onError: (error: AxiosError<{ message: string }>) => {
             toast.error(
-                error.response?.data?.error ||
+                error.response?.data?.message ||
                     error.message ||
                     'Failed to wait for specific slot'
             );
@@ -148,9 +241,9 @@ export function useSlotAction(gameId: string) {
             toast.success('Slot action performed');
             queryClient.invalidateQueries({ queryKey: ['games'] });
         },
-        onError: (error: AxiosError<{ error: string }>) => {
+        onError: (error: AxiosError<{ message: string }>) => {
             toast.error(
-                error.response?.data?.error ||
+                error.response?.data?.message ||
                     error.message ||
                     'Slot action failed'
             );

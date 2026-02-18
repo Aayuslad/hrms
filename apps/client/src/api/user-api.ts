@@ -57,7 +57,7 @@ export function useGetUserList() {
         queryKey: ['users'],
         queryFn: async (): Promise<UserSummary[]> => {
             const { data } = await axiosClient.get<{ data?: UserSummary[] }>(
-                '/users/me'
+                '/users/summary'
             );
             return data.data ?? [];
         },
@@ -77,9 +77,9 @@ export function useLoginUser() {
             queryClient.invalidateQueries({ queryKey: ['me'] });
             navigate('/home');
         },
-        onError: (error: AxiosError<{ error: string }>) => {
+        onError: (error: AxiosError<{ message: string }>) => {
             toast.error(
-                error.response?.data?.error || error.message || 'Login failed'
+                error.response?.data?.message || error.message || 'Login failed'
             );
             console.error('login failed', error);
         },
@@ -99,9 +99,9 @@ export function useRegisterUser() {
             queryClient.invalidateQueries({ queryKey: ['me'] });
             navigate('/create-user-profile');
         },
-        onError: (error: AxiosError<{ error: string }>) => {
+        onError: (error: AxiosError<{ message: string }>) => {
             toast.error(
-                error.response?.data?.error ||
+                error.response?.data?.message ||
                     error.message ||
                     'Register failed'
             );
@@ -125,13 +125,13 @@ export function useCreateUserProfile() {
             queryClient.invalidateQueries({ queryKey: ['me'] });
             navigate('/home');
         },
-        onError: (error: AxiosError<{ error: string }>) => {
+        onError: (error: AxiosError<{ message: string }>) => {
             toast.error(
-                error.response?.data?.error ||
+                error.response?.data?.message ||
                     error.message ||
                     'Profile creation failed'
             );
-            console.error('Profile creatio failed', error);
+            console.error('Profile creation failed', error);
         },
     });
 }
@@ -147,6 +147,14 @@ export function useLogoutUser() {
         onSuccess: () => {
             queryClient.clear();
             navigate('/login');
+        },
+        onError: (error: AxiosError<{ message: string }>) => {
+            toast.error(
+                error.response?.data?.message ||
+                    error.message ||
+                    'Logout failed'
+            );
+            console.error('logout failed', error);
         },
     });
 }
@@ -167,7 +175,12 @@ export function useUpdateUserByAdmin() {
             toast.success('User updated!');
             queryClient.invalidateQueries({ queryKey: ['users'] });
         },
-        onError: (error: AxiosError<{ error: string }>) => {
+        onError: (error: AxiosError<{ message: string }>) => {
+            toast.error(
+                error.response?.data?.message ||
+                    error.message ||
+                    'Failed to update user'
+            );
             console.error('update user failed', error);
         },
     });
@@ -190,7 +203,12 @@ export function useEditUserRoles() {
             toast.success('User roles updated!');
             queryClient.invalidateQueries({ queryKey: ['users'] });
         },
-        onError: (error: AxiosError<{ error: string }>) => {
+        onError: (error: AxiosError<{ message: string }>) => {
+            toast.error(
+                error.response?.data?.message ||
+                    error.message ||
+                    'Failed to update user roles'
+            );
             console.error('update roles failed', error);
         },
     });

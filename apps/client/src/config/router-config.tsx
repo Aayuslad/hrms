@@ -18,6 +18,11 @@ import { DocumentTypePage } from '@/pages/configurations/document-type-page';
 import { ExpenseCatrgoryPage } from '@/pages/configurations/expense-categories';
 import { ProfilePage } from '@/pages/profile-page';
 import { NotificationsPage } from '@/pages/notifications-page';
+import { GameDetailsPage } from '@/pages/games/game-details-page';
+
+// loaders / query client for prefetching
+import { queryClient } from '@/lib/query-client';
+import { gamesLoader, gameLoader } from '@/api/games-api';
 
 const router = createBrowserRouter([
     {
@@ -50,7 +55,13 @@ const router = createBrowserRouter([
             },
             {
                 path: 'games',
-                element: <GamesPage />,
+                element: <GamesPage />,   
+                loader: gamesLoader(queryClient),
+            },
+            {
+                path: 'games/:gameId',
+                element: <GameDetailsPage />,   
+                loader: gameLoader(queryClient),
             },
             {
                 path: 'travel-plans',

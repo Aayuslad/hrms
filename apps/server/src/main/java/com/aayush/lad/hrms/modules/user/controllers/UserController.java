@@ -113,9 +113,9 @@ public class UserController {
     }
 
     @GetMapping("/summary")
-    public ResponseEntity<List<UserSummaryResponse>> getUsersSummary() {
+    public ResponseEntity<Result<List<UserSummaryResponse>>> getUsersSummary() {
         List<UserSummaryResponse> responseDto = userService.getUsersSummary();
-        return ResponseEntity.ok(responseDto);
+        return ResultMapper.handle(HttpStatus.OK, responseDto);
     }
 
     @PutMapping("/{id}/roles")
