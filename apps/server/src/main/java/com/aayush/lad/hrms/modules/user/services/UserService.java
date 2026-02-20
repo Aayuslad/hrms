@@ -5,8 +5,10 @@ import com.aayush.lad.hrms.core.exeptions.NotFoundException;
 import com.aayush.lad.hrms.core.exeptions.UnauthorisedException;
 import com.aayush.lad.hrms.core.services.CurrentUserService;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.NotificationResponse;
+import com.aayush.lad.hrms.modules.user.dtos.user.read.OrgCharts;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.UserDetailResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.UserSummaryResponse;
+import com.aayush.lad.hrms.modules.user.dtos.user.read.internal.EmployeeOrgChartNodeResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.write.*;
 import com.aayush.lad.hrms.modules.user.mappers.UserMapper;
 import com.aayush.lad.hrms.modules.user.models.Notification;
@@ -24,7 +26,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -171,6 +176,43 @@ public class UserService {
         }
 
         userRepository.save(user);
+    }
+
+    public OrgCharts getOrgCharts() {
+        List<User> allUsers = userRepository.findAllWithProfiles();
+
+        Map<UUID, List<User>> subordinates = new HashMap<>();
+        List<User> roots = new ArrayList<>();
+
+        for (User user : allUsers) {
+            UUID managerId = user.getProfile() != null && user.getProfile().getManager() != null ? user.getProfile().getManager().getId() : null;
+            if (managerId == null) {
+                roots.add(user);
+            } else {
+                subordinates.computeIfAbsent(managerId, k -> new ArrayList<>()).add(user);
+            }
+        }
+
+        List<EmployeeOrgChartNodeResponse> orgCharts = roots.stream().map(user -> buildNode(user, subordinates)).toList();
+
+        return OrgCharts.builder().orgCharts(orgCharts).build();
+    }
+
+    private EmployeeOrgChartNodeResponse buildNode(User user, Map<UUID, List<User>> subordinates) {
+        List<EmployeeOrgChartNodeResponse> manages = subordinates.getOrDefault(user.getId(), new ArrayList<>()).stream()
+                .map(sub -> buildNode(sub, subordinates))
+                .toList();
+
+        return EmployeeOrgChartNodeResponse.builder()
+                .userId(user.getId())
+                .username(user.getUserName())
+                .firstName(user.getProfile() != null ? user.getProfile().getFirstName() : null)
+                .lastName(user.getProfile() != null ? user.getProfile().getLastName() : null)
+                .designation(user.getProfile() != null && user.getProfile().getDesignation() != null ? user.getProfile().getDesignation().getName() : null)
+                .department(user.getProfile() != null && user.getProfile().getDepartment() != null ? user.getProfile().getDepartment().getName() : null)
+                .avatarUrl(user.getProfile() != null ? user.getProfile().getAvatarUrl() : null)
+                .manages(manages)
+                .build();
     }
 
     private User getUserEntityById(UUID id) {

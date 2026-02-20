@@ -1,4 +1,5 @@
 import { useGetJobOpenings } from '@/api/jobs-api';
+import CreateJobOpeningDialog from '@/components/jobOpenings/create-job-opening-dialog';
 import JobOpeningCard from '@/components/jobOpenings/job-opening-card';
 import { Spinner } from '@/components/ui/spinner';
 
@@ -35,20 +36,26 @@ export function Index() {
                 <div className="px-10 flex-1">
                     <h1 className="text-2xl font-bold">Job Openings</h1>
                     <p>
-                        Manage all job openings and their interview workflows.
+                        Explore job openings share with your network and refer
+                        candidates.
                     </p>
                 </div>
                 <div className="w-[230px] mb-4">
-                    {/* <CreateJobOpeningSheet visibleTo={['Admin', 'Recruiter']} /> */}
+                    <CreateJobOpeningDialog />
                 </div>
             </div>
 
-            <div className="w-full flex justify-evenly pt-10">
+            <div className="w-full flex justify-evenly pt-5">
                 <div className="w-full flex flex-col items-center">
-                    <div className="mr-12 w-fit">
-                        {jobOpenings?.map((jobOpening) => (
-                            <JobOpeningCard jobOpening={jobOpening} />
-                        ))}
+                    <div className="w-fit">
+                        <div className="mx-auto max-w-7xl px-5 py-12 grid gap-8 md:grid-cols-2">
+                            {jobOpenings?.map((jobOpening) => (
+                                <JobOpeningCard
+                                    key={jobOpening.id}
+                                    jobOpening={jobOpening}
+                                />
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

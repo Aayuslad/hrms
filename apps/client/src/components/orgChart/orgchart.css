@@ -1,0 +1,42 @@
+/* Org Chart Styles */
+.orgchart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.orgchart-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.orgchart-children {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.orgchart-child {
+    margin: 0 10px;
+    position: relative;
+}
+
+.orgchart-child:before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    width: 2px;
+    height: 20px;
+    background-color: #ccc;
+    transform: translateX(-50%);
+}
+
+.orgchart-child:first-child:before {
+    left: 25%;
+}
+
+.orgchart-child:last-child:before {
+    left: 75%;
+}

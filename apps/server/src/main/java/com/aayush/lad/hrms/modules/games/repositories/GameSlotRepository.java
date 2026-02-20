@@ -98,8 +98,8 @@ public interface GameSlotRepository extends JpaRepository<GameSlot, UUID> {
     @Query("select s from GameSlot s where " +
             "s.game.id = :gameId " +
             "and s.day = :day " +
-            "and s.startTime = :startTime " +
-            "and s.endTime = :endTime " +
+            "and s.startTime = CAST(:startTime as time) " +
+            "and s.endTime = CAST(:endTime as time) " +
             "and s.status = GameSlotStatus.PENDING")
     List<GameSlot> findPendingSpecificSlots(
             @Param("gameId") UUID gameId,

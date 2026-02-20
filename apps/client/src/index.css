@@ -5,6 +5,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
+#initechOrgChart .orgNodeChildGroup .nodeGroupLineVerticalMiddle {
+  border-right: solid 1px grey;
+}
+#initechOrgChart .nodeLineBorderTop {
+  border-top: solid 1px grey;
+}
+
 :root {
   --background: oklch(0.98 0.01 335.69);
   --foreground: oklch(0.22 0 0);

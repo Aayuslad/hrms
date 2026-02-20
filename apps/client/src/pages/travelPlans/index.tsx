@@ -28,8 +28,8 @@ export function Index() {
                 <div className="px-10 flex-1">
                     <h1 className="text-2xl font-bold">Travel Plans</h1>
                     <p>
-                        Lorem, ipsum dolor sit amet consectetur adipisicing
-                        elit. Qui, corrupti!
+                        Go through your travel plans, view details, and manage
+                        them all in one place.
                     </p>
                 </div>
                 <div className="w-[230px] mb-4">

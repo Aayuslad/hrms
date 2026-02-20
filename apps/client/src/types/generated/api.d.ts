@@ -3,2856 +3,1939 @@
  * Do not make direct changes to the file.
  */
 
+
 export interface paths {
-    "/api/users/{id}/roles": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put: operations["updateRoles"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses/{expenseId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put: operations["updateExpense"];
-        post?: never;
-        delete: operations["deleteExpense"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/travel-plans/{travelPlanId}/participant/{participantId}/documents/{documentId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put: operations["updateDocument"];
-        post?: never;
-        delete: operations["deleteDocument"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/travel-plans/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["get"];
-        put: operations["update"];
-        post?: never;
-        delete: operations["delete"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/job-openings/{jobOpeningId}/refferals/{referralId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put: operations["updateReferral"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/job-openings/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["get_1"];
-        put: operations["update_1"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/games/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["get_2"];
-        put: operations["update_2"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/expense-categories/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put: operations["update_3"];
-        post?: never;
-        delete: operations["delete_1"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/document-types/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put: operations["update_4"];
-        post?: never;
-        delete: operations["delete_2"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/designations/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put: operations["update_5"];
-        post?: never;
-        delete: operations["delete_3"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/departments/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put: operations["update_6"];
-        post?: never;
-        delete: operations["delete_4"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/users/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getUserById"];
-        put?: never;
-        post: operations["updateByAdmin"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/users/register": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["register"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/users/profile": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["createProfile"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/users/me": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getMe"];
-        put?: never;
-        post: operations["updateBySelf"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/users/logout": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["logout"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/users/login": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["login"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/travel-plans": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getAll"];
-        put?: never;
-        post: operations["create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["createExpense"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/travel-plans/{travelPlanId}/participant/{participantId}/documents": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["createDocument"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/travel-plans/{travelPlanId}/participant/{participantId}/documents/hr": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["createDocumentByHr"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/job-openings": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getAll_1"];
-        put?: never;
-        post: operations["create_1"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/job-openings/{id}/share": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["share"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/job-openings/referrals": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["createReferral"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/games": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getAll_2"];
-        put?: never;
-        post: operations["create_2"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/games/{id}/slots/wait": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["waitForAnySlot"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/games/{id}/slots/book": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["bookSlot"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/games/{gameId}/slots/{slotId}/wait": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["waitForSpecificSlot"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/games/{gameId}/slots/{queuedSlotId}/{action}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["slotAction"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/expense-categories": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getAll_3"];
-        put?: never;
-        post: operations["create_3"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/document-types": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getAll_4"];
-        put?: never;
-        post: operations["create_4"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/designations": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getAll_5"];
-        put?: never;
-        post: operations["create_5"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/departments": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getAll_6"];
-        put?: never;
-        post: operations["create_6"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/submit": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["submitExpense"];
-        trace?: never;
-    };
-    "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/reject": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["rejectExpense"];
-        trace?: never;
-    };
-    "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/approve": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["approveExpense"];
-        trace?: never;
-    };
-    "/api/job-openings/{id}/close": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["close"];
-        trace?: never;
-    };
-    "/api/games/{gameId}/slots/{slotId}/cancel": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["cancelSlot"];
-        trace?: never;
-    };
-    "/api/users/summary": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getUsersSummary"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/users/me/notifications": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getNotifications"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/travel-plans/{travelPlanId}/participant/{participantId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getParticipant"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/roles": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getAll_7"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/games/offers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getOffers"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
+  "/api/users/{id}": {
+    get: operations["getUserById"];
+    put: operations["updateByAdmin"];
+  };
+  "/api/users/{id}/roles": {
+    put: operations["updateRoles"];
+  };
+  "/api/users/me": {
+    get: operations["getMe"];
+    put: operations["updateBySelf"];
+  };
+  "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses/{expenseId}": {
+    put: operations["updateExpense"];
+    delete: operations["deleteExpense"];
+  };
+  "/api/travel-plans/{travelPlanId}/participant/{participantId}/documents/{documentId}": {
+    put: operations["updateDocument"];
+    delete: operations["deleteDocument"];
+  };
+  "/api/travel-plans/{id}": {
+    get: operations["get"];
+    put: operations["update"];
+    delete: operations["delete"];
+  };
+  "/api/job-openings/{jobOpeningId}/refferals/{referralId}": {
+    put: operations["updateReferral"];
+  };
+  "/api/job-openings/{id}": {
+    get: operations["get_1"];
+    put: operations["update_1"];
+  };
+  "/api/games/{id}": {
+    get: operations["get_2"];
+    put: operations["update_2"];
+    delete: operations["delete_1"];
+  };
+  "/api/expense-categories/{id}": {
+    put: operations["update_3"];
+    delete: operations["delete_2"];
+  };
+  "/api/document-types/{id}": {
+    put: operations["update_4"];
+    delete: operations["delete_3"];
+  };
+  "/api/designations/{id}": {
+    put: operations["update_5"];
+    delete: operations["delete_4"];
+  };
+  "/api/departments/{id}": {
+    put: operations["update_6"];
+    delete: operations["delete_5"];
+  };
+  "/api/users/register": {
+    post: operations["register"];
+  };
+  "/api/users/profile": {
+    post: operations["createProfile"];
+  };
+  "/api/users/logout": {
+    post: operations["logout"];
+  };
+  "/api/users/login": {
+    post: operations["login"];
+  };
+  "/api/travel-plans": {
+    get: operations["getAll"];
+    post: operations["create"];
+  };
+  "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses": {
+    post: operations["createExpense"];
+  };
+  "/api/travel-plans/{travelPlanId}/participant/{participantId}/documents": {
+    post: operations["createDocument"];
+  };
+  "/api/travel-plans/{travelPlanId}/participant/{participantId}/documents/hr": {
+    post: operations["createDocumentByHr"];
+  };
+  "/api/job-openings": {
+    get: operations["getAll_1"];
+    post: operations["create_1"];
+  };
+  "/api/job-openings/{id}/share": {
+    post: operations["share"];
+  };
+  "/api/job-openings/referrals": {
+    post: operations["createReferral"];
+  };
+  "/api/games": {
+    get: operations["getAll_2"];
+    post: operations["create_2"];
+  };
+  "/api/games/{id}/slots/wait": {
+    post: operations["waitForAnySlot"];
+  };
+  "/api/games/{id}/slots/book": {
+    post: operations["bookSlot"];
+  };
+  "/api/games/{gameId}/slots/{slotId}/wait": {
+    post: operations["waitForSpecificSlot"];
+  };
+  "/api/games/{gameId}/slots/{queuedSlotId}/{action}": {
+    post: operations["slotAction"];
+  };
+  "/api/expense-categories": {
+    get: operations["getAll_3"];
+    post: operations["create_3"];
+  };
+  "/api/document-types": {
+    get: operations["getAll_4"];
+    post: operations["create_4"];
+  };
+  "/api/designations": {
+    get: operations["getAll_5"];
+    post: operations["create_5"];
+  };
+  "/api/departments": {
+    get: operations["getAll_6"];
+    post: operations["create_6"];
+  };
+  "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/submit": {
+    patch: operations["submitExpense"];
+  };
+  "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/reject": {
+    patch: operations["rejectExpense"];
+  };
+  "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/approve": {
+    patch: operations["approveExpense"];
+  };
+  "/api/job-openings/{id}/close": {
+    patch: operations["close"];
+  };
+  "/api/games/{gameId}/slots/{slotId}/cancel": {
+    patch: operations["cancelSlot"];
+  };
+  "/api/users/summary": {
+    get: operations["getUsersSummary"];
+  };
+  "/api/users/org-charts": {
+    get: operations["getOrgCharts"];
+  };
+  "/api/users/me/notifications": {
+    get: operations["getNotifications"];
+  };
+  "/api/users/details": {
+    get: operations["getAllUsersDetails"];
+  };
+  "/api/travel-plans/{travelPlanId}/participant/{participantId}": {
+    get: operations["getParticipant"];
+  };
+  "/api/roles": {
+    get: operations["getAll_7"];
+  };
+  "/api/games/offers": {
+    get: operations["getOffers"];
+  };
 }
+
 export type webhooks = Record<string, never>;
+
 export interface components {
-    schemas: {
-        UpdateUserRolesRequest: {
-            /** Format: uuid */
-            userId: string;
-            roles?: string[];
-        };
-        ResultVoid: {
-            /** Format: int32 */
-            statusCode?: number;
-            data?: unknown;
-            message?: string;
-            success?: boolean;
-        };
-        UpdateExpenseRequest: {
-            /** Format: uuid */
-            id: string;
-            /** Format: uuid */
-            travelPlanId: string;
-            /** Format: float */
-            amount: number;
-            /** Format: date */
-            date?: string;
-            /** Format: uuid */
-            expenseCategoryId: string;
-            proofs?: string[];
-        };
-        UpdateDocumentRequest: {
-            /** Format: uuid */
-            id: string;
-            /** Format: binary */
-            doc: string;
-            /** Format: uuid */
-            travelPlanId: string;
-            /** Format: uuid */
-            ownerId: string;
-            /** Format: uuid */
-            documentTypeId: string;
-        };
-        UpdateTravelPlanRequest: {
-            /** Format: uuid */
-            id: string;
-            title: string;
-            destination: string;
-            description?: string;
-            /** Format: date-time */
-            startAt?: string;
-            /** Format: date-time */
-            endAt?: string;
-            /** Format: float */
-            maxExpenseAmountPerDay?: number;
-            participants?: string[];
-        };
-        UpdateJobOpeningReferralRequest: {
-            /** Format: uuid */
-            id: string;
-            /** Format: uuid */
-            jobOpeningId: string;
-            name: string;
-            email: string;
-            cvUrl: string;
-            note?: string;
-        };
-        UpdateJobOpeningRequest: {
-            /** Format: uuid */
-            id: string;
-            description?: string;
-            /** Format: uuid */
-            designationId: string;
-            /** Format: float */
-            requiredExperience?: number;
-            /** Format: binary */
-            jd?: string;
-            /** Format: uuid */
-            defaultHrId: string;
-            hrs?: string[];
-            reviewers?: string[];
-        };
-        UpdateGameRequest: {
-            /** Format: uuid */
-            id: string;
-            name: string;
-            /** Format: int32 */
-            slotDuration: number;
-            /** Format: int32 */
-            maxSlotPlayers: number;
-            openTime: string;
-            closeTime: string;
-            /** @enum {string} */
-            openingDayOfWeek: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
-            /** @enum {string} */
-            closingDayOfWeek: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
-        };
-        UpdateExpenseCategoryRequest: {
-            /** Format: uuid */
-            id: string;
-            name: string;
-        };
-        UpdateDocumentTypeRequest: {
-            /** Format: uuid */
-            id: string;
-            name: string;
-        };
-        UpdateDesignationRequest: {
-            /** Format: uuid */
-            id: string;
-            name: string;
-        };
-        UpdateDepartmentRequest: {
-            /** Format: uuid */
-            id: string;
-            name: string;
-        };
-        UpdateUserByAdminRequest: {
-            /** Format: uuid */
-            userId: string;
-            profile?: components["schemas"]["UpdateUserProfileByAdminRequest"];
-        };
-        UpdateUserProfileByAdminRequest: {
-            firstName: string;
-            middleName?: string;
-            lastName: string;
-            contactNumber?: string;
-            /** Format: date */
-            dateOfBirth?: string;
-            /** @enum {string} */
-            gender?: "MALE" | "FEMALE" | "OTHER";
-            /** Format: date */
-            joiningDate?: string;
-            /** Format: uuid */
-            departmentId?: string;
-            /** Format: uuid */
-            designationId?: string;
-            /** Format: uuid */
-            managerId?: string;
-        };
-        RegisterUserRequest: {
-            /** Format: email */
-            email: string;
-            userName: string;
-            password: string;
-        };
-        CreateUserProfileRequest: {
-            firstName: string;
-            middleName?: string;
-            lastName: string;
-            contactNumber?: string;
-            /** Format: date */
-            dateOfBirth?: string;
-            /** @enum {string} */
-            gender?: "MALE" | "FEMALE" | "OTHER";
-            /** Format: date */
-            joiningDate?: string;
-        };
-        GameInterestRequest: {
-            /** Format: uuid */
-            gameId: string;
-        };
-        UpdateProfileBySelfRequest: {
-            firstName: string;
-            middleName?: string;
-            lastName: string;
-            contactNumber?: string;
-            /** Format: date */
-            dateOfBirth?: string;
-            /** @enum {string} */
-            gender?: "MALE" | "FEMALE" | "OTHER";
-            /** Format: date */
-            joiningDate?: string;
-        };
-        UpdateUserBySelfRequest: {
-            profile?: components["schemas"]["UpdateProfileBySelfRequest"];
-            gameInterests?: components["schemas"]["GameInterestRequest"][];
-        };
-        LoginUserRequest: {
-            emailOrUserName: string;
-            password: string;
-        };
-        CreateTravelPlanRequest: {
-            title: string;
-            destination: string;
-            description?: string;
-            /** Format: date-time */
-            startAt?: string;
-            /** Format: date-time */
-            endAt?: string;
-        };
-        CreateExpenseRequest: {
-            /** Format: uuid */
-            participantId?: string;
-            /** Format: float */
-            amount: number;
-            /** Format: date */
-            date?: string;
-            /** @enum {string} */
-            status?: "DRAFTING" | "SUBMITTED" | "APPROVED" | "REJECTED";
-            /** Format: uuid */
-            travelPlanId: string;
-            /** Format: uuid */
-            expenseCategoryId: string;
-            proofs?: string[];
-        };
-        CreateDocumentRequest: {
-            /** Format: binary */
-            doc: string;
-            /** Format: uuid */
-            ownerId: string;
-            /** Format: uuid */
-            travelPlanId: string;
-            /** Format: uuid */
-            documentTypeId: string;
-        };
-        CreateJobOpeningRequest: {
-            description?: string;
-            /** Format: uuid */
-            designationId: string;
-            /** Format: float */
-            requiredExperience?: number;
-            /** Format: binary */
-            jd?: string;
-            /** Format: uuid */
-            defaultHrId: string;
-            hrs?: string[];
-            reviewers?: string[];
-        };
-        ShareJobOpeningRequest: {
-            /** Format: uuid */
-            jobOpeningId?: string;
-            /** Format: email */
-            shareToEmail: string;
-        };
-        CreateJobOpeningReferralRequest: {
-            /** Format: uuid */
-            jobOpeningId: string;
-            name: string;
-            email: string;
-            cvUrl: string;
-            note?: string;
-        };
-        CreateGameRequest: {
-            name: string;
-            /** Format: int32 */
-            slotDuration: number;
-            /** Format: int32 */
-            maxSlotPlayers: number;
-            openTime: string;
-            closeTime: string;
-            /** @enum {string} */
-            openingDayOfWeek: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
-            /** @enum {string} */
-            closingDayOfWeek: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
-        };
-        WaitAnySlotRequest: {
-            /** Format: date */
-            day: string;
-            /** Format: uuid */
-            gameId: string;
-            playerIds?: string[];
-        };
-        BookSlotRequest: {
-            /** Format: uuid */
-            gameId: string;
-            /** Format: date */
-            day: string;
-            startTime: string;
-            playerIds?: string[];
-        };
-        WaitSpecificSlotRequest: {
-            /** Format: uuid */
-            gameId: string;
-            /** Format: uuid */
-            slotId: string;
-            playerIds?: string[];
-        };
-        QueuedSlotActionRequest: {
-            /** Format: uuid */
-            queuedSlotId: string;
-            /** Format: uuid */
-            canceledSlotId: string;
-            action: string;
-        };
-        CreateExpenseCategoryRequest: {
-            name: string;
-        };
-        CreateDocumentTypeRequest: {
-            name: string;
-        };
-        CreateDesignationRequest: {
-            name: string;
-        };
-        CreateDepartmentRequest: {
-            name: string;
-        };
-        DepartmentSummaryResponse: {
-            /** Format: uuid */
-            id?: string;
-            name?: string;
-        };
-        DesignationSummaryResponse: {
-            /** Format: uuid */
-            id?: string;
-            name?: string;
-        };
-        GameInterestResponse: {
-            /** Format: uuid */
-            id?: string;
-            name?: string;
-        };
-        ManagerSummaryResponse: {
-            /** Format: uuid */
-            id?: string;
-            userName?: string;
-            firstName?: string;
-            lastName?: string;
-            email?: string;
-            avatarUrl?: string;
-        };
-        ProfileResponse: {
-            firstName?: string;
-            middleName?: string;
-            lastName?: string;
-            contactNumber?: string;
-            /** Format: date */
-            dateOfBirth?: string;
-            /** @enum {string} */
-            gender?: "MALE" | "FEMALE" | "OTHER";
-            /** Format: date */
-            joiningDate?: string;
-            avatarUrl?: string;
-            department?: components["schemas"]["DepartmentSummaryResponse"];
-            designation?: components["schemas"]["DesignationSummaryResponse"];
-            manager?: components["schemas"]["ManagerSummaryResponse"];
-        };
-        ResultUserDetailResponse: {
-            /** Format: int32 */
-            statusCode?: number;
-            data?: components["schemas"]["UserDetailResponse"];
-            message?: string;
-            success?: boolean;
-        };
-        UserDetailResponse: {
-            /** Format: uuid */
-            id?: string;
-            email?: string;
-            userName?: string;
-            profile?: components["schemas"]["ProfileResponse"];
-            roles?: components["schemas"]["UserRoleResponse"][];
-            interestedInGames?: components["schemas"]["GameInterestResponse"][];
-        };
-        UserRoleResponse: {
-            /** Format: uuid */
-            id?: string;
-            name?: string;
-        };
-        UserSummaryResponse: {
-            /** Format: uuid */
-            id?: string;
-            email?: string;
-            userName?: string;
-            firstName?: string;
-            lastName?: string;
-            avatarUrl?: string;
-        };
-        NotificationResponse: {
-            /** Format: uuid */
-            id?: string;
-            content?: string;
-            isRead?: boolean;
-            /** Format: date-time */
-            createdAt?: string;
-        };
-        ResultListNotificationResponse: {
-            /** Format: int32 */
-            statusCode?: number;
-            data?: components["schemas"]["NotificationResponse"][];
-            message?: string;
-            success?: boolean;
-        };
-        GlobalUserResponseSummary: {
-            /** Format: uuid */
-            id?: string;
-            userName?: string;
-        };
-        ResultListTravelPlanSummaryResponse: {
-            /** Format: int32 */
-            statusCode?: number;
-            data?: components["schemas"]["TravelPlanSummaryResponse"][];
-            message?: string;
-            success?: boolean;
-        };
-        TravelPlanSummaryResponse: {
-            /** Format: uuid */
-            id?: string;
-            title?: string;
-            destination?: string;
-            description?: string;
-            /** Format: date-time */
-            startAt?: string;
-            /** Format: date-time */
-            endAt?: string;
-            createdBy?: components["schemas"]["GlobalUserResponseSummary"];
-            updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
-        };
-        ExpenseProofResponse: {
-            /** Format: uuid */
-            id?: string;
-            docUrl?: string;
-        };
-        ParticipantDocumentResponse: {
-            /** Format: uuid */
-            id?: string;
-            owner?: components["schemas"]["GlobalUserResponseSummary"];
-            docUrl?: string;
-            documentType?: string;
-            /** Format: date-time */
-            uploadedAt?: string;
-            uploadedBy?: components["schemas"]["GlobalUserResponseSummary"];
-        };
-        ParticipantExpenseResponse: {
-            /** Format: uuid */
-            id?: string;
-            /** Format: float */
-            amount?: number;
-            /** Format: date */
-            date?: string;
-            /** @enum {string} */
-            status?: "DRAFTING" | "SUBMITTED" | "APPROVED" | "REJECTED";
-            remarks?: string;
-            /** Format: date-time */
-            submittedAt?: string;
-            expenseCategory?: string;
-            approvedBy?: components["schemas"]["GlobalUserResponseSummary"];
-            proofs?: components["schemas"]["ExpenseProofResponse"][];
-        };
-        ParticipantResponse: {
-            /** Format: uuid */
-            id?: string;
-            userName?: string;
-            documents?: components["schemas"]["ParticipantDocumentResponse"][];
-            expenses?: components["schemas"]["ParticipantExpenseResponse"][];
-        };
-        ResultParticipantResponse: {
-            /** Format: int32 */
-            statusCode?: number;
-            data?: components["schemas"]["ParticipantResponse"];
-            message?: string;
-            success?: boolean;
-        };
-        ResultTravelPlanResponse: {
-            /** Format: int32 */
-            statusCode?: number;
-            data?: components["schemas"]["TravelPlanResponse"];
-            message?: string;
-            success?: boolean;
-        };
-        TravelPlanResponse: {
-            /** Format: uuid */
-            id?: string;
-            title?: string;
-            destination?: string;
-            description?: string;
-            /** Format: date-time */
-            startAt?: string;
-            /** Format: date-time */
-            endAt?: string;
-            /** Format: float */
-            maxExpenseAmountPerDay?: number;
-            participants?: components["schemas"]["GlobalUserResponseSummary"][];
-            createdBy?: components["schemas"]["GlobalUserResponseSummary"];
-            updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
-        };
-        ResultListRoleResponse: {
-            /** Format: int32 */
-            statusCode?: number;
-            data?: components["schemas"]["RoleResponse"][];
-            message?: string;
-            success?: boolean;
-        };
-        RoleResponse: {
-            /** Format: uuid */
-            id?: string;
-            name?: string;
-            createdBy?: components["schemas"]["GlobalUserResponseSummary"];
-            updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
-            /** Format: date-time */
-            createdAt?: string;
-            /** Format: date-time */
-            updatedAt?: string;
-        };
-        JobOpeningSummaryResponse: {
-            /** Format: uuid */
-            id?: string;
-            description?: string;
-            designation?: components["schemas"]["DesignationSummaryResponse"];
-            /** Format: float */
-            requiredExperience?: number;
-            jdUrl?: string;
-            defaultHr?: components["schemas"]["GlobalUserResponseSummary"];
-            createdBy?: components["schemas"]["GlobalUserResponseSummary"];
-            updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
-            closed?: boolean;
-        };
-        ResultListJobOpeningSummaryResponse: {
-            /** Format: int32 */
-            statusCode?: number;
-            data?: components["schemas"]["JobOpeningSummaryResponse"][];
-            message?: string;
-            success?: boolean;
-        };
-        JobOpeningReferralResponse: {
-            /** Format: uuid */
-            id?: string;
-            referredBy?: components["schemas"]["GlobalUserResponseSummary"];
-            name?: string;
-            email?: string;
-            cvUrl?: string;
-            note?: string;
-            /** @enum {string} */
-            status?: "NEW" | "IN_REVIEW" | "ACCEPTED" | "REJECTED";
-        };
-        JobOpeningResponse: {
-            /** Format: uuid */
-            id?: string;
-            description?: string;
-            designation?: components["schemas"]["DesignationSummaryResponse"];
-            /** Format: float */
-            requiredExperience?: number;
-            jdUrl?: string;
-            defaultHr?: components["schemas"]["GlobalUserResponseSummary"];
-            hrs?: components["schemas"]["GlobalUserResponseSummary"][];
-            reviewers?: components["schemas"]["GlobalUserResponseSummary"][];
-            referrals?: components["schemas"]["JobOpeningReferralResponse"][];
-            createdBy?: components["schemas"]["GlobalUserResponseSummary"];
-            updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
-            closed?: boolean;
-        };
-        ResultJobOpeningResponse: {
-            /** Format: int32 */
-            statusCode?: number;
-            data?: components["schemas"]["JobOpeningResponse"];
-            message?: string;
-            success?: boolean;
-        };
-        GameSummaryResponse: {
-            /** Format: uuid */
-            id?: string;
-            name?: string;
-            /** Format: int32 */
-            slotDuration?: number;
-            /** Format: int32 */
-            maxSlotPlayers?: number;
-            openTime?: string;
-            closeTime?: string;
-            /** @enum {string} */
-            openingDayOfWeek?: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
-            /** @enum {string} */
-            closingDayOfWeek?: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
-        };
-        ResultListGameSummaryResponse: {
-            /** Format: int32 */
-            statusCode?: number;
-            data?: components["schemas"]["GameSummaryResponse"][];
-            message?: string;
-            success?: boolean;
-        };
-        GameResponse: {
-            /** Format: uuid */
-            id?: string;
-            name?: string;
-            /** Format: int32 */
-            slotDuration?: number;
-            /** Format: int32 */
-            maxSlotPlayers?: number;
-            openTime?: string;
-            closeTime?: string;
-            /** @enum {string} */
-            openingDayOfWeek?: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
-            /** @enum {string} */
-            closingDayOfWeek?: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
-            gameSlots?: components["schemas"]["GameSlotResponse"][];
-            userGameStats?: components["schemas"]["UserGameStatsResponse"][];
-        };
-        GameSlotResponse: {
-            /** Format: uuid */
-            id?: string;
-            startTime?: string;
-            endTime?: string;
-            /** Format: date */
-            day?: string;
-            organiser?: components["schemas"]["UserSummaryResponse"];
-            players?: components["schemas"]["UserSummaryResponse"][];
-            booked?: boolean;
-        };
-        ResultGameResponse: {
-            /** Format: int32 */
-            statusCode?: number;
-            data?: components["schemas"]["GameResponse"];
-            message?: string;
-            success?: boolean;
-        };
-        UserGameStatsResponse: {
-            /** Format: uuid */
-            id?: string;
-            user?: components["schemas"]["UserSummaryResponse"];
-            /** Format: int32 */
-            completedSlots?: number;
-            /** Format: date-time */
-            lastPlayedAt?: string;
-        };
-        QueuedSlotOfferResponse: {
-            /** Format: uuid */
-            id?: string;
-            /** Format: uuid */
-            queueSlotId?: string;
-            /** Format: uuid */
-            cancelledSlotId?: string;
-            /** @enum {string} */
-            status?: "PENDING" | "ACCEPTED" | "REJECTED" | "EXPIRED";
-            /** Format: date-time */
-            expiresAt?: string;
-        };
-        ResultListQueuedSlotOfferResponse: {
-            /** Format: int32 */
-            statusCode?: number;
-            data?: components["schemas"]["QueuedSlotOfferResponse"][];
-            message?: string;
-            success?: boolean;
-        };
-        ExpenseCategoryResponse: {
-            /** Format: uuid */
-            id?: string;
-            name?: string;
-            createdBy?: components["schemas"]["GlobalUserResponseSummary"];
-            updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
-            /** Format: date-time */
-            createdAt?: string;
-            /** Format: date-time */
-            updatedAt?: string;
-        };
-        ResultListExpenseCategoryResponse: {
-            /** Format: int32 */
-            statusCode?: number;
-            data?: components["schemas"]["ExpenseCategoryResponse"][];
-            message?: string;
-            success?: boolean;
-        };
-        DocumentTypeResponse: {
-            /** Format: uuid */
-            id?: string;
-            name?: string;
-            createdBy?: components["schemas"]["GlobalUserResponseSummary"];
-            updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
-            /** Format: date-time */
-            createdAt?: string;
-            /** Format: date-time */
-            updatedAt?: string;
-        };
-        ResultListDocumentTypeResponse: {
-            /** Format: int32 */
-            statusCode?: number;
-            data?: components["schemas"]["DocumentTypeResponse"][];
-            message?: string;
-            success?: boolean;
-        };
-        DesignationResponse: {
-            /** Format: uuid */
-            id?: string;
-            name?: string;
-            createdBy?: components["schemas"]["GlobalUserResponseSummary"];
-            updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
-            /** Format: date-time */
-            createdAt?: string;
-            /** Format: date-time */
-            updatedAt?: string;
-        };
-        ResultListDesignationResponse: {
-            /** Format: int32 */
-            statusCode?: number;
-            data?: components["schemas"]["DesignationResponse"][];
-            message?: string;
-            success?: boolean;
-        };
-        DepartmentResponse: {
-            /** Format: uuid */
-            id?: string;
-            name?: string;
-            createdBy?: components["schemas"]["GlobalUserResponseSummary"];
-            updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
-            /** Format: date-time */
-            createdAt?: string;
-            /** Format: date-time */
-            updatedAt?: string;
-        };
-        ResultListDepartmentResponse: {
-            /** Format: int32 */
-            statusCode?: number;
-            data?: components["schemas"]["DepartmentResponse"][];
-            message?: string;
-            success?: boolean;
-        };
+  schemas: {
+    UpdateUserByAdminRequest: {
+      /** Format: uuid */
+      userId: string;
+      profile?: components["schemas"]["UpdateUserProfileByAdminRequest"];
     };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+    UpdateUserProfileByAdminRequest: {
+      firstName: string;
+      middleName?: string;
+      lastName: string;
+      contactNumber?: string;
+      /** Format: date */
+      dateOfBirth?: string;
+      /** @enum {string} */
+      gender?: "MALE" | "FEMALE" | "OTHER";
+      /** Format: date */
+      joiningDate?: string;
+      /** Format: uuid */
+      departmentId?: string;
+      /** Format: uuid */
+      designationId?: string;
+      /** Format: uuid */
+      managerId?: string;
+    };
+    ResultVoid: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: unknown;
+      message?: string;
+      success?: boolean;
+    };
+    UpdateUserRolesRequest: {
+      /** Format: uuid */
+      userId: string;
+      roles?: string[];
+    };
+    GameInterestRequest: {
+      /** Format: uuid */
+      gameId: string;
+    };
+    UpdateProfileBySelfRequest: {
+      firstName: string;
+      middleName?: string;
+      lastName: string;
+      contactNumber?: string;
+      /** Format: date */
+      dateOfBirth?: string;
+      /** @enum {string} */
+      gender?: "MALE" | "FEMALE" | "OTHER";
+      /** Format: date */
+      joiningDate?: string;
+    };
+    UpdateUserBySelfRequest: {
+      profile?: components["schemas"]["UpdateProfileBySelfRequest"];
+      gameInterests?: components["schemas"]["GameInterestRequest"][];
+    };
+    UpdateExpenseRequest: {
+      /** Format: uuid */
+      id: string;
+      /** Format: uuid */
+      travelPlanId: string;
+      /** Format: float */
+      amount: number;
+      /** Format: date */
+      date?: string;
+      /** Format: uuid */
+      expenseCategoryId: string;
+      proofs?: string[];
+    };
+    UpdateDocumentRequest: {
+      /** Format: uuid */
+      id: string;
+      /** Format: binary */
+      doc: string;
+      /** Format: uuid */
+      travelPlanId: string;
+      /** Format: uuid */
+      ownerId: string;
+      /** Format: uuid */
+      documentTypeId: string;
+    };
+    UpdateTravelPlanRequest: {
+      /** Format: uuid */
+      id: string;
+      title: string;
+      destination: string;
+      description?: string;
+      /** Format: date-time */
+      startAt?: string;
+      /** Format: date-time */
+      endAt?: string;
+      /** Format: float */
+      maxExpenseAmountPerDay?: number;
+      participants?: string[];
+    };
+    UpdateJobOpeningReferralRequest: {
+      /** Format: uuid */
+      id: string;
+      /** Format: uuid */
+      jobOpeningId: string;
+      name: string;
+      email: string;
+      cvUrl: string;
+      note?: string;
+    };
+    UpdateJobOpeningRequest: {
+      /** Format: uuid */
+      id: string;
+      description?: string;
+      /** Format: uuid */
+      designationId: string;
+      /** Format: float */
+      requiredExperience?: number;
+      /** Format: binary */
+      jd?: string;
+      /** Format: uuid */
+      defaultHrId: string;
+      hrs?: string[];
+      reviewers?: string[];
+    };
+    UpdateGameRequest: {
+      /** Format: uuid */
+      id: string;
+      name: string;
+      /** Format: int32 */
+      slotDuration: number;
+      /** Format: int32 */
+      maxSlotPlayers: number;
+      openTime: string;
+      closeTime: string;
+      /** @enum {string} */
+      openingDayOfWeek: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
+      /** @enum {string} */
+      closingDayOfWeek: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
+    };
+    UpdateExpenseCategoryRequest: {
+      /** Format: uuid */
+      id: string;
+      name: string;
+    };
+    UpdateDocumentTypeRequest: {
+      /** Format: uuid */
+      id: string;
+      name: string;
+    };
+    UpdateDesignationRequest: {
+      /** Format: uuid */
+      id: string;
+      name: string;
+    };
+    UpdateDepartmentRequest: {
+      /** Format: uuid */
+      id: string;
+      name: string;
+    };
+    RegisterUserRequest: {
+      /** Format: email */
+      email: string;
+      userName: string;
+      password: string;
+    };
+    CreateUserProfileRequest: {
+      firstName: string;
+      middleName?: string;
+      lastName: string;
+      contactNumber?: string;
+      /** Format: date */
+      dateOfBirth?: string;
+      /** @enum {string} */
+      gender?: "MALE" | "FEMALE" | "OTHER";
+      /** Format: date */
+      joiningDate?: string;
+    };
+    LoginUserRequest: {
+      emailOrUserName: string;
+      password: string;
+    };
+    CreateTravelPlanRequest: {
+      title: string;
+      destination: string;
+      description?: string;
+      /** Format: date-time */
+      startAt?: string;
+      /** Format: date-time */
+      endAt?: string;
+    };
+    CreateExpenseRequest: {
+      /** Format: uuid */
+      participantId?: string;
+      /** Format: float */
+      amount: number;
+      /** Format: date */
+      date?: string;
+      /** @enum {string} */
+      status?: "DRAFTING" | "SUBMITTED" | "APPROVED" | "REJECTED";
+      /** Format: uuid */
+      travelPlanId: string;
+      /** Format: uuid */
+      expenseCategoryId: string;
+      proofs?: string[];
+    };
+    CreateDocumentRequest: {
+      /** Format: binary */
+      doc: string;
+      /** Format: uuid */
+      ownerId: string;
+      /** Format: uuid */
+      travelPlanId: string;
+      /** Format: uuid */
+      documentTypeId: string;
+    };
+    CreateJobOpeningRequest: {
+      description?: string;
+      /** Format: uuid */
+      designationId: string;
+      /** Format: float */
+      requiredExperience?: number;
+      /** Format: binary */
+      jd?: string;
+      /** Format: uuid */
+      defaultHrId: string;
+      hrs?: string[];
+      reviewers?: string[];
+    };
+    ShareJobOpeningRequest: {
+      /** Format: uuid */
+      jobOpeningId?: string;
+      /** Format: email */
+      shareToEmail: string;
+    };
+    CreateJobOpeningReferralRequest: {
+      /** Format: uuid */
+      jobOpeningId: string;
+      name: string;
+      email: string;
+      cvUrl: string;
+      note?: string;
+    };
+    CreateGameRequest: {
+      name: string;
+      /** Format: int32 */
+      slotDuration: number;
+      /** Format: int32 */
+      maxSlotPlayers: number;
+      openTime: string;
+      closeTime: string;
+      /** @enum {string} */
+      openingDayOfWeek: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
+      /** @enum {string} */
+      closingDayOfWeek: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
+    };
+    WaitAnySlotRequest: {
+      /** Format: date */
+      day: string;
+      /** Format: uuid */
+      gameId: string;
+      playerIds?: string[];
+    };
+    BookSlotRequest: {
+      /** Format: uuid */
+      gameId: string;
+      /** Format: date */
+      day: string;
+      startTime: string;
+      playerIds?: string[];
+    };
+    WaitSpecificSlotRequest: {
+      /** Format: uuid */
+      gameId: string;
+      /** Format: uuid */
+      slotId: string;
+      playerIds?: string[];
+    };
+    QueuedSlotActionRequest: {
+      /** Format: uuid */
+      queuedSlotId: string;
+      /** Format: uuid */
+      canceledSlotId: string;
+      action: string;
+    };
+    CreateExpenseCategoryRequest: {
+      name: string;
+    };
+    CreateDocumentTypeRequest: {
+      name: string;
+    };
+    CreateDesignationRequest: {
+      name: string;
+    };
+    CreateDepartmentRequest: {
+      name: string;
+    };
+    DepartmentSummaryResponse: {
+      /** Format: uuid */
+      id?: string;
+      name?: string;
+    };
+    DesignationSummaryResponse: {
+      /** Format: uuid */
+      id?: string;
+      name?: string;
+    };
+    GameInterestResponse: {
+      /** Format: uuid */
+      id?: string;
+      name?: string;
+    };
+    ManagerSummaryResponse: {
+      /** Format: uuid */
+      id?: string;
+      userName?: string;
+      firstName?: string;
+      lastName?: string;
+      email?: string;
+      avatarUrl?: string;
+    };
+    ProfileResponse: {
+      firstName?: string;
+      middleName?: string;
+      lastName?: string;
+      contactNumber?: string;
+      /** Format: date */
+      dateOfBirth?: string;
+      /** @enum {string} */
+      gender?: "MALE" | "FEMALE" | "OTHER";
+      /** Format: date */
+      joiningDate?: string;
+      avatarUrl?: string;
+      department?: components["schemas"]["DepartmentSummaryResponse"];
+      designation?: components["schemas"]["DesignationSummaryResponse"];
+      manager?: components["schemas"]["ManagerSummaryResponse"];
+    };
+    ResultUserDetailResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["UserDetailResponse"];
+      message?: string;
+      success?: boolean;
+    };
+    UserDetailResponse: {
+      /** Format: uuid */
+      id?: string;
+      email?: string;
+      userName?: string;
+      profile?: components["schemas"]["ProfileResponse"];
+      roles?: components["schemas"]["UserRoleResponse"][];
+      interestedInGames?: components["schemas"]["GameInterestResponse"][];
+    };
+    UserRoleResponse: {
+      /** Format: uuid */
+      id?: string;
+      name?: string;
+    };
+    ResultListUserSummaryResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["UserSummaryResponse"][];
+      message?: string;
+      success?: boolean;
+    };
+    UserSummaryResponse: {
+      /** Format: uuid */
+      id?: string;
+      email?: string;
+      userName?: string;
+      firstName?: string;
+      lastName?: string;
+      avatarUrl?: string;
+    };
+    EmployeeOrgChartNodeResponse: {
+      /** Format: uuid */
+      userId?: string;
+      username?: string;
+      firstName?: string;
+      lastName?: string;
+      designation?: string;
+      department?: string;
+      manages?: components["schemas"]["EmployeeOrgChartNodeResponse"][];
+      avatarUrl?: string;
+    };
+    OrgCharts: {
+      orgCharts?: components["schemas"]["EmployeeOrgChartNodeResponse"][];
+    };
+    ResultOrgCharts: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["OrgCharts"];
+      message?: string;
+      success?: boolean;
+    };
+    NotificationResponse: {
+      /** Format: uuid */
+      id?: string;
+      content?: string;
+      isRead?: boolean;
+      /** Format: date-time */
+      createdAt?: string;
+    };
+    ResultListNotificationResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["NotificationResponse"][];
+      message?: string;
+      success?: boolean;
+    };
+    ResultListUserDetailResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["UserDetailResponse"][];
+      message?: string;
+      success?: boolean;
+    };
+    GlobalUserResponseSummary: {
+      /** Format: uuid */
+      id?: string;
+      userName?: string;
+      profile?: components["schemas"]["UserProfileResponseSummary"];
+    };
+    ResultListTravelPlanSummaryResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["TravelPlanSummaryResponse"][];
+      message?: string;
+      success?: boolean;
+    };
+    TravelPlanSummaryResponse: {
+      /** Format: uuid */
+      id?: string;
+      title?: string;
+      destination?: string;
+      description?: string;
+      /** Format: date-time */
+      startAt?: string;
+      /** Format: date-time */
+      endAt?: string;
+      createdBy?: components["schemas"]["GlobalUserResponseSummary"];
+      updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
+    };
+    UserProfileResponseSummary: {
+      /** Format: uuid */
+      id?: string;
+      firstName?: string;
+      middleName?: string;
+      lastName?: string;
+      avatarUrl?: string;
+    };
+    ExpenseProofResponse: {
+      /** Format: uuid */
+      id?: string;
+      docUrl?: string;
+    };
+    ParticipantDocumentResponse: {
+      /** Format: uuid */
+      id?: string;
+      owner?: components["schemas"]["GlobalUserResponseSummary"];
+      docUrl?: string;
+      documentType?: string;
+      /** Format: date-time */
+      uploadedAt?: string;
+      uploadedBy?: components["schemas"]["GlobalUserResponseSummary"];
+    };
+    ParticipantExpenseResponse: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: float */
+      amount?: number;
+      /** Format: date */
+      date?: string;
+      /** @enum {string} */
+      status?: "DRAFTING" | "SUBMITTED" | "APPROVED" | "REJECTED";
+      remarks?: string;
+      /** Format: date-time */
+      submittedAt?: string;
+      expenseCategory?: string;
+      approvedBy?: components["schemas"]["GlobalUserResponseSummary"];
+      proofs?: components["schemas"]["ExpenseProofResponse"][];
+    };
+    ParticipantResponse: {
+      /** Format: uuid */
+      id?: string;
+      userName?: string;
+      documents?: components["schemas"]["ParticipantDocumentResponse"][];
+      expenses?: components["schemas"]["ParticipantExpenseResponse"][];
+    };
+    ResultParticipantResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["ParticipantResponse"];
+      message?: string;
+      success?: boolean;
+    };
+    ResultTravelPlanResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["TravelPlanResponse"];
+      message?: string;
+      success?: boolean;
+    };
+    TravelPlanResponse: {
+      /** Format: uuid */
+      id?: string;
+      title?: string;
+      destination?: string;
+      description?: string;
+      /** Format: date-time */
+      startAt?: string;
+      /** Format: date-time */
+      endAt?: string;
+      /** Format: float */
+      maxExpenseAmountPerDay?: number;
+      participants?: components["schemas"]["GlobalUserResponseSummary"][];
+      createdBy?: components["schemas"]["GlobalUserResponseSummary"];
+      updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
+    };
+    ResultListRoleResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["RoleResponse"][];
+      message?: string;
+      success?: boolean;
+    };
+    RoleResponse: {
+      /** Format: uuid */
+      id?: string;
+      name?: string;
+      createdBy?: components["schemas"]["GlobalUserResponseSummary"];
+      updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
+    };
+    JobOpeningSummaryResponse: {
+      /** Format: uuid */
+      id?: string;
+      description?: string;
+      designation?: components["schemas"]["DesignationSummaryResponse"];
+      /** Format: float */
+      requiredExperience?: number;
+      jdUrl?: string;
+      defaultHr?: components["schemas"]["GlobalUserResponseSummary"];
+      createdBy?: components["schemas"]["GlobalUserResponseSummary"];
+      updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
+      closed?: boolean;
+    };
+    ResultListJobOpeningSummaryResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["JobOpeningSummaryResponse"][];
+      message?: string;
+      success?: boolean;
+    };
+    JobOpeningReferralResponse: {
+      /** Format: uuid */
+      id?: string;
+      referredBy?: components["schemas"]["GlobalUserResponseSummary"];
+      name?: string;
+      email?: string;
+      cvUrl?: string;
+      note?: string;
+      /** @enum {string} */
+      status?: "NEW" | "IN_REVIEW" | "ACCEPTED" | "REJECTED";
+    };
+    JobOpeningResponse: {
+      /** Format: uuid */
+      id?: string;
+      description?: string;
+      designation?: components["schemas"]["DesignationSummaryResponse"];
+      /** Format: float */
+      requiredExperience?: number;
+      jdUrl?: string;
+      defaultHr?: components["schemas"]["GlobalUserResponseSummary"];
+      hrs?: components["schemas"]["GlobalUserResponseSummary"][];
+      reviewers?: components["schemas"]["GlobalUserResponseSummary"][];
+      referrals?: components["schemas"]["JobOpeningReferralResponse"][];
+      createdBy?: components["schemas"]["GlobalUserResponseSummary"];
+      updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
+      closed?: boolean;
+    };
+    ResultJobOpeningResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["JobOpeningResponse"];
+      message?: string;
+      success?: boolean;
+    };
+    GameSummaryResponse: {
+      /** Format: uuid */
+      id?: string;
+      name?: string;
+      /** Format: int32 */
+      slotDuration?: number;
+      /** Format: int32 */
+      maxSlotPlayers?: number;
+      openTime?: string;
+      closeTime?: string;
+      /** @enum {string} */
+      openingDayOfWeek?: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
+      /** @enum {string} */
+      closingDayOfWeek?: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
+    };
+    ResultListGameSummaryResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["GameSummaryResponse"][];
+      message?: string;
+      success?: boolean;
+    };
+    GameResponse: {
+      /** Format: uuid */
+      id?: string;
+      name?: string;
+      /** Format: int32 */
+      slotDuration?: number;
+      /** Format: int32 */
+      maxSlotPlayers?: number;
+      openTime?: string;
+      closeTime?: string;
+      /** @enum {string} */
+      openingDayOfWeek?: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
+      /** @enum {string} */
+      closingDayOfWeek?: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
+      gameSlots?: components["schemas"]["GameSlotResponse"][];
+      userGameStats?: components["schemas"]["UserGameStatsResponse"][];
+    };
+    GameSlotResponse: {
+      /** Format: uuid */
+      id?: string;
+      startTime?: string;
+      endTime?: string;
+      /** Format: date */
+      day?: string;
+      organiser?: components["schemas"]["UserSummaryResponse"];
+      players?: components["schemas"]["UserSummaryResponse"][];
+      booked?: boolean;
+    };
+    ResultGameResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["GameResponse"];
+      message?: string;
+      success?: boolean;
+    };
+    UserGameStatsResponse: {
+      /** Format: uuid */
+      id?: string;
+      user?: components["schemas"]["UserSummaryResponse"];
+      /** Format: int32 */
+      completedSlots?: number;
+      /** Format: date-time */
+      lastPlayedAt?: string;
+    };
+    QueuedSlotOfferResponse: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: uuid */
+      queueSlotId?: string;
+      /** Format: uuid */
+      cancelledSlotId?: string;
+      /** @enum {string} */
+      status?: "PENDING" | "ACCEPTED" | "REJECTED" | "EXPIRED";
+      /** Format: date-time */
+      expiresAt?: string;
+    };
+    ResultListQueuedSlotOfferResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["QueuedSlotOfferResponse"][];
+      message?: string;
+      success?: boolean;
+    };
+    ExpenseCategoryResponse: {
+      /** Format: uuid */
+      id?: string;
+      name?: string;
+      createdBy?: components["schemas"]["GlobalUserResponseSummary"];
+      updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
+    };
+    ResultListExpenseCategoryResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["ExpenseCategoryResponse"][];
+      message?: string;
+      success?: boolean;
+    };
+    DocumentTypeResponse: {
+      /** Format: uuid */
+      id?: string;
+      name?: string;
+      createdBy?: components["schemas"]["GlobalUserResponseSummary"];
+      updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
+    };
+    ResultListDocumentTypeResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["DocumentTypeResponse"][];
+      message?: string;
+      success?: boolean;
+    };
+    DesignationResponse: {
+      /** Format: uuid */
+      id?: string;
+      name?: string;
+      createdBy?: components["schemas"]["GlobalUserResponseSummary"];
+      updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
+    };
+    ResultListDesignationResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["DesignationResponse"][];
+      message?: string;
+      success?: boolean;
+    };
+    DepartmentResponse: {
+      /** Format: uuid */
+      id?: string;
+      name?: string;
+      createdBy?: components["schemas"]["GlobalUserResponseSummary"];
+      updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
+    };
+    ResultListDepartmentResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["DepartmentResponse"][];
+      message?: string;
+      success?: boolean;
+    };
+  };
+  responses: never;
+  parameters: never;
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
 }
+
 export type $defs = Record<string, never>;
+
+export type external = Record<string, never>;
+
 export interface operations {
-    updateRoles: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateUserRolesRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+
+  getUserById: {
+    parameters: {
+      path: {
+        id: string;
+      };
     };
-    updateExpense: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                expenseId: string;
-                travelPlanId: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultUserDetailResponse"];
         };
-        requestBody?: {
-            content: {
-                "multipart/form-data": components["schemas"]["UpdateExpenseRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    deleteExpense: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                travelPlanId: string;
-                participantId: string;
-                expenseId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+  };
+  updateByAdmin: {
+    parameters: {
+      path: {
+        id: string;
+      };
     };
-    updateDocument: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                documentId: string;
-                travelPlanId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "multipart/form-data": components["schemas"]["UpdateDocumentRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateUserByAdminRequest"];
+      };
     };
-    deleteDocument: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                travelPlanId: string;
-                documentId: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultTravelPlanResponse"];
-                };
-            };
-        };
+  };
+  updateRoles: {
+    parameters: {
+      path: {
+        id: string;
+      };
     };
-    update: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateTravelPlanRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateUserRolesRequest"];
+      };
     };
-    delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    updateReferral: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                jobOpeningId: string;
-                referralId: string;
-            };
-            cookie?: never;
+  };
+  getMe: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultUserDetailResponse"];
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateJobOpeningReferralRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    get_1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultJobOpeningResponse"];
-                };
-            };
-        };
+  };
+  updateBySelf: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateUserBySelfRequest"];
+      };
     };
-    update_1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody?: {
-            content: {
-                "multipart/form-data": components["schemas"]["UpdateJobOpeningRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    get_2: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultGameResponse"];
-                };
-            };
-        };
+  };
+  updateExpense: {
+    parameters: {
+      path: {
+        expenseId: string;
+        travelPlanId: string;
+      };
     };
-    update_2: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateGameRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+    requestBody?: {
+      content: {
+        "multipart/form-data": components["schemas"]["UpdateExpenseRequest"];
+      };
     };
-    update_3: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateExpenseCategoryRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    delete_1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+  };
+  deleteExpense: {
+    parameters: {
+      path: {
+        travelPlanId: string;
+        participantId: string;
+        expenseId: string;
+      };
     };
-    update_4: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateDocumentTypeRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    delete_2: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+  };
+  updateDocument: {
+    parameters: {
+      path: {
+        documentId: string;
+        travelPlanId: string;
+      };
     };
-    update_5: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateDesignationRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+    requestBody?: {
+      content: {
+        "multipart/form-data": components["schemas"]["UpdateDocumentRequest"];
+      };
     };
-    delete_3: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    update_6: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateDepartmentRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+  };
+  deleteDocument: {
+    parameters: {
+      path: {
+        travelPlanId: string;
+        documentId: string;
+      };
     };
-    delete_4: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    getUserById: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultUserDetailResponse"];
-                };
-            };
-        };
+  };
+  get: {
+    parameters: {
+      path: {
+        id: string;
+      };
     };
-    updateByAdmin: {
-        parameters: {
-            query: {
-                request: components["schemas"]["UpdateUserByAdminRequest"];
-            };
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultTravelPlanResponse"];
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    register: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RegisterUserRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+  };
+  update: {
+    parameters: {
+      path: {
+        id: string;
+      };
     };
-    createProfile: {
-        parameters: {
-            query: {
-                request: components["schemas"]["CreateUserProfileRequest"];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateTravelPlanRequest"];
+      };
     };
-    getMe: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultUserDetailResponse"];
-                };
-            };
-        };
+      };
     };
-    updateBySelf: {
-        parameters: {
-            query: {
-                request: components["schemas"]["UpdateUserBySelfRequest"];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+  };
+  delete: {
+    parameters: {
+      path: {
+        id: string;
+      };
     };
-    logout: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    login: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["LoginUserRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+  };
+  updateReferral: {
+    parameters: {
+      path: {
+        jobOpeningId: string;
+        referralId: string;
+      };
     };
-    getAll: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultListTravelPlanSummaryResponse"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateJobOpeningReferralRequest"];
+      };
     };
-    create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateTravelPlanRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    createExpense: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                travelPlanId: string;
-                participantId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "multipart/form-data": components["schemas"]["CreateExpenseRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+  };
+  get_1: {
+    parameters: {
+      path: {
+        id: string;
+      };
     };
-    createDocument: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                travelPlanId: string;
-                participantId: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultJobOpeningResponse"];
         };
-        requestBody?: {
-            content: {
-                "multipart/form-data": components["schemas"]["CreateDocumentRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    createDocumentByHr: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                travelPlanId: string;
-                participantId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateDocumentRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+  };
+  update_1: {
+    parameters: {
+      path: {
+        id: string;
+      };
     };
-    getAll_1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultListJobOpeningSummaryResponse"];
-                };
-            };
-        };
+    requestBody?: {
+      content: {
+        "multipart/form-data": components["schemas"]["UpdateJobOpeningRequest"];
+      };
     };
-    create_1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody?: {
-            content: {
-                "multipart/form-data": components["schemas"]["CreateJobOpeningRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    share: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ShareJobOpeningRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+  };
+  get_2: {
+    parameters: {
+      path: {
+        id: string;
+      };
     };
-    createReferral: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultGameResponse"];
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateJobOpeningReferralRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    getAll_2: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultListGameSummaryResponse"];
-                };
-            };
-        };
+  };
+  update_2: {
+    parameters: {
+      path: {
+        id: string;
+      };
     };
-    create_2: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateGameRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateGameRequest"];
+      };
     };
-    waitForAnySlot: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["WaitAnySlotRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    bookSlot: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BookSlotRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+  };
+  delete_1: {
+    parameters: {
+      path: {
+        id: string;
+      };
     };
-    waitForSpecificSlot: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                gameId: string;
-                slotId: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["WaitSpecificSlotRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    slotAction: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                queuedSlotId: string;
-                action: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["QueuedSlotActionRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+  };
+  update_3: {
+    parameters: {
+      path: {
+        id: string;
+      };
     };
-    getAll_3: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultListExpenseCategoryResponse"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateExpenseCategoryRequest"];
+      };
     };
-    create_3: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateExpenseCategoryRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    getAll_4: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultListDocumentTypeResponse"];
-                };
-            };
-        };
+  };
+  delete_2: {
+    parameters: {
+      path: {
+        id: string;
+      };
     };
-    create_4: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateDocumentTypeRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    getAll_5: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultListDesignationResponse"];
-                };
-            };
-        };
+  };
+  update_4: {
+    parameters: {
+      path: {
+        id: string;
+      };
     };
-    create_5: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateDesignationRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateDocumentTypeRequest"];
+      };
     };
-    getAll_6: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultListDepartmentResponse"];
-                };
-            };
-        };
+      };
     };
-    create_6: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateDepartmentRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+  };
+  delete_3: {
+    parameters: {
+      path: {
+        id: string;
+      };
     };
-    submitExpense: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                travelPlanId: string;
-                expenseId: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    rejectExpense: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                travelPlanId: string;
-                expenseId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+  };
+  update_5: {
+    parameters: {
+      path: {
+        id: string;
+      };
     };
-    approveExpense: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                travelPlanId: string;
-                expenseId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateDesignationRequest"];
+      };
     };
-    close: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+      };
     };
-    cancelSlot: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                gameId: string;
-                slotId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultVoid"];
-                };
-            };
-        };
+  };
+  delete_4: {
+    parameters: {
+      path: {
+        id: string;
+      };
     };
-    getUsersSummary: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["UserSummaryResponse"][];
-                };
-            };
-        };
+      };
     };
-    getNotifications: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultListNotificationResponse"];
-                };
-            };
-        };
+  };
+  update_6: {
+    parameters: {
+      path: {
+        id: string;
+      };
     };
-    getParticipant: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                travelPlanId: string;
-                participantId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultParticipantResponse"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateDepartmentRequest"];
+      };
     };
-    getAll_7: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultListRoleResponse"];
-                };
-            };
-        };
+      };
     };
-    getOffers: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResultListQueuedSlotOfferResponse"];
-                };
-            };
-        };
+  };
+  delete_5: {
+    parameters: {
+      path: {
+        id: string;
+      };
     };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  register: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RegisterUserRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  createProfile: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateUserProfileRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  logout: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  login: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["LoginUserRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  getAll: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultListTravelPlanSummaryResponse"];
+        };
+      };
+    };
+  };
+  create: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateTravelPlanRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  createExpense: {
+    parameters: {
+      path: {
+        travelPlanId: string;
+        participantId: string;
+      };
+    };
+    requestBody?: {
+      content: {
+        "multipart/form-data": components["schemas"]["CreateExpenseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  createDocument: {
+    parameters: {
+      path: {
+        travelPlanId: string;
+        participantId: string;
+      };
+    };
+    requestBody?: {
+      content: {
+        "multipart/form-data": components["schemas"]["CreateDocumentRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  createDocumentByHr: {
+    parameters: {
+      path: {
+        travelPlanId: string;
+        participantId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateDocumentRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  getAll_1: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultListJobOpeningSummaryResponse"];
+        };
+      };
+    };
+  };
+  create_1: {
+    requestBody?: {
+      content: {
+        "multipart/form-data": components["schemas"]["CreateJobOpeningRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  share: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ShareJobOpeningRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  createReferral: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateJobOpeningReferralRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  getAll_2: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultListGameSummaryResponse"];
+        };
+      };
+    };
+  };
+  create_2: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateGameRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  waitForAnySlot: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["WaitAnySlotRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  bookSlot: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["BookSlotRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  waitForSpecificSlot: {
+    parameters: {
+      path: {
+        gameId: string;
+        slotId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["WaitSpecificSlotRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  slotAction: {
+    parameters: {
+      path: {
+        queuedSlotId: string;
+        action: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["QueuedSlotActionRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  getAll_3: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultListExpenseCategoryResponse"];
+        };
+      };
+    };
+  };
+  create_3: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateExpenseCategoryRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  getAll_4: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultListDocumentTypeResponse"];
+        };
+      };
+    };
+  };
+  create_4: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateDocumentTypeRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  getAll_5: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultListDesignationResponse"];
+        };
+      };
+    };
+  };
+  create_5: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateDesignationRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  getAll_6: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultListDepartmentResponse"];
+        };
+      };
+    };
+  };
+  create_6: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateDepartmentRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  submitExpense: {
+    parameters: {
+      path: {
+        travelPlanId: string;
+        expenseId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  rejectExpense: {
+    parameters: {
+      path: {
+        travelPlanId: string;
+        expenseId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  approveExpense: {
+    parameters: {
+      path: {
+        travelPlanId: string;
+        expenseId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  close: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  cancelSlot: {
+    parameters: {
+      path: {
+        gameId: string;
+        slotId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  getUsersSummary: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultListUserSummaryResponse"];
+        };
+      };
+    };
+  };
+  getOrgCharts: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultOrgCharts"];
+        };
+      };
+    };
+  };
+  getNotifications: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultListNotificationResponse"];
+        };
+      };
+    };
+  };
+  getAllUsersDetails: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultListUserDetailResponse"];
+        };
+      };
+    };
+  };
+  getParticipant: {
+    parameters: {
+      path: {
+        travelPlanId: string;
+        participantId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultParticipantResponse"];
+        };
+      };
+    };
+  };
+  getAll_7: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultListRoleResponse"];
+        };
+      };
+    };
+  };
+  getOffers: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultListQueuedSlotOfferResponse"];
+        };
+      };
+    };
+  };
 }

@@ -1,7 +1,36 @@
+import type { OrgChartNodeType } from '@/api/user-api';
+import { useGetOrgCharts } from '@/api/user-api';
+import { OrgChartNode } from '@/components/orgChart/OrgChartNode';
+import OrgChart from 'react-orgchart';
+
+interface ChartNode {
+    name: string;
+    title: string;
+    department: string | null;
+    avatarUrl: string | null;
+    children: ChartNode[];
+}
+
+function transformUser(user: OrgChartNodeType): ChartNode {
+    return {
+        name: `${user.firstName} ${user.lastName}`,
+        title: user.designation || 'N/A',
+        department: user?.department ?? 'N/A',
+        avatarUrl: user?.avatarUrl ?? null,
+        children: user?.manages?.map(transformUser) ?? [],
+    };
+}
+
 export function Index() {
+    const { data: orgCharts, isLoading } = useGetOrgCharts();
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
     return (
-        <div className=" h-full">
-            <div className="bg-muted  h-[100px] w-full flex items-center">
+        <div className="h-full">
+            <div className="bg-muted h-[100px] w-full flex items-center">
                 <div className="px-10 flex-1">
                     <h1 className="text-2xl font-bold">Organisation Chart</h1>
                     <p>
@@ -14,12 +43,18 @@ export function Index() {
                 </div>
             </div>
 
-            <div className="w-full flex justify-evenly pt-10">
-                <div className="w-full flex flex-col items-center">
-                    <div className="mr-12 w-fit">
-                        {/* <JobOpeningsTable /> */}
-                    </div>
-                </div>
+            <div className="w-full pt-10">
+                {orgCharts?.map((orgChart, index) => {
+                    const tree = transformUser(orgChart);
+                    return (
+                        <div key={index} className="mb-10 flex justify-center items-center">
+                            <OrgChart
+                                tree={tree}
+                                NodeComponent={OrgChartNode}
+                            />
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );

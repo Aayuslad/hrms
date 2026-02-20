@@ -34,6 +34,7 @@ import { Index as JobOpeningsPage } from '@/pages/jobOpenings';
 import { JobOpeningDetailsPage } from '@/pages/jobOpenings/job-opening-details-page';
 import LandingPage from '@/pages/landing-page';
 import NotFoundPage from '@/pages/not-found-page';
+import { ErrorPage } from '@/pages/error-page';
 import { NotificationsPage } from '@/pages/notifications-page';
 import { Index as OrgChartPage } from '@/pages/orgChart';
 import { ProfilePage } from '@/pages/profile-page';
@@ -70,31 +71,37 @@ const router = createBrowserRouter([
                 path: 'job-openings',
                 element: <JobOpeningsPage />,
                 loader: jobOpeningsLoader,
+                errorElement: <ErrorPage />,
             },
             {
                 path: 'job-openings/:jobOpeningId',
                 element: <JobOpeningDetailsPage />,
                 loader: jobOpeningLoader,
+                errorElement: <ErrorPage />,
             },
             {
                 path: 'games',
                 element: <GamesPage />,
                 loader: gamesLoader,
+                errorElement: <ErrorPage />,
             },
             {
                 path: 'games/:gameId',
                 element: <GameDetailsPage />,
                 loader: gameLoader,
+                errorElement: <ErrorPage />,
             },
             {
                 path: 'travel-plans',
                 element: <TravelPlans />,
                 loader: travelPlansLoader,
+                errorElement: <ErrorPage />,
             },
             {
                 path: 'travel-plans/:travelPlanId',
                 element: <TravelPlanDetailsPage />,
                 loader: travelPlanLoader,
+                errorElement: <ErrorPage />,
             },
             {
                 path: 'org-chart',
@@ -108,6 +115,7 @@ const router = createBrowserRouter([
                 path: 'notifications',
                 element: <NotificationsPage />,
                 loader: notificationsLoader,
+                errorElement: <ErrorPage />,
             },
             {
                 path: '',
@@ -116,6 +124,7 @@ const router = createBrowserRouter([
                         path: 'configuration/roles',
                         element: <RolePage />,
                         loader: rolesLoader,
+                        errorElement: <ErrorPage />,
                     },
                     {
                         path: 'configuration/employees',
@@ -135,6 +144,7 @@ const router = createBrowserRouter([
                         path: 'configuration/designations',
                         element: <DesignationPage />,
                         loader: designationsLoader,
+                        errorElement: <ErrorPage />,
                         children: [
                             {
                                 path: 'update',
@@ -150,6 +160,7 @@ const router = createBrowserRouter([
                         path: 'configuration/departments',
                         element: <DepartmentPage />,
                         loader: departmentsLoader,
+                        errorElement: <ErrorPage />,
                         children: [
                             {
                                 path: 'update',
@@ -165,6 +176,7 @@ const router = createBrowserRouter([
                         path: 'configuration/document-types',
                         element: <DocumentTypePage />,
                         loader: documentTypesLoader,
+                        errorElement: <ErrorPage />,
                         children: [
                             {
                                 path: 'update',
@@ -180,6 +192,7 @@ const router = createBrowserRouter([
                         path: 'configuration/expense-categories',
                         element: <ExpenseCatrgoryPage />,
                         loader: expenseCategoriesLoader,
+                        errorElement: <ErrorPage />,
                         children: [
                             {
                                 path: 'update',

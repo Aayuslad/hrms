@@ -289,3 +289,33 @@ export function useCancelSlot() {
         },
     });
 }
+
+export function useOfferAction() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (params: {
+            offerId: string;
+            action: string;
+            payload: QueuedSlotActionRequest;
+        }): Promise<void> => {
+            const { offerId, action, payload } = params;
+            await axiosClient.post(
+                `/games/offers/${offerId}/${action}`,
+                payload
+            );
+        },
+        onSuccess: () => {
+            toast.success('Offer action performed');
+            queryClient.invalidateQueries({ queryKey: ['game-offers'] });
+        },
+        onError: (error: AxiosError<{ message: string }>) => {
+            toast.error(
+                error.response?.data?.message ||
+                    error.message ||
+                    'Offer action failed'
+            );
+            console.error('Offer action failed', error);
+        },
+    });
+}

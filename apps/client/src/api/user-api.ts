@@ -10,6 +10,9 @@ import { useShallow } from 'zustand/react/shallow';
 
 export type User = components['schemas']['UserDetailResponse'];
 export type UserSummary = components['schemas']['UserSummaryResponse'];
+export type OrgChartType = OrgChartNodeType[];
+export type OrgChartNodeType =
+    components['schemas']['EmployeeOrgChartNodeResponse'];
 
 export type LoginUserRequest = components['schemas']['LoginUserRequest'];
 export type RegisterUserRequest = components['schemas']['RegisterUserRequest'];
@@ -82,7 +85,7 @@ const notificationsQuery = {
     queryKey: ['notifications'] as const,
     queryFn: async (): Promise<Notification[]> => {
         const { data } = await axiosClient.get<{ data?: Notification[] }>(
-            '/notifications'
+            'users/me/notifications'
         );
         return data.data || [];
     },
@@ -94,6 +97,22 @@ export function useGetNotificationns() {
 
 export const notificationsLoader = async () => {
     return await queryClient.ensureQueryData(notificationsQuery);
+};
+
+const orgChartQuery = {
+    queryKey: ['org-charts'] as const,
+    queryFn: async (): Promise<OrgChartType> => {
+        const { data } = await axiosClient.get('users/org-charts');
+        return data.data.orgCharts || [];
+    },
+};
+
+export function useGetOrgCharts() {
+    return useQuery<OrgChartType, AxiosError>(orgChartQuery);
+}
+
+export const orgChartsLoader = async () => {
+    return await queryClient.ensureQueryData(orgChartQuery);
 };
 
 export function useLoginUser() {
@@ -231,7 +250,7 @@ export function useEditUserRoles() {
         },
         onSuccess: () => {
             toast.success('User roles updated!');
-            queryClient.invalidateQueries({ queryKey: ['users'] });
+            queryClient.invalidateQueries({ queryKey: ['users-details'] });
         },
         onError: (error: AxiosError<{ message: string }>) => {
             toast.error(

@@ -9,26 +9,26 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Form } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Loader2 } from 'lucide-react';
 
-import { WEEK_DAYS } from '@/types/enums';
+import {
+    useCreateJobOpening,
+    type CreateJobOpeningRequest,
+} from '@/api/jobs-api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
 import { Label } from '../ui/label';
-import { NumberInputWithEndButtons } from '../ui/number-input-with-end-buttons';
-import TimeInput from '../ui/time-input';
-import { WeekDaySelector } from '../ui/week-day-selector';
-import {
-    useCreateJobOpening,
-    type CreateJobOpeningRequest,
-} from '@/api/jobs-api';
+import { Textarea } from '../ui/textarea';
 import { DesignationSelector } from './designations-selector';
-import { TextArea } from 'react-aria-components';
+import { DefaultHrSelector } from './default-hr-selector';
+import { HrsSelector } from './hrs-selector';
+import { ReviewersSelector } from './reviewers-selector';
+import { NumberInputWithEndButtons } from '../ui/number-input-with-end-buttons';
+import { Input } from '../ui/input';
 
 const createJobOpeningFormSchema = z.object({
     description: z.string().optional(),
@@ -47,7 +47,16 @@ const CreateJobOpeningDialog = () => {
 
     const form = useForm({
         resolver: zodResolver(createJobOpeningFormSchema),
-    } as const);
+        defaultValues: {
+            description: '',
+            designationId: '',
+            requiredExperience: 0,
+            jd: '',
+            defaultHrId: '',
+            hrs: [],
+            reviewers: [],
+        },
+    });
 
     const onSubmit = async (data: CreateJobOpeningRequest) => {
         const formData = new FormData();
@@ -62,7 +71,7 @@ const CreateJobOpeningDialog = () => {
         data.hrs?.forEach((x) => formData.append('hrs[]', x));
         data.reviewers?.forEach((x) => formData.append('reviewers[]', x));
 
-        await createJobOpeningMutation.mutate(data, {
+        createJobOpeningMutation.mutate(formData, {
             onSuccess: () => {
                 form.reset();
                 setOpen(false);
@@ -71,8 +80,10 @@ const CreateJobOpeningDialog = () => {
     };
 
     const onInvalid = (errors: typeof form.formState.errors) => {
-        const messages = Object.values(errors).map((err) => err.message);
-        messages.reverse().forEach((msg) => toast.error(msg));
+        const messages = Object.values(errors)
+            .map((err) => err?.message)
+            .filter((msg): msg is string => msg !== undefined);
+        messages.forEach((msg) => toast.error(msg));
     };
 
     return (
@@ -88,7 +99,7 @@ const CreateJobOpeningDialog = () => {
                             <DialogTitle>Create job opening</DialogTitle>
                         </DialogHeader>
 
-                        <ScrollArea className="px-6 py-4">
+                        <ScrollArea className="px-6 py-4 h-[400px] ">
                             <div className="space-y-5">
                                 <div className="grid gap-3">
                                     <Label htmlFor="name">Designation*</Label>
@@ -108,52 +119,67 @@ const CreateJobOpeningDialog = () => {
                                     <Label htmlFor="descirption">
                                         Description
                                     </Label>
-                                    <TextArea                               
+                                    <Textarea
                                         {...form.register('description')}
                                     />
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid gap-3">
                                     <NumberInputWithEndButtons
-                                        name="slotDuration"
+                                        name="requiredExperience"
                                         control={form.control}
-                                        label="Slot Duration (minutes)*"
-                                        minValue={1}
-                                        step={1}
-                                    />
-
-                                    <NumberInputWithEndButtons
-                                        name="maxSlotPlayers"
-                                        control={form.control}
-                                        label="Max Players per Slot*"
-                                        minValue={1}
-                                        step={1}
+                                        minValue={0}
+                                        label="Required Experience (years)"
                                     />
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-4">
-                                    <TimeInput
-                                        name="openTime"
-                                        control={form.control}
-                                        label="Open Time*"
-                                    />
-                                    <TimeInput
-                                        name="closeTime"
-                                        control={form.control}
-                                        label="Close Time*"
+                                <div className="grid gap-3">
+                                    <Label htmlFor="doc">
+                                        Job Description*
+                                    </Label>
+                                    <Input
+                                        id="doc"
+                                        type="file"
+                                        className=""
+                                        accept="image/*,.pdf,.doc,.docx"
+                                        onChange={(e) =>
+                                            setJd(e.target.files?.[0])
+                                        }
                                     />
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-4">
-                                    <WeekDaySelector
-                                        name="openingDayOfWeek"
-                                        control={form.control}
-                                        label="Opening Day*"
+                                <div className="grid gap-3">
+                                    <Label htmlFor="defaultHrId">
+                                        Default HR*
+                                    </Label>
+                                    <DefaultHrSelector
+                                        setSelectedHrId={(selectedId) =>
+                                            form.setValue(
+                                                'defaultHrId',
+                                                selectedId
+                                            )
+                                        }
                                     />
-                                    <WeekDaySelector
-                                        name="closingDayOfWeek"
-                                        control={form.control}
-                                        label="Closing Day*"
+                                </div>
+
+                                <div className="grid gap-3">
+                                    <Label htmlFor="hrs">HRs</Label>
+                                    <HrsSelector
+                                        setSelectedHrIds={(selectedIds) =>
+                                            form.setValue('hrs', selectedIds)
+                                        }
+                                    />
+                                </div>
+
+                                <div className="grid gap-3">
+                                    <Label htmlFor="reviewers">Reviewers</Label>
+                                    <ReviewersSelector
+                                        setSelectedReviewerIds={(selectedIds) =>
+                                            form.setValue(
+                                                'reviewers',
+                                                selectedIds
+                                            )
+                                        }
                                     />
                                 </div>
                             </div>
@@ -166,12 +192,12 @@ const CreateJobOpeningDialog = () => {
 
                             <Button
                                 type="submit"
-                                disabled={createJobOpeMutation.isPending}
+                                disabled={createJobOpeningMutation.isPending}
                             >
-                                {createJobOpeMutation.isPending && (
+                                {createJobOpeningMutation.isPending && (
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                 )}
-                                Create JobOpe
+                                Create Job Opening
                             </Button>
                         </DialogFooter>
                     </form>
