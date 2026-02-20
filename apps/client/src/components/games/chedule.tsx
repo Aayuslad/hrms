@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
     format,
     startOfWeek,
@@ -15,6 +16,8 @@ import {
     TableHead,
     TableCell,
 } from '@/components/ui/table';
+import BookSlotDialog from './book-slot-dialog';
+import BookedSlotDialog from './booked-slot-dialog';
 
 type GameSlotResponse = components['schemas']['GameSlotResponse'];
 type GameResponse = components['schemas']['GameResponse'];
@@ -30,6 +33,14 @@ export default function Schedule({
     referenceDate = new Date(),
     weekStartsOn = 1,
 }: Props) {
+    const [bookSlotOpen, setBookSlotOpen] = useState(false);
+    const [selectedSlot, setSelectedSlot] = useState<{
+        day: string;
+        time: string;
+    } | null>(null);
+    const [bookedSlotDialogOpen, setBookedSlotDialogOpen] = useState(false);
+    const [selectedBookedSlot, setSelectedBookedSlot] =
+        useState<GameSlotResponse | null>(null);
     // build an array of seven Date objects representing the current week
     const weekStart = startOfWeek(referenceDate, { weekStartsOn });
     let days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
@@ -89,49 +100,50 @@ export default function Schedule({
     const weekNumber = getWeek(referenceDate, { weekStartsOn });
 
     return (
-        <div className="overflow-auto w-full pr-4">
-            <Table
-                className="w-full table-fixed"
-                style={{
-                    ['--first-col' as any]: '6rem',
-                    ['--days' as any]: days.length,
-                }}
-            >
-                <colgroup>
-                    <col style={{ width: 'var(--first-col)' }} />
-                    {days.map((d) => (
-                        <col
-                            key={d.toString()}
-                            style={{
-                                width: `calc((100% - var(--first-col)) / var(--days))`,
-                            }}
-                        />
-                    ))}
-                </colgroup>
-
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className="bg-accent h-[50px] font-semibold rounded-tl-lg text-sm text-center sticky top-0 z-20 border-muted/50">
-                            Week {weekNumber}
-                        </TableHead>
-                        {days.map((d, idx) => (
-                            <TableHead
+        <>
+            <div className="overflow-auto w-full pr-4">
+                <Table
+                    className="w-full table-fixed"
+                    style={{
+                        ['--first-col' as any]: '6rem',
+                        ['--days' as any]: days.length,
+                    }}
+                >
+                    <colgroup>
+                        <col style={{ width: 'var(--first-col)' }} />
+                        {days.map((d) => (
+                            <col
                                 key={d.toString()}
-                                className={
-                                    'bg-accent text-center text-sm  sticky top-0 z-20  border-muted/50 ' +
-                                    (idx === days.length - 1
-                                        ? ' rounded-tr-lg'
-                                        : '')
-                                }
-                            >
-                                <div className="text-sm font-semibold">
-                                    {format(d, 'EEE')} {format(d, 'd')}
-                                </div>
-                            </TableHead>
+                                style={{
+                                    width: `calc((100% - var(--first-col)) / var(--days))`,
+                                }}
+                            />
                         ))}
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
+                    </colgroup>
+
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="bg-accent h-[50px] font-semibold rounded-tl-lg text-sm text-center sticky top-0 z-20 border-muted/50">
+                                Week {weekNumber}
+                            </TableHead>
+                            {days.map((d, idx) => (
+                                <TableHead
+                                    key={d.toString()}
+                                    className={
+                                        'bg-accent text-center text-sm  sticky top-0 z-20  border-muted/50 ' +
+                                        (idx === days.length - 1
+                                            ? ' rounded-tr-lg'
+                                            : '')
+                                    }
+                                >
+                                    <div className="text-sm font-semibold">
+                                        {format(d, 'EEE')} {format(d, 'd')}
+                                    </div>
+                                </TableHead>
+                            ))}
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
                     {slots.map((t) => (
                         <TableRow
                             key={t.toString()}
@@ -146,17 +158,26 @@ export default function Schedule({
                                 const slot = slotMap.get(
                                     `${dayKey} ${timeKey}`
                                 );
+
+                                const handleSlotClick = () => {
+                                    // Open dialog for booked slots
+                                    if (slot?.booked) {
+                                        setSelectedBookedSlot(slot);
+                                        setBookedSlotDialogOpen(true);
+                                    } else {
+                                        // Open dialog for empty slots
+                                        setSelectedSlot({
+                                            day: dayKey,
+                                            time: timeKey,
+                                        });
+                                        setBookSlotOpen(true);
+                                    }
+                                };
+
                                 return (
                                     <TableCell
                                         key={dayKey}
-                                        onClick={() =>
-                                            console.log('slot-click', {
-                                                gameId: game.id,
-                                                day: dayKey,
-                                                time: timeKey,
-                                                slot: slot ?? null,
-                                            })
-                                        }
+                                        onClick={handleSlotClick}
                                         className={
                                             'text-sm border-2 border-muted/50 hover:bg-muted/30 cursor-pointer border-r-0 border-b-0' +
                                             (slot?.booked
@@ -190,5 +211,22 @@ export default function Schedule({
                 </TableBody>
             </Table>
         </div>
+
+        <BookSlotDialog
+            gameId={game.id}
+            maxPlayers={game.maxSlotPlayers}
+            preFillDay={selectedSlot?.day}
+            preFillTime={selectedSlot?.time}
+            isOpen={bookSlotOpen}
+            onOpenChange={setBookSlotOpen}
+        />
+
+        <BookedSlotDialog
+            gameId={game.id}
+            slot={selectedBookedSlot ?? undefined}
+            isOpen={bookedSlotDialogOpen}
+            onOpenChange={setBookedSlotDialogOpen}
+        />
+    </>
     );
 }

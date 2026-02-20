@@ -39,6 +39,7 @@ export function useCreateExpenseCategory() {
         onSuccess: () => {
             toast.success('Expense category created');
             queryClient.invalidateQueries({ queryKey: ['expense-categories'] });
+            queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
         },
         onError: (error: AxiosError<{ message: string }>) => {
             toast.error(
@@ -61,6 +62,7 @@ export function useUpdateExpenseCategory() {
         onSuccess: () => {
             toast.success('Expense category updated');
             queryClient.invalidateQueries({ queryKey: ['expense-categories'] });
+            queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
         },
         onError: (error: AxiosError<{ message: string }>) => {
             toast.error(
@@ -80,6 +82,7 @@ export function useDeleteExpenseCategory() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['expense-categories'] });
+            queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
         },
         onError: (error: AxiosError<{ message: string }>) => {
             toast.error(

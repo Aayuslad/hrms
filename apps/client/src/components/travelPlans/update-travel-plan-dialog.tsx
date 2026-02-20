@@ -218,11 +218,11 @@ const UpdateTravelPlanDialog = ({ travelPlan }: Props) => {
                                                                                     u.id as string
                                                                                 )
                                                                             }
-                                                                            disabled={
-                                                                                !selected.includes(
-                                                                                    u.id as string
-                                                                                )
-                                                                            }
+                                                                            // disabled={
+                                                                            //     selected.includes(
+                                                                            //         u.id as string
+                                                                            //     )
+                                                                            // }
                                                                             className="me-2"
                                                                         />
                                                                         <div className="flex flex-col">

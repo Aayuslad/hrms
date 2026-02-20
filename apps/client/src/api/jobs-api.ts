@@ -5,14 +5,14 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 
-type JobOpeningSummary = components['schemas']['JobOpeningSummaryResponse'];
-type JobOpening = components['schemas']['JobOpeningResponse'];
+export type JobOpeningSummary = components['schemas']['JobOpeningSummaryResponse'];
+export type JobOpening = components['schemas']['JobOpeningResponse'];
 
-type CreateJobOpeningRequest = components['schemas']['CreateJobOpeningRequest'];
-type UpdateJobOpeningRequest = components['schemas']['UpdateJobOpeningRequest'];
-type ShareJobOpeningRequest = components['schemas']['ShareJobOpeningRequest'];
-type CreateJobOpeningReferralRequest = components['schemas']['CreateJobOpeningReferralRequest'];
-type UpdateJobOpeningReferralRequest = components['schemas']['UpdateJobOpeningReferralRequest'];
+export type CreateJobOpeningRequest = components['schemas']['CreateJobOpeningRequest'];
+export type UpdateJobOpeningRequest = components['schemas']['UpdateJobOpeningRequest'];
+export type ShareJobOpeningRequest = components['schemas']['ShareJobOpeningRequest'];
+export type CreateJobOpeningReferralRequest = components['schemas']['CreateJobOpeningReferralRequest'];
+export type UpdateJobOpeningReferralRequest = components['schemas']['UpdateJobOpeningReferralRequest'];
 
 const jobsQuery = {
     queryKey: ['job-openings'],
@@ -118,9 +118,10 @@ export function useDeleteJobOpening() {
         mutationFn: async (id: string): Promise<void> => {
             await axiosClient.delete(`/job-openings/${id}`);
         },
-        onSuccess: () => {
+        onSuccess: (_, id) => {
             toast.success('Job opening deleted');
             queryClient.invalidateQueries({ queryKey: ['job-openings'] });
+            queryClient.invalidateQueries({ queryKey: ['job-opening', id] });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -164,9 +165,10 @@ export function useCloseJobOpening() {
         mutationFn: async (id: string): Promise<void> => {
             await axiosClient.patch(`/job-openings/${id}/close`);
         },
-        onSuccess: () => {
+        onSuccess: (_, id) => {
             toast.success('Job opening closed');
             queryClient.invalidateQueries({ queryKey: ['job-openings'] });
+            queryClient.invalidateQueries({ queryKey: ['job-opening', id] });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -185,9 +187,10 @@ export function useCreateJobOpeningReferral() {
         mutationFn: async (payload: CreateJobOpeningReferralRequest): Promise<void> => {
             await axiosClient.post('/job-openings/referrals', payload);
         },
-        onSuccess: () => {
+        onSuccess: (_, vars) => {
             toast.success('Job opening referral created');
             queryClient.invalidateQueries({ queryKey: ['job-openings'] });
+            queryClient.invalidateQueries({ queryKey: ['job-opening', vars.jobOpeningId] });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -214,9 +217,10 @@ export function useUpdateJobOpeningReferral() {
                 payload
             );
         },
-        onSuccess: () => {
+        onSuccess: (_, vars) => {
             toast.success('Job opening referral updated');
             queryClient.invalidateQueries({ queryKey: ['job-openings'] });
+            queryClient.invalidateQueries({ queryKey: ['job-opening', vars.jobOpeningId] });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(

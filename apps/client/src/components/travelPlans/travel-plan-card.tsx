@@ -12,51 +12,59 @@ const TravelPlanCard = ({ travelPlan }: Props) => {
     const navigate = useNavigate();
 
     return (
-        <Card className="border-primary w-[400px]  gap-2 bg-transparent shadow-none">
-            <CardHeader>
-                <div className="flex justify-between">
-                    <CardTitle className="font-bold text-2xl">
+        <Card className="w-[420px] border-primary/40 bg-transparent shadow-none p-6 rounded-2xl">
+            {/* HEADER */}
+            <div className="flex items-start justify-between gap-4">
+                <div className="space-y-1">
+                    <CardTitle className="text-2xl font-semibold leading-tight">
                         {travelPlan.title}
                     </CardTitle>
-                    <Button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            navigate(`${travelPlan.id}`);
-                        }}
-                        className="bg-gradient-to-br from-purple-500 to-pink-500 text-white focus-visible:ring-pink-600/20"
-                    >
-                        Explore More
-                    </Button>
                 </div>
-            </CardHeader>
-            <CardContent className="space-y-1">
-                <div className="flex flex-col gap-2 text-sm  text-muted-foreground">
-                    <div className="flex items-center gap-2">
-                        <span>
-                            <MapPin className="h-4 w-4" />
-                        </span>
+
+                <Button
+                    size="sm"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`${travelPlan.id}`);
+                    }}
+                    className="shrink-0 bg-gradient-to-br from-purple-500 to-pink-500 text-white"
+                >
+                    Explore More
+                </Button>
+            </div>
+
+            {/* CONTENT */}
+            <CardContent className="px-0 pt-4 space-y-4">
+                <div className="space-y-3 text-sm text-muted-foreground">
+                    
+                    {/* Destination */}
+                    <div className="flex items-center gap-3">
+                        <MapPin className="h-4 w-4 shrink-0" />
                         <span>{travelPlan.destination}</span>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    {/* Date */}
+                    <div className="flex items-center gap-3">
+                        <Calendar className="h-4 w-4 shrink-0" />
                         <span>
-                            <Calendar className="h-4 w-4" />
-                        </span>
-                        <span>
-                            {new Date(
-                                travelPlan.startAt as string
-                            ).toLocaleString()}{' '}
-                            –{' '}
-                            {new Date(
-                                travelPlan.endAt as string
-                            ).toLocaleString()}
+                            {new Date(travelPlan.startAt as string).toLocaleString()} 
+                            {' – '}
+                            {new Date(travelPlan.endAt as string).toLocaleString()}
                         </span>
                     </div>
                 </div>
-                <div>{travelPlan.description}</div>
+
+                {/* Divider */}
+                <div className="h-px bg-border/50" />
+
+                {/* Description */}
+                <p className="text-sm text-foreground/90 leading-relaxed">
+                    {travelPlan.description}
+                </p>
             </CardContent>
         </Card>
     );
 };
+
 
 export default TravelPlanCard;

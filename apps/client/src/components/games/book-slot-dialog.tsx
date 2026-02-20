@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -31,6 +31,10 @@ import { Spinner } from '../ui/spinner';
 interface BookSlotDialogProps {
     gameId?: string;
     maxPlayers?: number;
+    preFillDay?: string;
+    preFillTime?: string;
+    isOpen?: boolean;
+    onOpenChange?: (open: boolean) => void;
 }
 
 const bookSlotFormSchema = z.object({
@@ -40,8 +44,19 @@ const bookSlotFormSchema = z.object({
     playerIds: z.array(z.string()).optional(),
 }) satisfies z.ZodType<BookSlotRequest>;
 
-const BookSlotDialog = ({ gameId, maxPlayers = 1 }: BookSlotDialogProps) => {
-    const [open, setOpen] = useState(false);
+const BookSlotDialog = ({
+    gameId,
+    maxPlayers = 1,
+    preFillDay,
+    preFillTime,
+    isOpen: externalOpen,
+    onOpenChange: externalOnOpenChange,
+}: BookSlotDialogProps) => {
+    const [internalOpen, setInternalOpen] = useState(false);
+    const isControlled = externalOpen !== undefined;
+    const open = isControlled ? externalOpen : internalOpen;
+    const setOpen = isControlled ? externalOnOpenChange! : setInternalOpen;
+
     const [selected, setSelected] = useState<string[]>([]);
     const { data: users = [] } = useGetUserList();
     const bookSlotMutation = useBookSlot();
@@ -50,11 +65,21 @@ const BookSlotDialog = ({ gameId, maxPlayers = 1 }: BookSlotDialogProps) => {
         resolver: zodResolver(bookSlotFormSchema),
         defaultValues: {
             gameId: gameId ?? '',
-            day: new Date().toISOString().slice(0, 10),
-            startTime: '',
+            day: preFillDay ?? new Date().toISOString().slice(0, 10),
+            startTime: preFillTime ?? '',
             playerIds: [],
         },
     });
+
+    // Update form values when pre-fill values change
+    useEffect(() => {
+        form.setValue(
+            'day',
+            preFillDay ?? new Date().toISOString().slice(0, 10)
+        );
+        form.setValue('startTime', preFillTime ?? '');
+        form.setValue('gameId', gameId ?? '');
+    }, [preFillDay, preFillTime, gameId, form]);
 
     const toggleUser = (id: string) => {
         setSelected((prev) => {
@@ -89,9 +114,11 @@ const BookSlotDialog = ({ gameId, maxPlayers = 1 }: BookSlotDialogProps) => {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button variant="outline">Book Slot</Button>
-            </DialogTrigger>
+            {!isControlled && (
+                <DialogTrigger asChild>
+                    <Button variant="outline">Book Slot</Button>
+                </DialogTrigger>
+            )}
 
             <DialogContent className="flex max-h-[min(600px,80vh)] flex-col gap-0 p-0 sm:max-w-md">
                 <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
@@ -144,7 +171,9 @@ const BookSlotDialog = ({ gameId, maxPlayers = 1 }: BookSlotDialogProps) => {
                                                         >
                                                             <div className="flex items-center gap-3">
                                                                 <Checkbox
-                                                                    checked={isChecked}
+                                                                    checked={
+                                                                        isChecked
+                                                                    }
                                                                     onCheckedChange={() =>
                                                                         toggleUser(
                                                                             u.id as string
@@ -203,9 +232,7 @@ const BookSlotDialog = ({ gameId, maxPlayers = 1 }: BookSlotDialogProps) => {
 
                     <DialogFooter className="flex-row items-center justify-end border-t px-6 py-4">
                         <DialogClose asChild>
-                            <Button variant="outline">
-                                Cancel
-                            </Button>
+                            <Button variant="outline">Cancel</Button>
                         </DialogClose>
 
                         <Button

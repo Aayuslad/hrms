@@ -199,9 +199,7 @@ export function useUpdateUserByAdmin() {
             id: string;
             payload: UpdateUserByAdminRequest;
         }): Promise<void> => {
-            await axiosClient.put(`/users/${params.id}`, undefined, {
-                params: { request: params.payload },
-            });
+            await axiosClient.put(`/users/${params.id}`, params.payload);
         },
         onSuccess: () => {
             toast.success('User updated!');

@@ -171,9 +171,10 @@ export function useCreateExpense() {
                 }
             );
         },
-        onSuccess: () => {
+        onSuccess: (_, vars) => {
             toast.success('Expense created');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
+            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -204,9 +205,10 @@ export function useUpdateExpense() {
                 }
             );
         },
-        onSuccess: () => {
+        onSuccess: (_, vars) => {
             toast.success('Expense updated');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
+            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -232,9 +234,10 @@ export function useDeleteExpense() {
                 `/travel-plans/${travelPlanId}/participant/${participantId}/expenses/${expenseId}`
             );
         },
-        onSuccess: () => {
+        onSuccess: (_, vars) => {
             toast.success('Expense deleted');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
+            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -260,9 +263,10 @@ export function useSubmitExpense() {
                 `/travel-plans/${travelPlanId}/participant/${participantId}/expenses/${expenseId}/submit`
             );
         },
-        onSuccess: () => {
+        onSuccess: (_, vars) => {
             toast.success('Expense submitted');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
+            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -292,9 +296,10 @@ export function useCreateDocument() {
                 }
             );
         },
-        onSuccess: () => {
+        onSuccess: (_, vars) => {
             toast.success('Document created');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
+            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -325,9 +330,10 @@ export function useUpdateDocument() {
                 }
             );
         },
-        onSuccess: () => {
+        onSuccess: (_, vars) => {
             toast.success('Document updated');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
+            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -353,9 +359,10 @@ export function useDeleteDocument() {
                 `/travel-plans/${travelPlanId}/participant/${participantId}/documents/${documentId}`
             );
         },
-        onSuccess: () => {
+        onSuccess: (_, vars) => {
             toast.success('Document deleted');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
+            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -382,9 +389,10 @@ export function useCreateDocumentByHr() {
                 payload
             );
         },
-        onSuccess: () => {
+        onSuccess: (_, vars) => {
             toast.success('Document created by HR');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
+            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -404,15 +412,18 @@ export function useApproveExpense() {
             travelPlanId: string;
             participantId: string;
             expenseId: string;
+            remarks?: string;
         }): Promise<void> => {
-            const { travelPlanId, participantId, expenseId } = params;
+            const { travelPlanId, participantId, expenseId, remarks } = params;
             await axiosClient.patch(
-                `/travel-plans/${travelPlanId}/participant/${participantId}/expenses/${expenseId}/approve`
+                `/travel-plans/${travelPlanId}/participant/${participantId}/expenses/${expenseId}/approve`,
+                { remarks }
             );
         },
-        onSuccess: () => {
+        onSuccess: (_, vars) => {
             toast.success('Expense approved');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
+            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -438,9 +449,10 @@ export function useRejectExpense() {
                 `/travel-plans/${travelPlanId}/participant/${participantId}/expenses/${expenseId}/reject`
             );
         },
-        onSuccess: () => {
+        onSuccess: (_, vars) => {
             toast.success('Expense rejected');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
+            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(

@@ -1,5 +1,5 @@
-import { designationsLoader } from '@/api/designation-api';
 import { departmentsLoader } from '@/api/department-api';
+import { designationsLoader } from '@/api/designation-api';
 import { documentTypesLoader } from '@/api/document-type-api';
 import { expenseCategoriesLoader } from '@/api/expense-category-api';
 import { gameLoader, gamesLoader } from '@/api/games-api';
@@ -13,6 +13,8 @@ import { DeleteDesignationDialog } from '@/components/configurations/designation
 import { UpdateDesignationDialog } from '@/components/configurations/designations/update-designation-dialog';
 import { DeleteDocTypeDialog } from '@/components/configurations/documentTypes/delete-document-type-dialog';
 import { UpdateDocTypeDialog } from '@/components/configurations/documentTypes/update-document-type-dialog';
+import { UpdateEmployeeDialog } from '@/components/configurations/employees/update-employee-dialog';
+import { UpdateEmployeeRolesDialog } from '@/components/configurations/employees/update-employee-roles-dialog';
 import { DeleteExpenseCategoryDialog } from '@/components/configurations/expenseCategories/delete-expense-category-dialog';
 import { UpdateExpenseCategoryDialog } from '@/components/configurations/expenseCategories/update-expense-category-dialog';
 import HomeLayout from '@/components/home-layout';
@@ -118,6 +120,16 @@ const router = createBrowserRouter([
                     {
                         path: 'configuration/employees',
                         element: <EmployeePage />,
+                        children: [
+                            {
+                                path: 'update-profile',
+                                element: <UpdateEmployeeDialog />,
+                            },
+                            {
+                                path: 'update-roles',
+                                element: <UpdateEmployeeRolesDialog />,
+                            },
+                        ],
                     },
                     {
                         path: 'configuration/designations',

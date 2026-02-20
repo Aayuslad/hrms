@@ -146,9 +146,10 @@ export function useWaitForAnySlot(gameId: string) {
         mutationFn: async (payload: WaitAnySlotRequest): Promise<void> => {
             await axiosClient.post(`/games/${gameId}/slots/wait`, payload);
         },
-        onSuccess: () => {
+        onSuccess: (_, gameId) => {
             toast.success('Waiting for any slot');
             queryClient.invalidateQueries({ queryKey: ['games'] });
+            queryClient.invalidateQueries({ queryKey: ['game', gameId] });
         },
         onError: (error: AxiosError<{ message: string }>) => {
             toast.error(
@@ -171,9 +172,10 @@ export function useBookSlot() {
                 payload
             );
         },
-        onSuccess: () => {
+        onSuccess: (_, payload) => {
             toast.success('Slot booked');
             queryClient.invalidateQueries({ queryKey: ['games'] });
+            queryClient.invalidateQueries({ queryKey: ['game', payload.gameId] });
         },
         onError: (error: AxiosError<{ message: string }>) => {
             toast.error(
@@ -196,9 +198,10 @@ export function useWaitForSpecificSlot(gameId: string, slotId: string) {
                 payload
             );
         },
-        onSuccess: () => {
+        onSuccess: (_, { gameId }) => {
             toast.success('Waiting for specific slot');
             queryClient.invalidateQueries({ queryKey: ['games'] });
+            queryClient.invalidateQueries({ queryKey: ['game', gameId] });
         },
         onError: (error: AxiosError<{ message: string }>) => {
             toast.error(
@@ -226,9 +229,10 @@ export function useSlotAction(gameId: string) {
                 payload
             );
         },
-        onSuccess: () => {
+        onSuccess: (_, gameId) => {
             toast.success('Slot action performed');
             queryClient.invalidateQueries({ queryKey: ['games'] });
+            queryClient.invalidateQueries({ queryKey: ['game', gameId] });
         },
         onError: (error: AxiosError<{ message: string }>) => {
             toast.error(
@@ -270,9 +274,10 @@ export function useCancelSlot() {
             const { gameId, slotId } = params;
             await axiosClient.patch(`/games/${gameId}/slots/${slotId}/cancel`);
         },
-        onSuccess: () => {
+        onSuccess: (_, { gameId }) => {
             toast.success('Slot cancelled');
             queryClient.invalidateQueries({ queryKey: ['games'] });
+            queryClient.invalidateQueries({ queryKey: ['game', gameId] });
         },
         onError: (error: AxiosError<{ message: string }>) => {
             toast.error(

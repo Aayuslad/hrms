@@ -39,6 +39,7 @@ export function useCreateDocumentType() {
         onSuccess: () => {
             toast.success('Document type created');
             queryClient.invalidateQueries({ queryKey: ['document-types'] });
+            queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
         },
         onError: (error: AxiosError<{ message: string }>) => {
             toast.error(
@@ -61,6 +62,7 @@ export function useUpdateDocumentType() {
         onSuccess: () => {
             toast.success('Document type updated');
             queryClient.invalidateQueries({ queryKey: ['document-types'] });
+            queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
         },
         onError: (error: AxiosError<{ message: string }>) => {
             toast.error(
@@ -80,6 +82,7 @@ export function useDeleteDocumentType() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['document-types'] });
+            queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
         },
         onError: (error: AxiosError<{ message: string }>) => {
             toast.error(

@@ -1,3 +1,6 @@
+import { EmployeesTable } from '@/components/configurations/employees/employees-table';
+import { Outlet } from 'react-router';
+
 export function EmployeePage() {
     return (
         <div className=" h-full">
@@ -10,14 +13,15 @@ export function EmployeePage() {
                     </p>
                 </div>
                 <div className="w-[230px] mb-4">
-                    {/* <CreateJobOpeningSheet visibleTo={['Admin', 'Recruiter']} /> */}
+                    {/* <CreateEmployeeDialog visibleTo={['Admin', 'HR']} /> */}
                 </div>
             </div>
 
             <div className="w-full flex justify-evenly pt-10">
                 <div className="w-full flex flex-col items-center">
                     <div className="mr-12 w-fit">
-                        {/* <JobOpeningsTable /> */}
+                        <EmployeesTable />
+                        <Outlet />
                     </div>
                 </div>
             </div>

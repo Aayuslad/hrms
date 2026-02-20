@@ -83,7 +83,7 @@ public class UserController {
     }
 
     //    @PutMapping(value = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PostMapping("/me")
+    @PutMapping("/me")
     public ResponseEntity<Result<Void>> updateBySelf(
             @Valid @RequestBody UpdateUserBySelfRequest request) {
         userService.update(request);
@@ -91,13 +91,13 @@ public class UserController {
     }
 
     //    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Result<Void>> updateByAdmin(
             @PathVariable("id") UUID id,
             @Valid @RequestBody UpdateUserByAdminRequest request) {
         request.setUserId(id);
         userService.update(request);
-        return ResultMapper.handle(HttpStatus.CREATED, "User updated");
+        return ResultMapper.handle(HttpStatus.OK);
     }
 
     @GetMapping("/me/notifications")

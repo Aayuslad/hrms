@@ -16,7 +16,6 @@ import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.UpdateTravelPla
 import com.aayush.lad.hrms.modules.travel.models.TravelPlan;
 import com.aayush.lad.hrms.modules.travel.models.TravelPlanDocument;
 import com.aayush.lad.hrms.modules.travel.models.TravelPlanExpense;
-import com.aayush.lad.hrms.modules.travel.models.TravelPlanExpenseProof;
 import com.aayush.lad.hrms.modules.user.models.User;
 import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
 
