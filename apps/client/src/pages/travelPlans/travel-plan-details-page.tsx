@@ -14,10 +14,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Spinner } from '@/components/ui/spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAccessChecker } from '@/hooks/use-has-access';
 import { Calendar, Dot, MapPin, Wallet } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 
 export function TravelPlanDetailsPage() {
+    const canAccess = useAccessChecker();
     const { travelPlanId } = useParams<{ travelPlanId?: string }>();
     const {
         data: travelPlan,
@@ -111,19 +113,23 @@ export function TravelPlanDetailsPage() {
                     </div>
                 </div>
                 <div className="mr-10 mb-4 flex gap-2">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline">Other Actions</Button>
-                        </DropdownMenuTrigger>
+                    {canAccess(['Admin', 'HR']) && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline">Other Actions</Button>
+                            </DropdownMenuTrigger>
 
-                        <DropdownMenuContent align="end">
-                            <UpdateTravelPlanDialog travelPlan={travelPlan} />
-                            <DropdownMenuSeparator />
-                            <DeleteTravelPlanDialog
-                                travelPlanId={travelPlan.id}
-                            />
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                            <DropdownMenuContent align="end">
+                                <UpdateTravelPlanDialog
+                                    travelPlan={travelPlan}
+                                />
+                                <DropdownMenuSeparator />
+                                <DeleteTravelPlanDialog
+                                    travelPlanId={travelPlan.id}
+                                />
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
                 </div>
             </div>
 

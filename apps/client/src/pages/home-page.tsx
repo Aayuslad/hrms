@@ -33,9 +33,9 @@ export function HomePage() {
     else if (hour >= 21 || hour < 5) greeting = 'Good night';
 
     return (
-        <div className="flex flex-col items-center justify-center bg-gray-50 p-8">
+        <div className="flex flex-col items-center justify-center p-8">
             <div className="text-center">
-                <p className="text-base text-gray-500 mb-4 font-semibold">
+                <p className="text-base  mb-4 font-semibold">
                     {date}
                 </p>
                 <h1 className="text-3xl font-bold text-fuchsia-500">
@@ -47,7 +47,7 @@ export function HomePage() {
             <div className="w-full py-10 flex flex-wrap justify-center gap-10">
                 <Card
                     onClick={() => navigate('/games')}
-                    className="border-primary max-w-md gap-0 bg-transparent shadow-none hover:bg-gray-100 transition cursor-pointer"
+                    className="border-primary max-w-md gap-0 bg-transparent shadow-none transition cursor-pointer"
                 >
                     <CardHeader>
                         <CardTitle className="text-2xl text-center mb-2">
@@ -61,7 +61,10 @@ export function HomePage() {
                     </CardContent>
                 </Card>
 
-                <Card onClick={() => navigate('/travel-plans')} className="border-primary max-w-md gap-0 bg-transparent shadow-none hover:bg-gray-100 transition cursor-pointer">
+                <Card
+                    onClick={() => navigate('/travel-plans')}
+                    className="border-primary max-w-md gap-0 bg-transparent shadow-none  transition cursor-pointer"
+                >
                     <CardHeader>
                         <CardTitle className="text-2xl text-center mb-2">
                             Explore Your Travels
@@ -74,7 +77,10 @@ export function HomePage() {
                     </CardContent>
                 </Card>
 
-                <Card onClick={() => navigate('/job-openings')} className="border-primary max-w-md gap-0 bg-transparent shadow-none hover:bg-gray-100 transition cursor-pointer">
+                <Card
+                    onClick={() => navigate('/job-openings')}
+                    className="border-primary max-w-md gap-0 bg-transparent shadow-none transition cursor-pointer"
+                >
                     <CardHeader>
                         <CardTitle className="text-2xl text-center mb-2">
                             Explore Job Opportunities
@@ -87,7 +93,10 @@ export function HomePage() {
                     </CardContent>
                 </Card>
 
-                <Card onClick={() => navigate('/achievements')} className="border-primary max-w-md gap-0 bg-transparent shadow-none hover:bg-gray-100 transition cursor-pointer">
+                <Card
+                    onClick={() => navigate('/achievements')}
+                    className="border-primary max-w-md gap-0 bg-transparent shadow-none  transition cursor-pointer"
+                >
                     <CardHeader>
                         <CardTitle className="text-2xl text-center mb-2">
                             Connect with colleagues

@@ -29,6 +29,7 @@ import { HrsSelector } from './hrs-selector';
 import { ReviewersSelector } from './reviewers-selector';
 import { NumberInputWithEndButtons } from '../ui/number-input-with-end-buttons';
 import { Input } from '../ui/input';
+import { useAccessChecker } from '@/hooks/use-has-access';
 
 const createJobOpeningFormSchema = z.object({
     description: z.string().optional(),
@@ -40,8 +41,13 @@ const createJobOpeningFormSchema = z.object({
     reviewers: z.array(z.string()).optional(),
 }) satisfies z.ZodType<CreateJobOpeningRequest>;
 
-const CreateJobOpeningDialog = () => {
+type Props = {
+    visibleTo: string[];
+};
+
+const CreateJobOpeningDialog = ({ visibleTo }: Props) => {
     const createJobOpeningMutation = useCreateJobOpening();
+    const canAccess = useAccessChecker();
     const [open, setOpen] = useState(false);
     const [jd, setJd] = useState<File>();
 
@@ -85,6 +91,8 @@ const CreateJobOpeningDialog = () => {
             .filter((msg): msg is string => msg !== undefined);
         messages.forEach((msg) => toast.error(msg));
     };
+
+    if (!canAccess(visibleTo)) return null;
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>

@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -28,6 +29,7 @@ public class TravelPlanParticipantController {
     private final TravelPlanExpenseService travelPlanExpenseService;
     private final TravelPlanDocumentService travelPlanDocumentsService;
 
+    @PreAuthorize("hasRole('Employee')")
     @GetMapping("/{travelPlanId}/participant/{participantId}")
     public ResponseEntity<Result<ParticipantResponse>> getParticipant(
             @PathVariable UUID travelPlanId,
@@ -36,6 +38,7 @@ public class TravelPlanParticipantController {
         return ResultMapper.handle(HttpStatus.OK, response);
     }
 
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
     @PostMapping(value = "/{travelPlanId}/participant/{participantId}/expenses", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Result<Void>> createExpense(
             @PathVariable UUID travelPlanId,
@@ -47,6 +50,7 @@ public class TravelPlanParticipantController {
         return ResultMapper.handle(HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
     @PutMapping(value = "/{travelPlanId}/participant/{participantId}/expenses/{expenseId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Result<Void>> updateExpense(
             @PathVariable UUID expenseId,
@@ -58,6 +62,7 @@ public class TravelPlanParticipantController {
         return ResultMapper.handle(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('Employee')")
     @DeleteMapping("/{travelPlanId}/participant/{participantId}/expenses/{expenseId}")
     public ResponseEntity<Result<Void>> deleteExpense(
             @PathVariable UUID travelPlanId,
@@ -67,6 +72,7 @@ public class TravelPlanParticipantController {
         return ResultMapper.handle(HttpStatus.NO_CONTENT);
     }
 
+    @PreAuthorize("hasRole('Employee')")
     @PatchMapping("/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/submit")
     public ResponseEntity<Result<Void>> submitExpense(
             @PathVariable UUID travelPlanId,
@@ -75,6 +81,7 @@ public class TravelPlanParticipantController {
         return ResultMapper.handle(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('Employee')")
     @PostMapping(value = "/{travelPlanId}/participant/{participantId}/documents", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Result<Void>> createDocument(
             @PathVariable UUID travelPlanId,
@@ -89,6 +96,7 @@ public class TravelPlanParticipantController {
         return ResultMapper.handle(HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('Employee')")
     @PutMapping(value = "/{travelPlanId}/participant/{participantId}/documents/{documentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Result<Void>> updateDocument(
             @PathVariable UUID documentId,
@@ -100,6 +108,7 @@ public class TravelPlanParticipantController {
         return ResultMapper.handle(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('Employee')")
     @DeleteMapping("/{travelPlanId}/participant/{participantId}/documents/{documentId}")
     public ResponseEntity<Result<Void>> deleteDocument(
             @PathVariable UUID travelPlanId,

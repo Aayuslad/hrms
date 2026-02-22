@@ -8,7 +8,9 @@ import com.aayush.lad.hrms.modules.travel.services.TravelPlanExpenseService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -21,6 +23,7 @@ public class TravelPlanParticipantHrController {
     private final TravelPlanExpenseService travelPlanExpenseService;
     private final TravelPlanDocumentService travelPlanDocumentsService;
 
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
     @PatchMapping("/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/approve")
     public ResponseEntity<Result<Void>> approveExpense(
             @PathVariable UUID travelPlanId,
@@ -29,6 +32,7 @@ public class TravelPlanParticipantHrController {
         return ResultMapper.handle(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
     @PatchMapping("/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/reject")
     public ResponseEntity<Result<Void>> rejectExpense(
             @PathVariable UUID travelPlanId,
@@ -37,11 +41,12 @@ public class TravelPlanParticipantHrController {
         return ResultMapper.handle(HttpStatus.OK);
     }
 
-    @PostMapping("/{travelPlanId}/participant/{participantId}/documents/hr")
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
+    @PostMapping(value = "/{travelPlanId}/participant/{participantId}/documents/hr", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Result<Void>> createDocumentByHr(
             @PathVariable UUID travelPlanId,
             @PathVariable UUID participantId,
-            @Valid @RequestBody CreateDocumentRequest request) {
+            @Valid @ModelAttribute CreateDocumentRequest request) {
 
         request.setTravelPlanId(travelPlanId);
         if (request.getOwnerId() == null)

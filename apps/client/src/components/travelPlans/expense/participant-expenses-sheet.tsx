@@ -109,27 +109,30 @@ export function ParticipantExpensesSheet({
                                                     ).toLocaleDateString()}
                                                 </p>
 
-                                                <div>
-                                                    <div className="flex items-center gap-2">
-                                                        <Badge
-                                                            variant={
-                                                                expense.status ===
-                                                                'APPROVED'
-                                                                    ? 'default'
-                                                                    : expense.status ===
-                                                                        'REJECTED'
-                                                                      ? 'destructive'
-                                                                      : 'secondary'
-                                                            }
-                                                        >
-                                                            {expense.status}
-                                                        </Badge>
+                                                {expense.status !==
+                                                    'SUBMITTED' && (
+                                                    <div>
+                                                        <div className="flex items-center gap-2">
+                                                            <Badge
+                                                                variant={
+                                                                    expense.status ===
+                                                                    'APPROVED'
+                                                                        ? 'default'
+                                                                        : expense.status ===
+                                                                            'REJECTED'
+                                                                          ? 'destructive'
+                                                                          : 'secondary'
+                                                                }
+                                                            >
+                                                                {expense.status}
+                                                            </Badge>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                )}
 
                                                 {expense.status ===
                                                     'SUBMITTED' && (
-                                                    <div className="flex gap-2 mt-4">
+                                                    <div className="flex gap-2">
                                                         <Button
                                                             size="sm"
                                                             onClick={() => {

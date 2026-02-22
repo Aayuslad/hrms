@@ -16,18 +16,13 @@ import {
 } from '@tanstack/react-table';
 
 // Assuming a ShareResponse type, since it's not in the API yet
-type ShareResponse = {
-    id: string;
-    sharedToEmail: string;
-    sharedBy?: components['schemas']['GlobalUserResponseSummary'];
-    sharedAt?: string;
-};
 
 type Props = {
-    readonly shares: readonly ShareResponse[];
+    shares: components['schemas']['JobOpeningShareAuditResponse'][];
 };
 
-const columnHelper = createColumnHelper<ShareResponse>();
+const columnHelper =
+    createColumnHelper<components['schemas']['JobOpeningShareAuditResponse']>();
 
 const columns = [
     columnHelper.accessor('sharedToEmail', {
@@ -47,7 +42,8 @@ const columns = [
                 <div className="flex items-center gap-2">
                     <User className="h-4 w-4 shrink-0 text-muted-foreground" />
                     <span>
-                        {sharedBy?.profile?.firstName} {sharedBy?.profile?.lastName}
+                        {sharedBy?.profile?.firstName}{' '}
+                        {sharedBy?.profile?.lastName}
                     </span>
                 </div>
             );

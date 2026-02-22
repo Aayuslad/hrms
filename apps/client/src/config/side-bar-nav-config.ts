@@ -2,9 +2,10 @@ import {
     Briefcase,
     Gamepad2,
     Home,
+    MessageSquare,
     Plane,
     SlidersHorizontal,
-    Users
+    Users,
 } from 'lucide-react';
 
 export const sidebarNavConfig = {
@@ -18,25 +19,31 @@ export const sidebarNavConfig = {
             name: 'Games',
             url: '/games',
             icon: Gamepad2,
-            roles: ['Admin', 'Recruiter', 'Viewer'],
+            roles: ['Employee'],
         },
         {
             name: 'Travel Plans',
             url: '/travel-plans',
             icon: Plane,
-            roles: ['Admin', 'Recruiter', 'Viewer'],
+            roles: ['Employee'],
         },
         {
             name: 'Job Openings',
             url: '/job-openings',
             icon: Briefcase,
-            roles: ['Admin', 'Recruiter', 'Viewer'],
+            roles: ['Employee'],
         },
         {
             name: 'Org Chart',
             url: '/org-chart',
             icon: Users,
-            roles: ['Admin', 'Recruiter', 'Viewer'],
+            roles: ['Employee'],
+        },
+        {
+            name: 'Achievements & Social',
+            url: '/engagement',
+            icon: MessageSquare,
+            roles: ['Employee'],
         },
     ],
     collapsibleGroup: [
@@ -45,7 +52,7 @@ export const sidebarNavConfig = {
             url: 'configuration',
             icon: SlidersHorizontal,
             isActive: false,
-            roles: ['Admin', 'Recruiter', 'Viewer'],
+            roles: ['Admin', 'HR'],
             items: [
                 {
                     title: 'Roles',
@@ -70,6 +77,10 @@ export const sidebarNavConfig = {
                 {
                     title: 'Expense Catrgories',
                     url: 'configuration/expense-categories',
+                },
+                {
+                    title: 'Tags',
+                    url: 'configuration/tags',
                 },
             ],
         },

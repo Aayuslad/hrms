@@ -35,6 +35,10 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class UserService {
+    private final NotificationService notificationService;
+    public void markNotificationsAsRead(List<UUID> notificationIds) {
+        notificationService.markNotificationsAsRead(notificationIds);
+    }
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;

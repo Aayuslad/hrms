@@ -81,8 +81,6 @@ public class JobOpeningService {
                 + "Description: " + jobOpening.getDescription()
                 + "Job Description: " + jobOpening.getJdUrl();
 
-        emailService.sendSimpleEmail(request.getShareToEmail(), "Job Opportunity", content);
-
         JobOpeningShareAudit audit = JobOpeningShareAudit.builder()
                 .sharedToEmail(request.getShareToEmail())
                 .jobOpening(jobOpening)
@@ -90,6 +88,8 @@ public class JobOpeningService {
                 .build();
 
         jobOpening.getShareAudits().add(audit);
+
+        emailService.sendSimpleEmail(request.getShareToEmail(), "Job Opportunity", content);
 
         jobOpeningRepository.save(jobOpening);
     }

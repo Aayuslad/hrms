@@ -5,12 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import ShareJobOpeningDialog from './share-job-opening-dialog';
 import ReferJobOpeningDialog from './refer-job-opening-dialog';
 import type { JobOpeningSummary } from '@/api/jobs-api';
+import { useAccessChecker } from '@/hooks/use-has-access';
 
 type Props = {
     jobOpening: JobOpeningSummary;
 };
 
 const JobOpeningCard = ({ jobOpening }: Props) => {
+    const canAccess = useAccessChecker();
     const navigate = useNavigate();
 
     return (
@@ -22,16 +24,18 @@ const JobOpeningCard = ({ jobOpening }: Props) => {
                     </CardTitle>
                 </div>
 
-                <Button
-                    size="sm"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`${jobOpening.id}`);
-                    }}
-                    className="shrink-0 bg-gradient-to-br from-purple-500 to-pink-500 text-white"
-                >
-                    View Details
-                </Button>
+                {canAccess(['Admin', 'HR']) && (
+                    <Button
+                        size="sm"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`${jobOpening.id}`);
+                        }}
+                        variant={'outline'}
+                    >
+                        View Details
+                    </Button>
+                )}
             </div>
 
             <CardContent className="px-0 space-y-4">

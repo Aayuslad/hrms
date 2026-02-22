@@ -11,12 +11,14 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Spinner } from '@/components/ui/spinner';
+import { useAccessChecker } from '@/hooks/use-has-access';
 import { Calendar, Clock, Dot, Users } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 
 export function GameDetailsPage() {
     const { gameId } = useParams<{ gameId?: string }>();
     const { data: game, isLoading, isError } = useGetGame(gameId);
+    const canAccess = useAccessChecker();
 
     if (isLoading) {
         return (
@@ -89,17 +91,19 @@ export function GameDetailsPage() {
                         gameId={game?.id ?? ''}
                         maxPlayers={game?.maxSlotPlayers ?? 1}
                     />
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline">Other Actions</Button>
-                        </DropdownMenuTrigger>
+                    {canAccess(['Admin', 'HR']) && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline">Other Actions</Button>
+                            </DropdownMenuTrigger>
 
-                        <DropdownMenuContent align="end">
-                            <UpdateGameDialog game={game as Game} />
-                            <DropdownMenuSeparator />
-                            <DeleteGameDialog gameId={game?.id ?? ''} />
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                            <DropdownMenuContent align="end">
+                                <UpdateGameDialog game={game as Game} />
+                                <DropdownMenuSeparator />
+                                <DeleteGameDialog gameId={game?.id ?? ''} />
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
                 </div>
             </div>
 

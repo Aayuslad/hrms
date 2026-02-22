@@ -21,7 +21,7 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 import { useBookSlot, type BookSlotRequest } from '@/api/games-api';
-import { useGetUserList, type UserSummary } from '@/api/user-api';
+import { useGetMe, useGetUserList, type UserSummary } from '@/api/user-api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -56,9 +56,12 @@ const BookSlotDialog = ({
     const isControlled = externalOpen !== undefined;
     const open = isControlled ? externalOpen : internalOpen;
     const setOpen = isControlled ? externalOnOpenChange! : setInternalOpen;
+    const { data: me } = useGetMe();
 
     const [selected, setSelected] = useState<string[]>([]);
     const { data: users = [] } = useGetUserList();
+    // Remove current user from selectable users
+    const filteredUsers = users.filter((u: UserSummary) => u.id !== me?.id);
     const bookSlotMutation = useBookSlot();
 
     const form = useForm<BookSlotRequest>({
@@ -109,7 +112,7 @@ const BookSlotDialog = ({
 
     const onInvalid = (errors: typeof form.formState.errors) => {
         const messages = Object.values(errors).map((err) => err.message);
-        messages.reverse().forEach((msg) => toast.error(msg));
+        messages.slice().reverse().forEach((msg: string | undefined) => toast.error(msg));
     };
 
     return (
@@ -159,11 +162,8 @@ const BookSlotDialog = ({
                                     <PopoverContent>
                                         <div className="max-h-60 w-64 overflow-auto">
                                             <div className="space-y-2">
-                                                {users.map((u: UserSummary) => {
-                                                    const isChecked =
-                                                        selected.includes(
-                                                            u.id as string
-                                                        );
+                                                {filteredUsers.map((u: UserSummary) => {
+                                                    const isChecked = selected.includes(u.id as string);
                                                     return (
                                                         <div
                                                             key={u.id}
@@ -171,35 +171,14 @@ const BookSlotDialog = ({
                                                         >
                                                             <div className="flex items-center gap-3">
                                                                 <Checkbox
-                                                                    checked={
-                                                                        isChecked
-                                                                    }
-                                                                    onCheckedChange={() =>
-                                                                        toggleUser(
-                                                                            u.id as string
-                                                                        )
-                                                                    }
-                                                                    disabled={
-                                                                        !isChecked &&
-                                                                        selected.length >=
-                                                                            maxPlayers
-                                                                    }
+                                                                    checked={isChecked}
+                                                                    onCheckedChange={() => toggleUser(u.id as string)}
+                                                                    disabled={!isChecked && selected.length >= maxPlayers}
                                                                     className="me-2"
                                                                 />
                                                                 <div className="flex flex-col">
-                                                                    <span className="text-sm font-medium">
-                                                                        {
-                                                                            u.userName
-                                                                        }
-                                                                    </span>
-                                                                    <span className="text-xs text-muted-foreground">
-                                                                        {
-                                                                            u.firstName
-                                                                        }{' '}
-                                                                        {
-                                                                            u.lastName
-                                                                        }
-                                                                    </span>
+                                                                    <span className="text-sm font-medium">{u.userName}</span>
+                                                                    <span className="text-xs text-muted-foreground">{u.firstName} {u.lastName}</span>
                                                                 </div>
                                                             </div>
                                                         </div>

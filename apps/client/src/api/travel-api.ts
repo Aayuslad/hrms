@@ -1,12 +1,9 @@
 import { axiosClient } from '@/lib/axios-client';
 import { queryClient } from '@/lib/query-client';
 import type { components } from '@/types/generated/api';
-import {
-    useMutation,
-    useQuery,
-    useQueryClient
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export type TravelPlanSummary =
@@ -19,10 +16,14 @@ export type UpdateTravelPlanRequest =
     components['schemas']['UpdateTravelPlanRequest'];
 
 export type Participant = components['schemas']['ParticipantResponse'];
-export type CreateExpenseRequest = components['schemas']['CreateExpenseRequest'];
-export type UpdateExpenseRequest = components['schemas']['UpdateExpenseRequest'];
-export type CreateDocumentRequest = components['schemas']['CreateDocumentRequest'];
-export type UpdateDocumentRequest = components['schemas']['UpdateDocumentRequest'];
+export type CreateExpenseRequest =
+    components['schemas']['CreateExpenseRequest'];
+export type UpdateExpenseRequest =
+    components['schemas']['UpdateExpenseRequest'];
+export type CreateDocumentRequest =
+    components['schemas']['CreateDocumentRequest'];
+export type UpdateDocumentRequest =
+    components['schemas']['UpdateDocumentRequest'];
 
 // get a list of travel plan
 const travelPlansQuery = {
@@ -70,7 +71,6 @@ export const travelPlanLoader = async ({
     }
     return await queryClient.ensureQueryData(travelPlanQuery(id));
 };
-
 
 export function useCreateTravelPlan() {
     const queryClient = useQueryClient();
@@ -122,6 +122,8 @@ export function useUpdateTravelPlan() {
 
 export function useDeleteTravelPlan() {
     const queryClient = useQueryClient();
+    const navigate = useNavigate();
+
     return useMutation({
         mutationFn: async (id: string): Promise<void> => {
             await axiosClient.delete(`/travel-plans/${id}`);
@@ -129,6 +131,7 @@ export function useDeleteTravelPlan() {
         onSuccess: () => {
             toast.success('Travel plan deleted');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
+            navigate('/travel-plans');
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -141,7 +144,10 @@ export function useDeleteTravelPlan() {
     });
 }
 
-export function useGetParticipant(travelPlanId?: string, participantId?: string) {
+export function useGetParticipant(
+    travelPlanId?: string,
+    participantId?: string
+) {
     return useQuery({
         queryKey: ['travel-plan-participant', travelPlanId, participantId],
         queryFn: async (): Promise<Participant | null> => {
@@ -174,7 +180,19 @@ export function useCreateExpense() {
         onSuccess: (_, vars) => {
             toast.success('Expense created');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
-            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
+            queryClient.invalidateQueries({
+                queryKey: ['travel-plan', vars.travelPlanId],
+            });
+            queryClient.invalidateQueries({
+                queryKey: [
+                    'travel-plan-participant',
+                    vars.travelPlanId,
+                    vars.participantId,
+                ],
+            });
+            queryClient.invalidateQueries({
+                queryKey: ['travel-plan', vars.travelPlanId],
+            });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -208,7 +226,16 @@ export function useUpdateExpense() {
         onSuccess: (_, vars) => {
             toast.success('Expense updated');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
-            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
+            queryClient.invalidateQueries({
+                queryKey: ['travel-plan', vars.travelPlanId],
+            });
+            queryClient.invalidateQueries({
+                queryKey: [
+                    'travel-plan-participant',
+                    vars.travelPlanId,
+                    vars.participantId,
+                ],
+            });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -237,7 +264,16 @@ export function useDeleteExpense() {
         onSuccess: (_, vars) => {
             toast.success('Expense deleted');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
-            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
+            queryClient.invalidateQueries({
+                queryKey: ['travel-plan', vars.travelPlanId],
+            });
+            queryClient.invalidateQueries({
+                queryKey: [
+                    'travel-plan-participant',
+                    vars.travelPlanId,
+                    vars.participantId,
+                ],
+            });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -266,7 +302,16 @@ export function useSubmitExpense() {
         onSuccess: (_, vars) => {
             toast.success('Expense submitted');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
-            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
+            queryClient.invalidateQueries({
+                queryKey: ['travel-plan', vars.travelPlanId],
+            });
+            queryClient.invalidateQueries({
+                queryKey: [
+                    'travel-plan-participant',
+                    vars.travelPlanId,
+                    vars.participantId,
+                ],
+            });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -299,7 +344,16 @@ export function useCreateDocument() {
         onSuccess: (_, vars) => {
             toast.success('Document created');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
-            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
+            queryClient.invalidateQueries({
+                queryKey: ['travel-plan', vars.travelPlanId],
+            });
+            queryClient.invalidateQueries({
+                queryKey: [
+                    'travel-plan-participant',
+                    vars.travelPlanId,
+                    vars.participantId,
+                ],
+            });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -333,7 +387,16 @@ export function useUpdateDocument() {
         onSuccess: (_, vars) => {
             toast.success('Document updated');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
-            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
+            queryClient.invalidateQueries({
+                queryKey: ['travel-plan', vars.travelPlanId],
+            });
+            queryClient.invalidateQueries({
+                queryKey: [
+                    'travel-plan-participant',
+                    vars.travelPlanId,
+                    vars.participantId,
+                ],
+            });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -362,7 +425,16 @@ export function useDeleteDocument() {
         onSuccess: (_, vars) => {
             toast.success('Document deleted');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
-            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
+            queryClient.invalidateQueries({
+                queryKey: ['travel-plan', vars.travelPlanId],
+            });
+            queryClient.invalidateQueries({
+                queryKey: [
+                    'travel-plan-participant',
+                    vars.travelPlanId,
+                    vars.participantId,
+                ],
+            });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -386,13 +458,25 @@ export function useCreateDocumentByHr() {
             const { travelPlanId, participantId, payload } = params;
             await axiosClient.post(
                 `/travel-plans/${travelPlanId}/participant/${participantId}/documents/hr`,
-                payload
+                payload,
+                {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                }
             );
         },
         onSuccess: (_, vars) => {
             toast.success('Document created by HR');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
-            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
+            queryClient.invalidateQueries({
+                queryKey: ['travel-plan', vars.travelPlanId],
+            });
+            queryClient.invalidateQueries({
+                queryKey: [
+                    'travel-plan-participant',
+                    vars.travelPlanId,
+                    vars.participantId,
+                ],
+            });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -423,7 +507,16 @@ export function useApproveExpense() {
         onSuccess: (_, vars) => {
             toast.success('Expense approved');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
-            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
+            queryClient.invalidateQueries({
+                queryKey: ['travel-plan', vars.travelPlanId],
+            });
+            queryClient.invalidateQueries({
+                queryKey: [
+                    'travel-plan-participant',
+                    vars.travelPlanId,
+                    vars.participantId,
+                ],
+            });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(
@@ -452,7 +545,16 @@ export function useRejectExpense() {
         onSuccess: (_, vars) => {
             toast.success('Expense rejected');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
-            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
+            queryClient.invalidateQueries({
+                queryKey: ['travel-plan', vars.travelPlanId],
+            });
+            queryClient.invalidateQueries({
+                queryKey: [
+                    'travel-plan-participant',
+                    vars.travelPlanId,
+                    vars.participantId,
+                ],
+            });
         },
         onError: (error: AxiosError<{ error: string }>) => {
             toast.error(

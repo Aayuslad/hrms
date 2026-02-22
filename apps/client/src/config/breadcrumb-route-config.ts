@@ -12,18 +12,40 @@ export const routes: RouteConfigType[] = [
     {
         breadcrumb: 'Job Openings',
         path: 'job-openings',
+        children: [
+            {
+                breadcrumb: 'Opening',
+                path: ':id',
+            },
+        ],
     },
     {
         breadcrumb: 'Games',
         path: 'games',
+        children: [
+            {
+                breadcrumb: 'Game',
+                path: ':id',
+            },
+        ],
     },
     {
         breadcrumb: 'Travel Plans',
         path: 'travel-plans',
+        children: [
+            {
+                breadcrumb: 'Travel Plan',
+                path: ':id',
+            },
+        ],
     },
     {
         breadcrumb: 'Org Chart',
         path: 'org-chart',
+    },
+    {
+        breadcrumb: 'Achievements & Social',
+        path: 'engagement',
     },
     {
         breadcrumb: 'Configurations',
@@ -56,6 +78,10 @@ export const routes: RouteConfigType[] = [
             {
                 breadcrumb: 'Expense Catrgories',
                 path: 'expense-categories',
+            },
+            {
+                breadcrumb: 'Tags',
+                path: 'tags',
             },
         ],
     },

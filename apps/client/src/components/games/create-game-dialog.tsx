@@ -24,6 +24,7 @@ import { Label } from '../ui/label';
 import { NumberInputWithEndButtons } from '../ui/number-input-with-end-buttons';
 import TimeInput from '../ui/time-input';
 import { WeekDaySelector } from '../ui/week-day-selector';
+import { useAccessChecker } from '@/hooks/use-has-access';
 
 const createGameFormSchema = z.object({
     name: z.string().min(1, 'Name is required').max(80),
@@ -35,9 +36,14 @@ const createGameFormSchema = z.object({
     closingDayOfWeek: z.enum(WEEK_DAYS),
 }) satisfies z.ZodType<CreateGameRequest>;
 
-const CreateGameDialog = () => {
+type Props = {
+    visibleTo: string[];
+};
+
+const CreateGameDialog = ({ visibleTo = [] }: Props) => {
     const createGameMutation = useCreateGame();
     const [open, setOpen] = useState(false);
+    const canAccess = useAccessChecker();
 
     const form = useForm({
         resolver: zodResolver(createGameFormSchema),
@@ -66,6 +72,8 @@ const CreateGameDialog = () => {
         const messages = Object.values(errors).map((err) => err.message);
         messages.reverse().forEach((msg) => toast.error(msg));
     };
+
+    if (!canAccess(visibleTo)) return null;
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>

@@ -16,6 +16,9 @@ export interface paths {
     get: operations["getMe"];
     put: operations["updateBySelf"];
   };
+  "/api/users/me/notifications/mark-as-read": {
+    put: operations["markNotificationsAsRead"];
+  };
   "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses/{expenseId}": {
     put: operations["updateExpense"];
     delete: operations["deleteExpense"];
@@ -45,17 +48,31 @@ export interface paths {
     put: operations["update_3"];
     delete: operations["delete_2"];
   };
-  "/api/document-types/{id}": {
+  "/api/engagement/tags/{id}": {
+    get: operations["get_3"];
     put: operations["update_4"];
     delete: operations["delete_3"];
   };
-  "/api/designations/{id}": {
+  "/api/engagement/posts/{postId}/comment/{commentId}": {
+    put: operations["updateComment"];
+    delete: operations["deleteComment"];
+  };
+  "/api/engagement/posts/{id}": {
+    get: operations["get_4"];
     put: operations["update_5"];
     delete: operations["delete_4"];
   };
-  "/api/departments/{id}": {
+  "/api/document-types/{id}": {
     put: operations["update_6"];
     delete: operations["delete_5"];
+  };
+  "/api/designations/{id}": {
+    put: operations["update_7"];
+    delete: operations["delete_6"];
+  };
+  "/api/departments/{id}": {
+    put: operations["update_8"];
+    delete: operations["delete_7"];
   };
   "/api/users/register": {
     post: operations["register"];
@@ -112,17 +129,28 @@ export interface paths {
     get: operations["getAll_3"];
     post: operations["create_3"];
   };
-  "/api/document-types": {
+  "/api/engagement/tags": {
     get: operations["getAll_4"];
     post: operations["create_4"];
   };
-  "/api/designations": {
+  "/api/engagement/posts": {
     get: operations["getAll_5"];
     post: operations["create_5"];
   };
-  "/api/departments": {
+  "/api/engagement/posts/{id}/comment": {
+    post: operations["createComment"];
+  };
+  "/api/document-types": {
     get: operations["getAll_6"];
     post: operations["create_6"];
+  };
+  "/api/designations": {
+    get: operations["getAll_7"];
+    post: operations["create_7"];
+  };
+  "/api/departments": {
+    get: operations["getAll_8"];
+    post: operations["create_8"];
   };
   "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/submit": {
     patch: operations["submitExpense"];
@@ -138,6 +166,18 @@ export interface paths {
   };
   "/api/games/{gameId}/slots/{slotId}/cancel": {
     patch: operations["cancelSlot"];
+  };
+  "/api/engagement/posts/{postId}/comment/{commentId}/unlike": {
+    patch: operations["unlikeComment"];
+  };
+  "/api/engagement/posts/{postId}/comment/{commentId}/like": {
+    patch: operations["likeComment"];
+  };
+  "/api/engagement/posts/{id}/unlike": {
+    patch: operations["unlike"];
+  };
+  "/api/engagement/posts/{id}/like": {
+    patch: operations["like"];
   };
   "/api/users/summary": {
     get: operations["getUsersSummary"];
@@ -155,7 +195,7 @@ export interface paths {
     get: operations["getParticipant"];
   };
   "/api/roles": {
-    get: operations["getAll_7"];
+    get: operations["getAll_9"];
   };
   "/api/games/offers": {
     get: operations["getOffers"];
@@ -220,6 +260,9 @@ export interface components {
     UpdateUserBySelfRequest: {
       profile?: components["schemas"]["UpdateProfileBySelfRequest"];
       gameInterests?: components["schemas"]["GameInterestRequest"][];
+    };
+    MarkNotificationsReadRequest: {
+      notificationIds: string[];
     };
     UpdateExpenseRequest: {
       /** Format: uuid */
@@ -304,6 +347,23 @@ export interface components {
       /** Format: uuid */
       id: string;
       name: string;
+    };
+    UpdateTagRequest: {
+      /** Format: uuid */
+      id?: string;
+      name: string;
+    };
+    UpdateCommentRequest: {
+      /** Format: uuid */
+      id?: string;
+      content: string;
+    };
+    UpdatePostRequest: {
+      /** Format: uuid */
+      id?: string;
+      title: string;
+      content?: string;
+      tagIds?: string[];
     };
     UpdateDocumentTypeRequest: {
       /** Format: uuid */
@@ -447,6 +507,17 @@ export interface components {
     };
     CreateExpenseCategoryRequest: {
       name: string;
+    };
+    CreateTagRequest: {
+      name: string;
+    };
+    CreatePostRequest: {
+      title: string;
+      content?: string;
+      tagIds?: string[];
+    };
+    CreateCommentRequest: {
+      content: string;
     };
     CreateDocumentTypeRequest: {
       name: string;
@@ -742,7 +813,16 @@ export interface components {
       referrals?: components["schemas"]["JobOpeningReferralResponse"][];
       createdBy?: components["schemas"]["GlobalUserResponseSummary"];
       updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
+      shareAudits?: components["schemas"]["JobOpeningShareAuditResponse"][];
       closed?: boolean;
+    };
+    JobOpeningShareAuditResponse: {
+      /** Format: uuid */
+      id?: string;
+      sharedBy?: components["schemas"]["GlobalUserResponseSummary"];
+      /** Format: date-time */
+      sharedAt?: string;
+      sharedToEmail?: string;
     };
     ResultJobOpeningResponse: {
       /** Format: int32 */
@@ -851,6 +931,74 @@ export interface components {
       /** Format: int32 */
       statusCode?: number;
       data?: components["schemas"]["ExpenseCategoryResponse"][];
+      message?: string;
+      success?: boolean;
+    };
+    ResultListTagResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["TagResponse"][];
+      message?: string;
+      success?: boolean;
+    };
+    TagResponse: {
+      /** Format: uuid */
+      id?: string;
+      name?: string;
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
+    };
+    ResultTagResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["TagResponse"];
+      message?: string;
+      success?: boolean;
+    };
+    PostCommentResponse: {
+      /** Format: uuid */
+      id?: string;
+      author?: components["schemas"]["GlobalUserResponseSummary"];
+      content?: string;
+      /** Format: int64 */
+      likeCount?: number;
+      /** Format: date-time */
+      createdAt?: string;
+      likedBy?: components["schemas"]["GlobalUserResponseSummary"][];
+    };
+    PostResponse: {
+      /** Format: uuid */
+      id?: string;
+      title?: string;
+      content?: string;
+      author?: components["schemas"]["GlobalUserResponseSummary"];
+      /** Format: int64 */
+      likeCount?: number;
+      /** Format: int64 */
+      commentCount?: number;
+      tags?: components["schemas"]["TagResponse"][];
+      comments?: components["schemas"]["PostCommentResponse"][];
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
+      createdBy?: components["schemas"]["GlobalUserResponseSummary"];
+      updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
+      liked?: boolean;
+    };
+    ResultListPostResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["PostResponse"][];
+      message?: string;
+      success?: boolean;
+    };
+    ResultPostResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["PostResponse"];
       message?: string;
       success?: boolean;
     };
@@ -991,6 +1139,21 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["UpdateUserBySelfRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  markNotificationsAsRead: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["MarkNotificationsReadRequest"];
       };
     };
     responses: {
@@ -1268,6 +1431,21 @@ export interface operations {
       };
     };
   };
+  get_3: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultTagResponse"];
+        };
+      };
+    };
+  };
   update_4: {
     parameters: {
       path: {
@@ -1276,7 +1454,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["UpdateDocumentTypeRequest"];
+        "application/json": components["schemas"]["UpdateTagRequest"];
       };
     };
     responses: {
@@ -1303,6 +1481,58 @@ export interface operations {
       };
     };
   };
+  updateComment: {
+    parameters: {
+      path: {
+        postId: string;
+        commentId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateCommentRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  deleteComment: {
+    parameters: {
+      path: {
+        postId: string;
+        commentId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  get_4: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultPostResponse"];
+        };
+      };
+    };
+  };
   update_5: {
     parameters: {
       path: {
@@ -1311,7 +1541,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["UpdateDesignationRequest"];
+        "application/json": components["schemas"]["UpdatePostRequest"];
       };
     };
     responses: {
@@ -1346,7 +1576,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["UpdateDepartmentRequest"];
+        "application/json": components["schemas"]["UpdateDocumentTypeRequest"];
       };
     };
     responses: {
@@ -1359,6 +1589,76 @@ export interface operations {
     };
   };
   delete_5: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  update_7: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateDesignationRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  delete_6: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  update_8: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateDepartmentRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  delete_7: {
     parameters: {
       path: {
         id: string;
@@ -1502,9 +1802,9 @@ export interface operations {
         participantId: string;
       };
     };
-    requestBody: {
+    requestBody?: {
       content: {
-        "application/json": components["schemas"]["CreateDocumentRequest"];
+        "multipart/form-data": components["schemas"]["CreateDocumentRequest"];
       };
     };
     responses: {
@@ -1713,7 +2013,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "*/*": components["schemas"]["ResultListDocumentTypeResponse"];
+          "*/*": components["schemas"]["ResultListTagResponse"];
         };
       };
     };
@@ -1721,7 +2021,7 @@ export interface operations {
   create_4: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateDocumentTypeRequest"];
+        "application/json": components["schemas"]["CreateTagRequest"];
       };
     };
     responses: {
@@ -1738,7 +2038,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "*/*": components["schemas"]["ResultListDesignationResponse"];
+          "*/*": components["schemas"]["ResultListPostResponse"];
         };
       };
     };
@@ -1746,7 +2046,27 @@ export interface operations {
   create_5: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateDesignationRequest"];
+        "application/json": components["schemas"]["CreatePostRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  createComment: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateCommentRequest"];
       };
     };
     responses: {
@@ -1763,12 +2083,62 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "*/*": components["schemas"]["ResultListDepartmentResponse"];
+          "*/*": components["schemas"]["ResultListDocumentTypeResponse"];
         };
       };
     };
   };
   create_6: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateDocumentTypeRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  getAll_7: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultListDesignationResponse"];
+        };
+      };
+    };
+  };
+  create_7: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateDesignationRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  getAll_8: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultListDepartmentResponse"];
+        };
+      };
+    };
+  };
+  create_8: {
     requestBody: {
       content: {
         "application/json": components["schemas"]["CreateDepartmentRequest"];
@@ -1862,6 +2232,68 @@ export interface operations {
       };
     };
   };
+  unlikeComment: {
+    parameters: {
+      path: {
+        postId: string;
+        commentId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  likeComment: {
+    parameters: {
+      path: {
+        postId: string;
+        commentId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  unlike: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  like: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
   getUsersSummary: {
     responses: {
       /** @description OK */
@@ -1918,7 +2350,7 @@ export interface operations {
       };
     };
   };
-  getAll_7: {
+  getAll_9: {
     responses: {
       /** @description OK */
       200: {

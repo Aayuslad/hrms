@@ -23,6 +23,7 @@ import {
     type WaitSpecificSlotRequest,
 } from '@/api/games-api';
 import { useGetUserList, type UserSummary } from '@/api/user-api';
+import { useGetMe } from '@/api/user-api';
 import { Spinner } from '@/components/ui/spinner';
 
 interface WaitForSlotDialogProps {
@@ -51,6 +52,10 @@ const WaitForSlotDialog = ({
 
     const [selected, setSelected] = useState<string[]>([]);
     const { data: users = [] } = useGetUserList();
+    // Get current user
+    const { data: me } = useGetMe();
+    // Remove current user from selectable users
+    const filteredUsers = users.filter((u: UserSummary) => u.id !== me?.id);
     const waitForSlotMutation = useWaitForSpecificSlot(gameId ?? '', slotId ?? '');
 
     const form = useForm<WaitSpecificSlotRequest>({
@@ -118,34 +123,20 @@ const WaitForSlotDialog = ({
                                     <PopoverContent>
                                         <div className="max-h-60 w-64 overflow-auto">
                                             <div className="space-y-2">
-                                                {users.map((u: UserSummary) => {
-                                                    const isChecked =
-                                                        selected.includes(
-                                                            u.id as string
-                                                        );
+                                                {filteredUsers.map((u: UserSummary) => {
+                                                    const isChecked = selected.includes(u.id as string);
                                                     return (
                                                         <div
                                                             key={u.id}
                                                             className="flex items-center justify-between gap-3"
                                                         >
                                                             <div className="flex flex-col">
-                                                                <span className="text-sm font-medium">
-                                                                    {u.userName}
-                                                                </span>
-                                                                <span className="text-xs text-muted-foreground">
-                                                                    {u.firstName}{' '}
-                                                                    {u.lastName}
-                                                                </span>
+                                                                <span className="text-sm font-medium">{u.userName}</span>
+                                                                <span className="text-xs text-muted-foreground">{u.firstName} {u.lastName}</span>
                                                             </div>
                                                             <Checkbox
-                                                                checked={
-                                                                    isChecked
-                                                                }
-                                                                onCheckedChange={() =>
-                                                                    toggleUser(
-                                                                        u.id as string
-                                                                    )
-                                                                }
+                                                                checked={isChecked}
+                                                                onCheckedChange={() => toggleUser(u.id as string)}
                                                             />
                                                         </div>
                                                     );

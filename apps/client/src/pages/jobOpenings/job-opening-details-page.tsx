@@ -12,10 +12,12 @@ import {
     DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import { Spinner } from '@/components/ui/spinner';
+import { useAccessChecker } from '@/hooks/use-has-access';
 import { BriefcaseBusiness, Dot, ExternalLink, User } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 
 export function JobOpeningDetailsPage() {
+    const canAccess = useAccessChecker();
     const { jobOpeningId } = useParams<{ jobOpeningId: string }>();
     const {
         data: jobOpening,
@@ -101,26 +103,28 @@ export function JobOpeningDetailsPage() {
                     </div>
                 </div>
                 <div className="mr-10 mb-4 flex gap-2">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline">Other Actions</Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-36">
-                            <DropdownMenuItem asChild>
-                                <UpdateJobOpeningDialog
-                                    jobOpening={jobOpening}
-                                />
-                            </DropdownMenuItem>
-                            <DeleteJobOpeningDialog
-                                jobOpeningId={jobOpening.id!}
-                            />
-                            {!jobOpening.closed && (
-                                <CloseJobOpeningDialog
+                    {canAccess(['Admin', 'HR']) && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline">Other Actions</Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-36">
+                                <DropdownMenuItem asChild>
+                                    <UpdateJobOpeningDialog
+                                        jobOpening={jobOpening}
+                                    />
+                                </DropdownMenuItem>
+                                <DeleteJobOpeningDialog
                                     jobOpeningId={jobOpening.id!}
                                 />
-                            )}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                                {!jobOpening.closed && (
+                                    <CloseJobOpeningDialog
+                                        jobOpeningId={jobOpening.id!}
+                                    />
+                                )}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
                 </div>
             </div>
 
@@ -174,19 +178,19 @@ export function JobOpeningDetailsPage() {
                     </div>
 
                     {/* Referrals */}
-                    <div className='mx-10'>
+                    <div className="mx-10">
                         <h2 className="text-xl font-semibold mb-4 ">
                             Referrals
                         </h2>
-                        <ReferralsTable referrals={jobOpening.referrals || []} />
+                        <ReferralsTable
+                            referrals={jobOpening.referrals || []}
+                        />
                     </div>
 
                     {/* Shares */}
-                    <div className='mx-10'>
-                        <h2 className="text-xl font-semibold mb-4 ">
-                            Shares
-                        </h2>
-                        <SharesTable shares={[]} />
+                    <div className="mx-10">
+                        <h2 className="text-xl font-semibold mb-4 ">Shares</h2>
+                        <SharesTable shares={jobOpening.shareAudits ?? []} />
                     </div>
                 </div>
             </div>

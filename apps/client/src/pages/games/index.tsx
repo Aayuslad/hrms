@@ -37,12 +37,10 @@ export function Index() {
             <div className="bg-muted h-[100px] w-full flex items-center">
                 <div className="px-10 flex-1">
                     <h1 className="text-2xl font-bold">Games</h1>
-                    <p>
-                        Explore your gaming world! Dive into your collection.
-                    </p>
+                    <p>Explore your gaming world! Dive into your collection.</p>
                 </div>
                 <div className="w-[230px] mb-4">
-                    <CreateGameDialog />
+                    <CreateGameDialog visibleTo={['Admin', 'HR']} />
                 </div>
             </div>
 
@@ -51,10 +49,15 @@ export function Index() {
                     <div className="mx-auto px-5 py-12 gap-8">
                         {offers && offers.length > 0 && (
                             <div className="w-full mb-8">
-                                <h2 className="text-xl font-bold mb-4">Offers</h2>
+                                <h2 className="text-xl font-bold mb-4">
+                                    Offers
+                                </h2>
                                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                                     {offers.map((offer) => (
-                                        <OfferCard key={offer.id} offer={offer} />
+                                        <OfferCard
+                                            key={offer.id}
+                                            offer={offer}
+                                        />
                                     ))}
                                 </div>
                             </div>

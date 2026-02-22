@@ -13,11 +13,12 @@ import java.util.UUID;
  //TODO: is this  annotation required here ?
 public interface JobOpeningRepository extends JpaRepository<JobOpening, UUID> {
 
-    @EntityGraph(attributePaths = {
+        @EntityGraph(attributePaths = {
             "hrs",
             "reviewers",
-            "referrals"
-    })
-    @Query("select jo from JobOpening jo where jo.id = :id")
-    Optional<JobOpening> findByIdWithAll(@Param("id") UUID id);
+            "referrals",
+            "shareAudits"
+        })
+        @Query("select jo from JobOpening jo where jo.id = :id")
+        Optional<JobOpening> findByIdWithAll(@Param("id") UUID id);
 }

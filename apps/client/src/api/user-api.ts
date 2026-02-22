@@ -99,6 +99,30 @@ export const notificationsLoader = async () => {
     return await queryClient.ensureQueryData(notificationsQuery);
 };
 
+export function useMarkNotificationsAsRead() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (notificationIds: string[]): Promise<void> => {
+            await axiosClient.put('/users/me/notifications/mark-as-read', {
+                notificationIds,
+            });
+        },
+        onSuccess: () => {
+            toast.success('Notifications marked as read!');
+            queryClient.invalidateQueries({ queryKey: ['notifications'] });
+        },
+        onError: (error: AxiosError<{ message: string }>) => {
+            toast.error(
+                error.response?.data?.message ||
+                    error.message ||
+                    'Failed to mark notifications as read'
+            );
+            console.error('mark as read failed', error);
+        },
+    });
+}
+
 const orgChartQuery = {
     queryKey: ['org-charts'] as const,
     queryFn: async (): Promise<OrgChartType> => {

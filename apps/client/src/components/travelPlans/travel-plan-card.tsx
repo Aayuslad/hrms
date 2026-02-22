@@ -27,7 +27,7 @@ const TravelPlanCard = ({ travelPlan }: Props) => {
                         e.stopPropagation();
                         navigate(`${travelPlan.id}`);
                     }}
-                    className="shrink-0 bg-gradient-to-br from-purple-500 to-pink-500 text-white"
+                    variant={'outline'}
                 >
                     Explore More
                 </Button>
@@ -36,7 +36,6 @@ const TravelPlanCard = ({ travelPlan }: Props) => {
             {/* CONTENT */}
             <CardContent className="px-0 pt-4 space-y-4">
                 <div className="space-y-3 text-sm text-muted-foreground">
-                    
                     {/* Destination */}
                     <div className="flex items-center gap-3">
                         <MapPin className="h-4 w-4 shrink-0" />
@@ -47,9 +46,13 @@ const TravelPlanCard = ({ travelPlan }: Props) => {
                     <div className="flex items-center gap-3">
                         <Calendar className="h-4 w-4 shrink-0" />
                         <span>
-                            {new Date(travelPlan.startAt as string).toLocaleString()} 
+                            {new Date(
+                                travelPlan.startAt as string
+                            ).toLocaleString()}
                             {' – '}
-                            {new Date(travelPlan.endAt as string).toLocaleString()}
+                            {new Date(
+                                travelPlan.endAt as string
+                            ).toLocaleString()}
                         </span>
                     </div>
                 </div>
@@ -65,6 +68,5 @@ const TravelPlanCard = ({ travelPlan }: Props) => {
         </Card>
     );
 };
-
 
 export default TravelPlanCard;

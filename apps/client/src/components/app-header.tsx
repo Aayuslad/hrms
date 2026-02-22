@@ -9,12 +9,16 @@ import {
     BreadcrumbSeparator,
 } from './ui/breadcrumb';
 import { ThemeToggleButton } from './ui/theme-toggle-button';
+import { BellIcon } from './ui/bell-icon';
+import { useGetNotificationns } from '@/api/user-api';
 import { useBreadCrumbs } from '@/hooks/use-bread-crumbs';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
 
 function AppHeader() {
+    const { data: notifications } = useGetNotificationns();
+    const unreadCount = notifications?.filter((n) => !n.isRead)?.length || 0;
     const breadcrumbs = useBreadCrumbs();
     const navigate = useNavigate();
     const { toggleSidebar } = useAppStore(
@@ -36,8 +40,8 @@ function AppHeader() {
                 <Breadcrumb>
                     <BreadcrumbList>
                         {breadcrumbs.map((bc, index) => (
-                            <BreadcrumbItem key={index}>
-                                {index !== breadcrumbs.length - 1 ? (
+                            <BreadcrumbItem key={bc.path || bc.label || index}>
+                                {index < breadcrumbs.length - 1 ? (
                                     <BreadcrumbLink
                                         className="hover:cursor-pointer"
                                         onClick={() => navigate(bc.path)}
@@ -48,7 +52,7 @@ function AppHeader() {
                                     <BreadcrumbPage>{bc.label}</BreadcrumbPage>
                                 )}
 
-                                {index !== breadcrumbs.length - 1 && (
+                                {index < breadcrumbs.length - 1 && (
                                     <BreadcrumbSeparator className="hidden -mb-1 -mr-1 md:block" />
                                 )}
                             </BreadcrumbItem>
@@ -56,6 +60,27 @@ function AppHeader() {
                     </BreadcrumbList>
                 </Breadcrumb>
             </div>
+
+            <button
+                className="relative p-2 rounded-full hover:bg-zinc-100/10 transition-colors"
+                aria-label="Notifications"
+                onClick={() => navigate('/notifications')}
+            >
+                <BellIcon
+                    filled={unreadCount > 0}
+                    className={
+                        'w-6 h-6 ' +
+                        (unreadCount > 0
+                            ? 'text-fuchsia-500 animate-bounce'
+                            : 'text-zinc-400')
+                    }
+                />
+                {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-fuchsia-500 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[1.2em] flex items-center justify-center border border-white shadow">
+                        {unreadCount}
+                    </span>
+                )}
+            </button>
 
             <ThemeToggleButton />
         </header>

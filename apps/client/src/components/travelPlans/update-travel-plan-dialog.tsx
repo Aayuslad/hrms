@@ -20,7 +20,7 @@ import {
 } from '@/api/travel-api';
 import { useGetUserList, type UserSummary } from '@/api/user-api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
@@ -49,8 +49,10 @@ type Props = {
 const UpdateTravelPlanDialog = ({ travelPlan }: Props) => {
     const updateTravelPlanMutation = useUpdateTravelPlan();
     const { data: users = [] } = useGetUserList();
-    const [selected, setSelected] = useState<string[]>([]);
     const [open, setOpen] = useState(false);
+    const [selected, setSelected] = useState<string[]>(
+        travelPlan.participants?.map((x) => x.id) ?? []
+    );
 
     const form = useForm({
         resolver: zodResolver(updateTravelPlanFormSchema),
@@ -65,6 +67,14 @@ const UpdateTravelPlanDialog = ({ travelPlan }: Props) => {
             participants: travelPlan.participants?.map((x) => x.id) ?? [],
         },
     } as const);
+
+    useEffect(() => {
+        if (open) {
+            setSelected(travelPlan.participants?.map((x) => x.id) ?? []);
+        }
+    }, [open, travelPlan]);
+
+    console.log('Form default values:', form.getValues('participants'));
 
     const onSubmit = async (data: UpdateTravelPlanRequest) => {
         const payload: UpdateTravelPlanRequest = {
@@ -110,7 +120,7 @@ const UpdateTravelPlanDialog = ({ travelPlan }: Props) => {
                             </DialogTitle>
                         </DialogHeader>
 
-                        <ScrollArea className="px-6 py-4">
+                        <ScrollArea className="px-6 py-4 h-[400px]">
                             <div className="space-y-5">
                                 <div className="grid gap-3">
                                     <Label htmlFor="title">Title*</Label>

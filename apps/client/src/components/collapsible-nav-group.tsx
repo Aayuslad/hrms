@@ -16,6 +16,7 @@ import {
     SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 import { NavLink } from 'react-router-dom';
+import { useAccessChecker } from '@/hooks/use-has-access';
 
 export function CollapsibleNavGroup({
     title,
@@ -34,6 +35,16 @@ export function CollapsibleNavGroup({
         }[];
     }[];
 }) {
+    const canAccess = useAccessChecker();
+
+    const visibleItems = items.filter((item) => {
+        return canAccess(item.roles);
+    });
+
+    if (visibleItems.length === 0) {
+        return null;
+    }
+    
     return (
         <SidebarGroup className="-mt-5">
             {title && <SidebarGroupLabel>{title}</SidebarGroupLabel>}

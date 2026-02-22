@@ -1,10 +1,12 @@
 import { departmentsLoader } from '@/api/department-api';
 import { designationsLoader } from '@/api/designation-api';
 import { documentTypesLoader } from '@/api/document-type-api';
+import { postsLoader } from '@/api/engagement-api';
 import { expenseCategoriesLoader } from '@/api/expense-category-api';
 import { gameLoader, gamesLoader } from '@/api/games-api';
 import { jobOpeningLoader, jobOpeningsLoader } from '@/api/jobs-api';
 import { rolesLoader } from '@/api/role-api';
+import { tagsLoader } from '@/api/tag-api';
 import { travelPlanLoader, travelPlansLoader } from '@/api/travel-api';
 import { notificationsLoader } from '@/api/user-api';
 import { DeleteDepartmentDialog } from '@/components/configurations/departments/delete-department-dialog';
@@ -17,6 +19,8 @@ import { UpdateEmployeeDialog } from '@/components/configurations/employees/upda
 import { UpdateEmployeeRolesDialog } from '@/components/configurations/employees/update-employee-roles-dialog';
 import { DeleteExpenseCategoryDialog } from '@/components/configurations/expenseCategories/delete-expense-category-dialog';
 import { UpdateExpenseCategoryDialog } from '@/components/configurations/expenseCategories/update-expense-category-dialog';
+import { DeleteTagDialog } from '@/components/configurations/tags/delete-tag-dialog';
+import { UpdateTagDialog } from '@/components/configurations/tags/update-tag-dialog';
 import HomeLayout from '@/components/home-layout';
 import CreateUserProfilePage from '@/pages/auth/create-user-profile-page';
 import LoginPage from '@/pages/auth/login-page';
@@ -27,6 +31,8 @@ import { DocumentTypePage } from '@/pages/configurations/document-type-page';
 import { EmployeePage } from '@/pages/configurations/employee-page';
 import { ExpenseCatrgoryPage } from '@/pages/configurations/expense-categories';
 import { RolePage } from '@/pages/configurations/role-page';
+import { TagPage } from '@/pages/configurations/tag-page';
+import { EngagementPage } from '@/pages/engagement/engagement-page';
 import { Index as GamesPage } from '@/pages/games';
 import { GameDetailsPage } from '@/pages/games/game-details-page';
 import { HomePage } from '@/pages/home-page';
@@ -118,6 +124,12 @@ const router = createBrowserRouter([
                 errorElement: <ErrorPage />,
             },
             {
+                path: 'engagement',
+                element: <EngagementPage />,
+                loader: postsLoader,
+                errorElement: <ErrorPage />,
+            },
+            {
                 path: '',
                 children: [
                     {
@@ -201,6 +213,22 @@ const router = createBrowserRouter([
                             {
                                 path: 'delete',
                                 element: <DeleteExpenseCategoryDialog />,
+                            },
+                        ],
+                    },
+                    {
+                        path: 'configuration/tags',
+                        element: <TagPage />,
+                        loader: tagsLoader,
+                        errorElement: <ErrorPage />,
+                        children: [
+                            {
+                                path: 'update',
+                                element: <UpdateTagDialog />,
+                            },
+                            {
+                                path: 'delete',
+                                element: <DeleteTagDialog />,
                             },
                         ],
                     },

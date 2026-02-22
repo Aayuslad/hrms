@@ -33,7 +33,7 @@ export function Index() {
                     </p>
                 </div>
                 <div className="w-[230px] mb-4">
-                    <CreateTravelPlanDialog />
+                    <CreateTravelPlanDialog visibleTo={['Admin', 'HR']} />
                 </div>
             </div>
 

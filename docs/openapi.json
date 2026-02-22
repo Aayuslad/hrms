@@ -1,20 +1,31 @@
 {
   "openapi": "3.1.0",
-  "info": { "title": "OpenAPI definition", "version": "v0" },
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
   "servers": [
-    { "url": "http://localhost:8080", "description": "Generated server url" }
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
   ],
   "paths": {
     "/api/users/{id}": {
       "get": {
-        "tags": ["user-controller"],
+        "tags": [
+          "user-controller"
+        ],
         "operationId": "getUserById",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
@@ -31,14 +42,19 @@
         }
       },
       "put": {
-        "tags": ["user-controller"],
+        "tags": [
+          "user-controller"
+        ],
         "operationId": "updateByAdmin",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
@@ -55,7 +71,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -63,14 +83,19 @@
     },
     "/api/users/{id}/roles": {
       "put": {
-        "tags": ["user-controller"],
+        "tags": [
+          "user-controller"
+        ],
         "operationId": "updateRoles",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
@@ -87,7 +112,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -95,7 +124,9 @@
     },
     "/api/users/me": {
       "get": {
-        "tags": ["user-controller"],
+        "tags": [
+          "user-controller"
+        ],
         "operationId": "getMe",
         "responses": {
           "200": {
@@ -111,7 +142,9 @@
         }
       },
       "put": {
-        "tags": ["user-controller"],
+        "tags": [
+          "user-controller"
+        ],
         "operationId": "updateBySelf",
         "requestBody": {
           "content": {
@@ -127,7 +160,41 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/me/notifications/mark-as-read": {
+      "put": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "markNotificationsAsRead",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarkNotificationsReadRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -135,26 +202,36 @@
     },
     "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses/{expenseId}": {
       "put": {
-        "tags": ["travel-plan-participant-controller"],
+        "tags": [
+          "travel-plan-participant-controller"
+        ],
         "operationId": "updateExpense",
         "parameters": [
           {
             "name": "expenseId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "name": "travelPlanId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
           "content": {
             "multipart/form-data": {
-              "schema": { "$ref": "#/components/schemas/UpdateExpenseRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/UpdateExpenseRequest"
+              }
             }
           }
         },
@@ -162,39 +239,58 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
       },
       "delete": {
-        "tags": ["travel-plan-participant-controller"],
+        "tags": [
+          "travel-plan-participant-controller"
+        ],
         "operationId": "deleteExpense",
         "parameters": [
           {
             "name": "travelPlanId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "name": "participantId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "name": "expenseId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -202,26 +298,36 @@
     },
     "/api/travel-plans/{travelPlanId}/participant/{participantId}/documents/{documentId}": {
       "put": {
-        "tags": ["travel-plan-participant-controller"],
+        "tags": [
+          "travel-plan-participant-controller"
+        ],
         "operationId": "updateDocument",
         "parameters": [
           {
             "name": "documentId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "name": "travelPlanId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
           "content": {
             "multipart/form-data": {
-              "schema": { "$ref": "#/components/schemas/UpdateDocumentRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDocumentRequest"
+              }
             }
           }
         },
@@ -229,33 +335,49 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
       },
       "delete": {
-        "tags": ["travel-plan-participant-controller"],
+        "tags": [
+          "travel-plan-participant-controller"
+        ],
         "operationId": "deleteDocument",
         "parameters": [
           {
             "name": "travelPlanId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "name": "documentId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -263,14 +385,19 @@
     },
     "/api/travel-plans/{id}": {
       "get": {
-        "tags": ["travel-plan-controller"],
+        "tags": [
+          "travel-plan-controller"
+        ],
         "operationId": "get",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
@@ -287,14 +414,19 @@
         }
       },
       "put": {
-        "tags": ["travel-plan-controller"],
+        "tags": [
+          "travel-plan-controller"
+        ],
         "operationId": "update",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
@@ -311,27 +443,40 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
       },
       "delete": {
-        "tags": ["travel-plan-controller"],
+        "tags": [
+          "travel-plan-controller"
+        ],
         "operationId": "delete",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -339,20 +484,28 @@
     },
     "/api/job-openings/{jobOpeningId}/refferals/{referralId}": {
       "put": {
-        "tags": ["job-opening-referral-controller"],
+        "tags": [
+          "job-opening-referral-controller"
+        ],
         "operationId": "updateReferral",
         "parameters": [
           {
             "name": "jobOpeningId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "name": "referralId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
@@ -369,7 +522,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -377,14 +534,19 @@
     },
     "/api/job-openings/{id}": {
       "get": {
-        "tags": ["job-opening-controller"],
+        "tags": [
+          "job-opening-controller"
+        ],
         "operationId": "get_1",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
@@ -401,14 +563,19 @@
         }
       },
       "put": {
-        "tags": ["job-opening-controller"],
+        "tags": [
+          "job-opening-controller"
+        ],
         "operationId": "update_1",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
@@ -424,7 +591,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -432,14 +603,19 @@
     },
     "/api/games/{id}": {
       "get": {
-        "tags": ["game-controller"],
+        "tags": [
+          "game-controller"
+        ],
         "operationId": "get_2",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
@@ -447,27 +623,36 @@
             "description": "OK",
             "content": {
               "*/*": {
-                "schema": { "$ref": "#/components/schemas/ResultGameResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/ResultGameResponse"
+                }
               }
             }
           }
         }
       },
       "put": {
-        "tags": ["game-controller"],
+        "tags": [
+          "game-controller"
+        ],
         "operationId": "update_2",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/UpdateGameRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGameRequest"
+              }
             }
           },
           "required": true
@@ -476,27 +661,40 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
       },
       "delete": {
-        "tags": ["game-controller"],
+        "tags": [
+          "game-controller"
+        ],
         "operationId": "delete_1",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -504,14 +702,19 @@
     },
     "/api/expense-categories/{id}": {
       "put": {
-        "tags": ["expense-category-controller"],
+        "tags": [
+          "expense-category-controller"
+        ],
         "operationId": "update_3",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
@@ -528,27 +731,326 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
       },
       "delete": {
-        "tags": ["expense-category-controller"],
+        "tags": [
+          "expense-category-controller"
+        ],
         "operationId": "delete_2",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/engagement/tags/{id}": {
+      "get": {
+        "tags": [
+          "tag-controller"
+        ],
+        "operationId": "get_3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultTagResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "tag-controller"
+        ],
+        "operationId": "update_4",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTagRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "tag-controller"
+        ],
+        "operationId": "delete_3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/engagement/posts/{postId}/comment/{commentId}": {
+      "put": {
+        "tags": [
+          "post-controller"
+        ],
+        "operationId": "updateComment",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCommentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "post-controller"
+        ],
+        "operationId": "deleteComment",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/engagement/posts/{id}": {
+      "get": {
+        "tags": [
+          "post-controller"
+        ],
+        "operationId": "get_4",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultPostResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "post-controller"
+        ],
+        "operationId": "update_5",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "post-controller"
+        ],
+        "operationId": "delete_4",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -556,14 +1058,19 @@
     },
     "/api/document-types/{id}": {
       "put": {
-        "tags": ["document-type-controller"],
-        "operationId": "update_4",
+        "tags": [
+          "document-type-controller"
+        ],
+        "operationId": "update_6",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
@@ -580,27 +1087,40 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
       },
       "delete": {
-        "tags": ["document-type-controller"],
-        "operationId": "delete_3",
+        "tags": [
+          "document-type-controller"
+        ],
+        "operationId": "delete_5",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -608,14 +1128,19 @@
     },
     "/api/designations/{id}": {
       "put": {
-        "tags": ["designation-controller"],
-        "operationId": "update_5",
+        "tags": [
+          "designation-controller"
+        ],
+        "operationId": "update_7",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
@@ -632,27 +1157,40 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
       },
       "delete": {
-        "tags": ["designation-controller"],
-        "operationId": "delete_4",
+        "tags": [
+          "designation-controller"
+        ],
+        "operationId": "delete_6",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -660,14 +1198,19 @@
     },
     "/api/departments/{id}": {
       "put": {
-        "tags": ["department-controller"],
-        "operationId": "update_6",
+        "tags": [
+          "department-controller"
+        ],
+        "operationId": "update_8",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
@@ -684,27 +1227,40 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
       },
       "delete": {
-        "tags": ["department-controller"],
-        "operationId": "delete_5",
+        "tags": [
+          "department-controller"
+        ],
+        "operationId": "delete_7",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -712,12 +1268,16 @@
     },
     "/api/users/register": {
       "post": {
-        "tags": ["user-controller"],
+        "tags": [
+          "user-controller"
+        ],
         "operationId": "register",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/RegisterUserRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserRequest"
+              }
             }
           },
           "required": true
@@ -726,7 +1286,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -734,7 +1298,9 @@
     },
     "/api/users/profile": {
       "post": {
-        "tags": ["user-controller"],
+        "tags": [
+          "user-controller"
+        ],
         "operationId": "createProfile",
         "requestBody": {
           "content": {
@@ -750,7 +1316,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -758,13 +1328,19 @@
     },
     "/api/users/logout": {
       "post": {
-        "tags": ["user-controller"],
+        "tags": [
+          "user-controller"
+        ],
         "operationId": "logout",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -772,12 +1348,16 @@
     },
     "/api/users/login": {
       "post": {
-        "tags": ["user-controller"],
+        "tags": [
+          "user-controller"
+        ],
         "operationId": "login",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/LoginUserRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/LoginUserRequest"
+              }
             }
           },
           "required": true
@@ -786,7 +1366,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -794,7 +1378,9 @@
     },
     "/api/travel-plans": {
       "get": {
-        "tags": ["travel-plan-controller"],
+        "tags": [
+          "travel-plan-controller"
+        ],
         "operationId": "getAll",
         "responses": {
           "200": {
@@ -810,7 +1396,9 @@
         }
       },
       "post": {
-        "tags": ["travel-plan-controller"],
+        "tags": [
+          "travel-plan-controller"
+        ],
         "operationId": "create",
         "requestBody": {
           "content": {
@@ -826,7 +1414,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -834,26 +1426,36 @@
     },
     "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses": {
       "post": {
-        "tags": ["travel-plan-participant-controller"],
+        "tags": [
+          "travel-plan-participant-controller"
+        ],
         "operationId": "createExpense",
         "parameters": [
           {
             "name": "travelPlanId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "name": "participantId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
           "content": {
             "multipart/form-data": {
-              "schema": { "$ref": "#/components/schemas/CreateExpenseRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/CreateExpenseRequest"
+              }
             }
           }
         },
@@ -861,7 +1463,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -869,26 +1475,36 @@
     },
     "/api/travel-plans/{travelPlanId}/participant/{participantId}/documents": {
       "post": {
-        "tags": ["travel-plan-participant-controller"],
+        "tags": [
+          "travel-plan-participant-controller"
+        ],
         "operationId": "createDocument",
         "parameters": [
           {
             "name": "travelPlanId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "name": "participantId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
           "content": {
             "multipart/form-data": {
-              "schema": { "$ref": "#/components/schemas/CreateDocumentRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/CreateDocumentRequest"
+              }
             }
           }
         },
@@ -896,7 +1512,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -904,35 +1524,48 @@
     },
     "/api/travel-plans/{travelPlanId}/participant/{participantId}/documents/hr": {
       "post": {
-        "tags": ["travel-plan-participant-hr-controller"],
+        "tags": [
+          "travel-plan-participant-hr-controller"
+        ],
         "operationId": "createDocumentByHr",
         "parameters": [
           {
             "name": "travelPlanId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "name": "participantId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
           "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/CreateDocumentRequest" }
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDocumentRequest"
+              }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -940,7 +1573,9 @@
     },
     "/api/job-openings": {
       "get": {
-        "tags": ["job-opening-controller"],
+        "tags": [
+          "job-opening-controller"
+        ],
         "operationId": "getAll_1",
         "responses": {
           "200": {
@@ -956,7 +1591,9 @@
         }
       },
       "post": {
-        "tags": ["job-opening-controller"],
+        "tags": [
+          "job-opening-controller"
+        ],
         "operationId": "create_1",
         "requestBody": {
           "content": {
@@ -971,7 +1608,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -979,14 +1620,19 @@
     },
     "/api/job-openings/{id}/share": {
       "post": {
-        "tags": ["job-opening-controller"],
+        "tags": [
+          "job-opening-controller"
+        ],
         "operationId": "share",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
@@ -1003,7 +1649,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -1011,7 +1661,9 @@
     },
     "/api/job-openings/referrals": {
       "post": {
-        "tags": ["job-opening-referral-controller"],
+        "tags": [
+          "job-opening-referral-controller"
+        ],
         "operationId": "createReferral",
         "requestBody": {
           "content": {
@@ -1027,7 +1679,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -1035,7 +1691,9 @@
     },
     "/api/games": {
       "get": {
-        "tags": ["game-controller"],
+        "tags": [
+          "game-controller"
+        ],
         "operationId": "getAll_2",
         "responses": {
           "200": {
@@ -1051,12 +1709,16 @@
         }
       },
       "post": {
-        "tags": ["game-controller"],
+        "tags": [
+          "game-controller"
+        ],
         "operationId": "create_2",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/CreateGameRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/CreateGameRequest"
+              }
             }
           },
           "required": true
@@ -1065,7 +1727,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -1073,20 +1739,27 @@
     },
     "/api/games/{id}/slots/wait": {
       "post": {
-        "tags": ["game-controller"],
+        "tags": [
+          "game-controller"
+        ],
         "operationId": "waitForAnySlot",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/WaitAnySlotRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/WaitAnySlotRequest"
+              }
             }
           },
           "required": true
@@ -1095,7 +1768,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -1103,20 +1780,27 @@
     },
     "/api/games/{id}/slots/book": {
       "post": {
-        "tags": ["game-controller"],
+        "tags": [
+          "game-controller"
+        ],
         "operationId": "bookSlot",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/BookSlotRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/BookSlotRequest"
+              }
             }
           },
           "required": true
@@ -1125,7 +1809,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -1133,20 +1821,28 @@
     },
     "/api/games/{gameId}/slots/{slotId}/wait": {
       "post": {
-        "tags": ["game-controller"],
+        "tags": [
+          "game-controller"
+        ],
         "operationId": "waitForSpecificSlot",
         "parameters": [
           {
             "name": "gameId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "name": "slotId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
@@ -1163,7 +1859,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -1171,20 +1871,27 @@
     },
     "/api/games/{gameId}/slots/{queuedSlotId}/{action}": {
       "post": {
-        "tags": ["game-controller"],
+        "tags": [
+          "game-controller"
+        ],
         "operationId": "slotAction",
         "parameters": [
           {
             "name": "queuedSlotId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "name": "action",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -1201,7 +1908,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -1209,7 +1920,9 @@
     },
     "/api/expense-categories": {
       "get": {
-        "tags": ["expense-category-controller"],
+        "tags": [
+          "expense-category-controller"
+        ],
         "operationId": "getAll_3",
         "responses": {
           "200": {
@@ -1225,7 +1938,9 @@
         }
       },
       "post": {
-        "tags": ["expense-category-controller"],
+        "tags": [
+          "expense-category-controller"
+        ],
         "operationId": "create_3",
         "requestBody": {
           "content": {
@@ -1241,7 +1956,148 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/engagement/tags": {
+      "get": {
+        "tags": [
+          "tag-controller"
+        ],
+        "operationId": "getAll_4",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultListTagResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "tag-controller"
+        ],
+        "operationId": "create_4",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTagRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/engagement/posts": {
+      "get": {
+        "tags": [
+          "post-controller"
+        ],
+        "operationId": "getAll_5",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultListPostResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "post-controller"
+        ],
+        "operationId": "create_5",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePostRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/engagement/posts/{id}/comment": {
+      "post": {
+        "tags": [
+          "post-controller"
+        ],
+        "operationId": "createComment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCommentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -1249,8 +2105,10 @@
     },
     "/api/document-types": {
       "get": {
-        "tags": ["document-type-controller"],
-        "operationId": "getAll_4",
+        "tags": [
+          "document-type-controller"
+        ],
+        "operationId": "getAll_6",
         "responses": {
           "200": {
             "description": "OK",
@@ -1265,8 +2123,10 @@
         }
       },
       "post": {
-        "tags": ["document-type-controller"],
-        "operationId": "create_4",
+        "tags": [
+          "document-type-controller"
+        ],
+        "operationId": "create_6",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1281,7 +2141,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -1289,8 +2153,10 @@
     },
     "/api/designations": {
       "get": {
-        "tags": ["designation-controller"],
-        "operationId": "getAll_5",
+        "tags": [
+          "designation-controller"
+        ],
+        "operationId": "getAll_7",
         "responses": {
           "200": {
             "description": "OK",
@@ -1305,8 +2171,10 @@
         }
       },
       "post": {
-        "tags": ["designation-controller"],
-        "operationId": "create_5",
+        "tags": [
+          "designation-controller"
+        ],
+        "operationId": "create_7",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1321,7 +2189,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -1329,8 +2201,10 @@
     },
     "/api/departments": {
       "get": {
-        "tags": ["department-controller"],
-        "operationId": "getAll_6",
+        "tags": [
+          "department-controller"
+        ],
+        "operationId": "getAll_8",
         "responses": {
           "200": {
             "description": "OK",
@@ -1345,8 +2219,10 @@
         }
       },
       "post": {
-        "tags": ["department-controller"],
-        "operationId": "create_6",
+        "tags": [
+          "department-controller"
+        ],
+        "operationId": "create_8",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1361,7 +2237,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -1369,27 +2249,39 @@
     },
     "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/submit": {
       "patch": {
-        "tags": ["travel-plan-participant-controller"],
+        "tags": [
+          "travel-plan-participant-controller"
+        ],
         "operationId": "submitExpense",
         "parameters": [
           {
             "name": "travelPlanId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "name": "expenseId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -1397,27 +2289,39 @@
     },
     "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/reject": {
       "patch": {
-        "tags": ["travel-plan-participant-hr-controller"],
+        "tags": [
+          "travel-plan-participant-hr-controller"
+        ],
         "operationId": "rejectExpense",
         "parameters": [
           {
             "name": "travelPlanId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "name": "expenseId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -1425,27 +2329,39 @@
     },
     "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/approve": {
       "patch": {
-        "tags": ["travel-plan-participant-hr-controller"],
+        "tags": [
+          "travel-plan-participant-hr-controller"
+        ],
         "operationId": "approveExpense",
         "parameters": [
           {
             "name": "travelPlanId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "name": "expenseId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -1453,21 +2369,30 @@
     },
     "/api/job-openings/{id}/close": {
       "patch": {
-        "tags": ["job-opening-controller"],
+        "tags": [
+          "job-opening-controller"
+        ],
         "operationId": "close",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -1475,27 +2400,181 @@
     },
     "/api/games/{gameId}/slots/{slotId}/cancel": {
       "patch": {
-        "tags": ["game-controller"],
+        "tags": [
+          "game-controller"
+        ],
         "operationId": "cancelSlot",
         "parameters": [
           {
             "name": "gameId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "name": "slotId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/engagement/posts/{postId}/comment/{commentId}/unlike": {
+      "patch": {
+        "tags": [
+          "post-controller"
+        ],
+        "operationId": "unlikeComment",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/engagement/posts/{postId}/comment/{commentId}/like": {
+      "patch": {
+        "tags": [
+          "post-controller"
+        ],
+        "operationId": "likeComment",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/engagement/posts/{id}/unlike": {
+      "patch": {
+        "tags": [
+          "post-controller"
+        ],
+        "operationId": "unlike",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/engagement/posts/{id}/like": {
+      "patch": {
+        "tags": [
+          "post-controller"
+        ],
+        "operationId": "like",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
             }
           }
         }
@@ -1503,7 +2582,9 @@
     },
     "/api/users/summary": {
       "get": {
-        "tags": ["user-controller"],
+        "tags": [
+          "user-controller"
+        ],
         "operationId": "getUsersSummary",
         "responses": {
           "200": {
@@ -1521,14 +2602,18 @@
     },
     "/api/users/org-charts": {
       "get": {
-        "tags": ["user-controller"],
+        "tags": [
+          "user-controller"
+        ],
         "operationId": "getOrgCharts",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "*/*": {
-                "schema": { "$ref": "#/components/schemas/ResultOrgCharts" }
+                "schema": {
+                  "$ref": "#/components/schemas/ResultOrgCharts"
+                }
               }
             }
           }
@@ -1537,7 +2622,9 @@
     },
     "/api/users/me/notifications": {
       "get": {
-        "tags": ["user-controller"],
+        "tags": [
+          "user-controller"
+        ],
         "operationId": "getNotifications",
         "responses": {
           "200": {
@@ -1555,7 +2642,9 @@
     },
     "/api/users/details": {
       "get": {
-        "tags": ["user-controller"],
+        "tags": [
+          "user-controller"
+        ],
         "operationId": "getAllUsersDetails",
         "responses": {
           "200": {
@@ -1573,20 +2662,28 @@
     },
     "/api/travel-plans/{travelPlanId}/participant/{participantId}": {
       "get": {
-        "tags": ["travel-plan-participant-controller"],
+        "tags": [
+          "travel-plan-participant-controller"
+        ],
         "operationId": "getParticipant",
         "parameters": [
           {
             "name": "travelPlanId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "name": "participantId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
@@ -1605,8 +2702,10 @@
     },
     "/api/roles": {
       "get": {
-        "tags": ["role-controller"],
-        "operationId": "getAll_7",
+        "tags": [
+          "role-controller"
+        ],
+        "operationId": "getAll_9",
         "responses": {
           "200": {
             "description": "OK",
@@ -1623,7 +2722,9 @@
     },
     "/api/games/offers": {
       "get": {
-        "tags": ["game-controller"],
+        "tags": [
+          "game-controller"
+        ],
         "operationId": "getOffers",
         "responses": {
           "200": {
@@ -1645,67 +2746,157 @@
       "UpdateUserByAdminRequest": {
         "type": "object",
         "properties": {
-          "userId": { "type": "string", "format": "uuid" },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "profile": {
             "$ref": "#/components/schemas/UpdateUserProfileByAdminRequest"
           }
         },
-        "required": ["userId"]
+        "required": [
+          "userId"
+        ]
       },
       "UpdateUserProfileByAdminRequest": {
         "type": "object",
         "properties": {
-          "firstName": { "type": "string", "minLength": 1 },
-          "middleName": { "type": "string" },
-          "lastName": { "type": "string", "minLength": 1 },
-          "contactNumber": { "type": "string" },
-          "dateOfBirth": { "type": "string", "format": "date" },
-          "gender": { "type": "string", "enum": ["MALE", "FEMALE", "OTHER"] },
-          "joiningDate": { "type": "string", "format": "date" },
-          "departmentId": { "type": "string", "format": "uuid" },
-          "designationId": { "type": "string", "format": "uuid" },
-          "managerId": { "type": "string", "format": "uuid" }
+          "firstName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "middleName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "contactNumber": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "MALE",
+              "FEMALE",
+              "OTHER"
+            ]
+          },
+          "joiningDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "departmentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "designationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "managerId": {
+            "type": "string",
+            "format": "uuid"
+          }
         },
-        "required": ["firstName", "lastName"]
+        "required": [
+          "firstName",
+          "lastName"
+        ]
       },
       "ResultVoid": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer", "format": "int32" },
-          "data": {},
-          "message": { "type": "string" },
-          "success": { "type": "boolean" }
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
         }
       },
       "UpdateUserRolesRequest": {
         "type": "object",
         "properties": {
-          "userId": { "type": "string", "format": "uuid" },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "roles": {
             "type": "array",
-            "items": { "type": "string", "format": "uuid" },
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
             "uniqueItems": true
           }
         },
-        "required": ["userId"]
+        "required": [
+          "userId"
+        ]
       },
       "GameInterestRequest": {
         "type": "object",
-        "properties": { "gameId": { "type": "string", "format": "uuid" } },
-        "required": ["gameId"]
+        "properties": {
+          "gameId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "gameId"
+        ]
       },
       "UpdateProfileBySelfRequest": {
         "type": "object",
         "properties": {
-          "firstName": { "type": "string", "minLength": 1 },
-          "middleName": { "type": "string" },
-          "lastName": { "type": "string", "minLength": 1 },
-          "contactNumber": { "type": "string" },
-          "dateOfBirth": { "type": "string", "format": "date" },
-          "gender": { "type": "string", "enum": ["MALE", "FEMALE", "OTHER"] },
-          "joiningDate": { "type": "string", "format": "date" }
+          "firstName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "middleName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "contactNumber": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "MALE",
+              "FEMALE",
+              "OTHER"
+            ]
+          },
+          "joiningDate": {
+            "type": "string",
+            "format": "date"
+          }
         },
-        "required": ["firstName", "lastName"]
+        "required": [
+          "firstName",
+          "lastName"
+        ]
       },
       "UpdateUserBySelfRequest": {
         "type": "object",
@@ -1715,96 +2906,239 @@
           },
           "gameInterests": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/GameInterestRequest" }
+            "items": {
+              "$ref": "#/components/schemas/GameInterestRequest"
+            }
           }
         }
+      },
+      "MarkNotificationsReadRequest": {
+        "type": "object",
+        "properties": {
+          "notificationIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "notificationIds"
+        ]
       },
       "UpdateExpenseRequest": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "travelPlanId": { "type": "string", "format": "uuid" },
-          "amount": { "type": "number", "format": "float", "minimum": 1 },
-          "date": { "type": "string", "format": "date" },
-          "expenseCategoryId": { "type": "string", "format": "uuid" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "travelPlanId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "float",
+            "minimum": 1
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "expenseCategoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "proofs": {
             "type": "array",
-            "items": { "type": "string", "format": "binary" }
+            "items": {
+              "type": "string",
+              "format": "binary"
+            }
           }
         },
-        "required": ["amount", "expenseCategoryId", "id", "travelPlanId"]
+        "required": [
+          "amount",
+          "expenseCategoryId",
+          "id",
+          "travelPlanId"
+        ]
       },
       "UpdateDocumentRequest": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "doc": { "type": "string", "format": "binary" },
-          "travelPlanId": { "type": "string", "format": "uuid" },
-          "ownerId": { "type": "string", "format": "uuid" },
-          "documentTypeId": { "type": "string", "format": "uuid" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "doc": {
+            "type": "string",
+            "format": "binary"
+          },
+          "travelPlanId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentTypeId": {
+            "type": "string",
+            "format": "uuid"
+          }
         },
-        "required": ["doc", "documentTypeId", "id", "ownerId", "travelPlanId"]
+        "required": [
+          "doc",
+          "documentTypeId",
+          "id",
+          "ownerId",
+          "travelPlanId"
+        ]
       },
       "UpdateTravelPlanRequest": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "title": { "type": "string", "minLength": 1 },
-          "destination": { "type": "string", "minLength": 1 },
-          "description": { "type": "string" },
-          "startAt": { "type": "string", "format": "date-time" },
-          "endAt": { "type": "string", "format": "date-time" },
-          "maxExpenseAmountPerDay": { "type": "number", "format": "float" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "destination": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string"
+          },
+          "startAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "maxExpenseAmountPerDay": {
+            "type": "number",
+            "format": "float"
+          },
           "participants": {
             "type": "array",
-            "items": { "type": "string", "format": "uuid" }
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         },
-        "required": ["destination", "id", "title"]
+        "required": [
+          "destination",
+          "id",
+          "title"
+        ]
       },
       "UpdateJobOpeningReferralRequest": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "jobOpeningId": { "type": "string", "format": "uuid" },
-          "name": { "type": "string", "minLength": 1 },
-          "email": { "type": "string", "minLength": 1 },
-          "cvUrl": { "type": "string", "minLength": 1 },
-          "note": { "type": "string" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "jobOpeningId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "email": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cvUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "note": {
+            "type": "string"
+          }
         },
-        "required": ["cvUrl", "email", "id", "jobOpeningId", "name"]
+        "required": [
+          "cvUrl",
+          "email",
+          "id",
+          "jobOpeningId",
+          "name"
+        ]
       },
       "UpdateJobOpeningRequest": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "description": { "type": "string" },
-          "designationId": { "type": "string", "format": "uuid" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "description": {
+            "type": "string"
+          },
+          "designationId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "requiredExperience": {
             "type": "number",
             "format": "float",
             "minimum": 0
           },
-          "jd": { "type": "string", "format": "binary" },
-          "defaultHrId": { "type": "string", "format": "uuid" },
+          "jd": {
+            "type": "string",
+            "format": "binary"
+          },
+          "defaultHrId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "hrs": {
             "type": "array",
-            "items": { "type": "string", "format": "uuid" },
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
             "uniqueItems": true
           },
           "reviewers": {
             "type": "array",
-            "items": { "type": "string", "format": "uuid" },
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
             "uniqueItems": true
           }
         },
-        "required": ["defaultHrId", "designationId", "id"]
+        "required": [
+          "defaultHrId",
+          "designationId",
+          "id"
+        ]
       },
       "UpdateGameRequest": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string", "minLength": 1 },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
           "slotDuration": {
             "type": "integer",
             "format": "int32",
@@ -1815,8 +3149,12 @@
             "format": "int32",
             "minimum": 1
           },
-          "openTime": { "type": "string" },
-          "closeTime": { "type": "string" },
+          "openTime": {
+            "type": "string"
+          },
+          "closeTime": {
+            "type": "string"
+          },
           "openingDayOfWeek": {
             "type": "string",
             "enum": [
@@ -1856,161 +3194,410 @@
       "UpdateExpenseCategoryRequest": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string", "minLength": 1 }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
         },
-        "required": ["id", "name"]
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "UpdateTagRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "UpdateCommentRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "content": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "content"
+        ]
+      },
+      "UpdatePostRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "content": {
+            "type": "string"
+          },
+          "tagIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "required": [
+          "title"
+        ]
       },
       "UpdateDocumentTypeRequest": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string", "minLength": 1 }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
         },
-        "required": ["id", "name"]
+        "required": [
+          "id",
+          "name"
+        ]
       },
       "UpdateDesignationRequest": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string", "minLength": 1 }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
         },
-        "required": ["id", "name"]
+        "required": [
+          "id",
+          "name"
+        ]
       },
       "UpdateDepartmentRequest": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string", "minLength": 1 }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
         },
-        "required": ["id", "name"]
+        "required": [
+          "id",
+          "name"
+        ]
       },
       "RegisterUserRequest": {
         "type": "object",
         "properties": {
-          "email": { "type": "string", "format": "email", "minLength": 1 },
-          "userName": { "type": "string", "minLength": 1 },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
+          "userName": {
+            "type": "string",
+            "minLength": 1
+          },
           "password": {
             "type": "string",
             "maxLength": 2147483647,
             "minLength": 6
           }
         },
-        "required": ["email", "password", "userName"]
+        "required": [
+          "email",
+          "password",
+          "userName"
+        ]
       },
       "CreateUserProfileRequest": {
         "type": "object",
         "properties": {
-          "firstName": { "type": "string", "minLength": 1 },
-          "middleName": { "type": "string" },
-          "lastName": { "type": "string", "minLength": 1 },
-          "contactNumber": { "type": "string" },
-          "dateOfBirth": { "type": "string", "format": "date" },
-          "gender": { "type": "string", "enum": ["MALE", "FEMALE", "OTHER"] },
-          "joiningDate": { "type": "string", "format": "date" }
+          "firstName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "middleName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "contactNumber": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "MALE",
+              "FEMALE",
+              "OTHER"
+            ]
+          },
+          "joiningDate": {
+            "type": "string",
+            "format": "date"
+          }
         },
-        "required": ["firstName", "lastName"]
+        "required": [
+          "firstName",
+          "lastName"
+        ]
       },
       "LoginUserRequest": {
         "type": "object",
         "properties": {
-          "emailOrUserName": { "type": "string", "minLength": 1 },
-          "password": { "type": "string", "minLength": 1 }
+          "emailOrUserName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          }
         },
-        "required": ["emailOrUserName", "password"]
+        "required": [
+          "emailOrUserName",
+          "password"
+        ]
       },
       "CreateTravelPlanRequest": {
         "type": "object",
         "properties": {
-          "title": { "type": "string", "minLength": 1 },
-          "destination": { "type": "string", "minLength": 1 },
-          "description": { "type": "string" },
-          "startAt": { "type": "string", "format": "date-time" },
-          "endAt": { "type": "string", "format": "date-time" }
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "destination": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string"
+          },
+          "startAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endAt": {
+            "type": "string",
+            "format": "date-time"
+          }
         },
-        "required": ["destination", "title"]
+        "required": [
+          "destination",
+          "title"
+        ]
       },
       "CreateExpenseRequest": {
         "type": "object",
         "properties": {
-          "participantId": { "type": "string", "format": "uuid" },
-          "amount": { "type": "number", "format": "float", "minimum": 1 },
-          "date": { "type": "string", "format": "date" },
+          "participantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "float",
+            "minimum": 1
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
           "status": {
             "type": "string",
-            "enum": ["DRAFTING", "SUBMITTED", "APPROVED", "REJECTED"]
+            "enum": [
+              "DRAFTING",
+              "SUBMITTED",
+              "APPROVED",
+              "REJECTED"
+            ]
           },
-          "travelPlanId": { "type": "string", "format": "uuid" },
-          "expenseCategoryId": { "type": "string", "format": "uuid" },
+          "travelPlanId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expenseCategoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "proofs": {
             "type": "array",
-            "items": { "type": "string", "format": "binary" }
+            "items": {
+              "type": "string",
+              "format": "binary"
+            }
           }
         },
-        "required": ["amount", "expenseCategoryId", "travelPlanId"]
+        "required": [
+          "amount",
+          "expenseCategoryId",
+          "travelPlanId"
+        ]
       },
       "CreateDocumentRequest": {
         "type": "object",
         "properties": {
-          "doc": { "type": "string", "format": "binary" },
-          "ownerId": { "type": "string", "format": "uuid" },
-          "travelPlanId": { "type": "string", "format": "uuid" },
-          "documentTypeId": { "type": "string", "format": "uuid" }
+          "doc": {
+            "type": "string",
+            "format": "binary"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "travelPlanId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentTypeId": {
+            "type": "string",
+            "format": "uuid"
+          }
         },
-        "required": ["doc", "documentTypeId", "ownerId", "travelPlanId"]
+        "required": [
+          "doc",
+          "documentTypeId",
+          "ownerId",
+          "travelPlanId"
+        ]
       },
       "CreateJobOpeningRequest": {
         "type": "object",
         "properties": {
-          "description": { "type": "string" },
-          "designationId": { "type": "string", "format": "uuid" },
+          "description": {
+            "type": "string"
+          },
+          "designationId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "requiredExperience": {
             "type": "number",
             "format": "float",
             "minimum": 0
           },
-          "jd": { "type": "string", "format": "binary" },
-          "defaultHrId": { "type": "string", "format": "uuid" },
+          "jd": {
+            "type": "string",
+            "format": "binary"
+          },
+          "defaultHrId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "hrs": {
             "type": "array",
-            "items": { "type": "string", "format": "uuid" },
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
             "uniqueItems": true
           },
           "reviewers": {
             "type": "array",
-            "items": { "type": "string", "format": "uuid" },
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
             "uniqueItems": true
           }
         },
-        "required": ["defaultHrId", "designationId"]
+        "required": [
+          "defaultHrId",
+          "designationId"
+        ]
       },
       "ShareJobOpeningRequest": {
         "type": "object",
         "properties": {
-          "jobOpeningId": { "type": "string", "format": "uuid" },
+          "jobOpeningId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "shareToEmail": {
             "type": "string",
             "format": "email",
             "minLength": 1
           }
         },
-        "required": ["shareToEmail"]
+        "required": [
+          "shareToEmail"
+        ]
       },
       "CreateJobOpeningReferralRequest": {
         "type": "object",
         "properties": {
-          "jobOpeningId": { "type": "string", "format": "uuid" },
-          "name": { "type": "string", "minLength": 1 },
-          "email": { "type": "string", "minLength": 1 },
-          "cvUrl": { "type": "string", "minLength": 1 },
-          "note": { "type": "string" }
+          "jobOpeningId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "email": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cvUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "note": {
+            "type": "string"
+          }
         },
-        "required": ["cvUrl", "email", "jobOpeningId", "name"]
+        "required": [
+          "cvUrl",
+          "email",
+          "jobOpeningId",
+          "name"
+        ]
       },
       "CreateGameRequest": {
         "type": "object",
         "properties": {
-          "name": { "type": "string", "minLength": 1 },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
           "slotDuration": {
             "type": "integer",
             "format": "int32",
@@ -2021,8 +3608,12 @@
             "format": "int32",
             "minimum": 1
           },
-          "openTime": { "type": "string" },
-          "closeTime": { "type": "string" },
+          "openTime": {
+            "type": "string"
+          },
+          "closeTime": {
+            "type": "string"
+          },
           "openingDayOfWeek": {
             "type": "string",
             "enum": [
@@ -2061,145 +3652,347 @@
       "WaitAnySlotRequest": {
         "type": "object",
         "properties": {
-          "day": { "type": "string", "format": "date" },
-          "gameId": { "type": "string", "format": "uuid" },
+          "day": {
+            "type": "string",
+            "format": "date"
+          },
+          "gameId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "playerIds": {
             "type": "array",
-            "items": { "type": "string", "format": "uuid" }
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         },
-        "required": ["day", "gameId"]
+        "required": [
+          "day",
+          "gameId"
+        ]
       },
       "BookSlotRequest": {
         "type": "object",
         "properties": {
-          "gameId": { "type": "string", "format": "uuid" },
-          "day": { "type": "string", "format": "date" },
-          "startTime": { "type": "string" },
+          "gameId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "day": {
+            "type": "string",
+            "format": "date"
+          },
+          "startTime": {
+            "type": "string"
+          },
           "playerIds": {
             "type": "array",
-            "items": { "type": "string", "format": "uuid" }
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         },
-        "required": ["day", "gameId", "startTime"]
+        "required": [
+          "day",
+          "gameId",
+          "startTime"
+        ]
       },
       "WaitSpecificSlotRequest": {
         "type": "object",
         "properties": {
-          "gameId": { "type": "string", "format": "uuid" },
-          "slotId": { "type": "string", "format": "uuid" },
+          "gameId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slotId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "playerIds": {
             "type": "array",
-            "items": { "type": "string", "format": "uuid" }
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         },
-        "required": ["gameId", "slotId"]
+        "required": [
+          "gameId",
+          "slotId"
+        ]
       },
       "QueuedSlotActionRequest": {
         "type": "object",
         "properties": {
-          "queuedSlotId": { "type": "string", "format": "uuid" },
-          "canceledSlotId": { "type": "string", "format": "uuid" },
-          "action": { "type": "string", "minLength": 1 }
+          "queuedSlotId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "canceledSlotId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "action": {
+            "type": "string",
+            "minLength": 1
+          }
         },
-        "required": ["action", "canceledSlotId", "queuedSlotId"]
+        "required": [
+          "action",
+          "canceledSlotId",
+          "queuedSlotId"
+        ]
       },
       "CreateExpenseCategoryRequest": {
         "type": "object",
-        "properties": { "name": { "type": "string", "minLength": 1 } },
-        "required": ["name"]
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "CreateTagRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "CreatePostRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "content": {
+            "type": "string"
+          },
+          "tagIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "CreateCommentRequest": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "content"
+        ]
       },
       "CreateDocumentTypeRequest": {
         "type": "object",
-        "properties": { "name": { "type": "string", "minLength": 1 } },
-        "required": ["name"]
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "name"
+        ]
       },
       "CreateDesignationRequest": {
         "type": "object",
-        "properties": { "name": { "type": "string", "minLength": 1 } },
-        "required": ["name"]
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "name"
+        ]
       },
       "CreateDepartmentRequest": {
         "type": "object",
-        "properties": { "name": { "type": "string", "minLength": 1 } },
-        "required": ["name"]
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "name"
+        ]
       },
       "DepartmentSummaryResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          }
         }
       },
       "DesignationSummaryResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          }
         }
       },
       "GameInterestResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          }
         }
       },
       "ManagerSummaryResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "userName": { "type": "string" },
-          "firstName": { "type": "string" },
-          "lastName": { "type": "string" },
-          "email": { "type": "string" },
-          "avatarUrl": { "type": "string" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "avatarUrl": {
+            "type": "string"
+          }
         }
       },
       "ProfileResponse": {
         "type": "object",
         "properties": {
-          "firstName": { "type": "string" },
-          "middleName": { "type": "string" },
-          "lastName": { "type": "string" },
-          "contactNumber": { "type": "string" },
-          "dateOfBirth": { "type": "string", "format": "date" },
-          "gender": { "type": "string", "enum": ["MALE", "FEMALE", "OTHER"] },
-          "joiningDate": { "type": "string", "format": "date" },
-          "avatarUrl": { "type": "string" },
+          "firstName": {
+            "type": "string"
+          },
+          "middleName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "contactNumber": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "MALE",
+              "FEMALE",
+              "OTHER"
+            ]
+          },
+          "joiningDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "avatarUrl": {
+            "type": "string"
+          },
           "department": {
             "$ref": "#/components/schemas/DepartmentSummaryResponse"
           },
           "designation": {
             "$ref": "#/components/schemas/DesignationSummaryResponse"
           },
-          "manager": { "$ref": "#/components/schemas/ManagerSummaryResponse" }
+          "manager": {
+            "$ref": "#/components/schemas/ManagerSummaryResponse"
+          }
         }
       },
       "ResultUserDetailResponse": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer", "format": "int32" },
-          "data": { "$ref": "#/components/schemas/UserDetailResponse" },
-          "message": { "type": "string" },
-          "success": { "type": "boolean" }
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "$ref": "#/components/schemas/UserDetailResponse"
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
         }
       },
       "UserDetailResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "email": { "type": "string" },
-          "userName": { "type": "string" },
-          "profile": { "$ref": "#/components/schemas/ProfileResponse" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/ProfileResponse"
+          },
           "roles": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/UserRoleResponse" },
+            "items": {
+              "$ref": "#/components/schemas/UserRoleResponse"
+            },
             "uniqueItems": true
           },
           "interestedInGames": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/GameInterestResponse" },
+            "items": {
+              "$ref": "#/components/schemas/GameInterestResponse"
+            },
             "uniqueItems": true
           }
         }
@@ -2207,49 +4000,91 @@
       "UserRoleResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          }
         }
       },
       "ResultListUserSummaryResponse": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer", "format": "int32" },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
           "data": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/UserSummaryResponse" }
+            "items": {
+              "$ref": "#/components/schemas/UserSummaryResponse"
+            }
           },
-          "message": { "type": "string" },
-          "success": { "type": "boolean" }
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
         }
       },
       "UserSummaryResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "email": { "type": "string" },
-          "userName": { "type": "string" },
-          "firstName": { "type": "string" },
-          "lastName": { "type": "string" },
-          "avatarUrl": { "type": "string" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "avatarUrl": {
+            "type": "string"
+          }
         }
       },
       "EmployeeOrgChartNodeResponse": {
         "type": "object",
         "properties": {
-          "userId": { "type": "string", "format": "uuid" },
-          "username": { "type": "string" },
-          "firstName": { "type": "string" },
-          "lastName": { "type": "string" },
-          "designation": { "type": "string" },
-          "department": { "type": "string" },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "username": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "designation": {
+            "type": "string"
+          },
+          "department": {
+            "type": "string"
+          },
           "manages": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/EmployeeOrgChartNodeResponse"
             }
           },
-          "avatarUrl": { "type": "string" }
+          "avatarUrl": {
+            "type": "string"
+          }
         }
       },
       "OrgCharts": {
@@ -2266,50 +4101,92 @@
       "ResultOrgCharts": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer", "format": "int32" },
-          "data": { "$ref": "#/components/schemas/OrgCharts" },
-          "message": { "type": "string" },
-          "success": { "type": "boolean" }
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "$ref": "#/components/schemas/OrgCharts"
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
         }
       },
       "NotificationResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "content": { "type": "string" },
-          "isRead": { "type": "boolean" },
-          "createdAt": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "content": {
+            "type": "string"
+          },
+          "isRead": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "ResultListNotificationResponse": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer", "format": "int32" },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
           "data": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/NotificationResponse" }
+            "items": {
+              "$ref": "#/components/schemas/NotificationResponse"
+            }
           },
-          "message": { "type": "string" },
-          "success": { "type": "boolean" }
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
         }
       },
       "ResultListUserDetailResponse": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer", "format": "int32" },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
           "data": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/UserDetailResponse" }
+            "items": {
+              "$ref": "#/components/schemas/UserDetailResponse"
+            }
           },
-          "message": { "type": "string" },
-          "success": { "type": "boolean" }
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
         }
       },
       "GlobalUserResponseSummary": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "userName": { "type": "string" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userName": {
+            "type": "string"
+          },
           "profile": {
             "$ref": "#/components/schemas/UserProfileResponseSummary"
           }
@@ -2318,26 +4195,48 @@
       "ResultListTravelPlanSummaryResponse": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer", "format": "int32" },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
           "data": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TravelPlanSummaryResponse"
             }
           },
-          "message": { "type": "string" },
-          "success": { "type": "boolean" }
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
         }
       },
       "TravelPlanSummaryResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "title": { "type": "string" },
-          "destination": { "type": "string" },
-          "description": { "type": "string" },
-          "startAt": { "type": "string", "format": "date-time" },
-          "endAt": { "type": "string", "format": "date-time" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "destination": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "startAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endAt": {
+            "type": "string",
+            "format": "date-time"
+          },
           "createdBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
@@ -2349,28 +4248,56 @@
       "UserProfileResponseSummary": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "firstName": { "type": "string" },
-          "middleName": { "type": "string" },
-          "lastName": { "type": "string" },
-          "avatarUrl": { "type": "string" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "middleName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "avatarUrl": {
+            "type": "string"
+          }
         }
       },
       "ExpenseProofResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "docUrl": { "type": "string" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "docUrl": {
+            "type": "string"
+          }
         }
       },
       "ParticipantDocumentResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "owner": { "$ref": "#/components/schemas/GlobalUserResponseSummary" },
-          "docUrl": { "type": "string" },
-          "documentType": { "type": "string" },
-          "uploadedAt": { "type": "string", "format": "date-time" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/GlobalUserResponseSummary"
+          },
+          "docUrl": {
+            "type": "string"
+          },
+          "documentType": {
+            "type": "string"
+          },
+          "uploadedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
           "uploadedBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
           }
@@ -2379,30 +4306,58 @@
       "ParticipantExpenseResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "amount": { "type": "number", "format": "float" },
-          "date": { "type": "string", "format": "date" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "float"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
           "status": {
             "type": "string",
-            "enum": ["DRAFTING", "SUBMITTED", "APPROVED", "REJECTED"]
+            "enum": [
+              "DRAFTING",
+              "SUBMITTED",
+              "APPROVED",
+              "REJECTED"
+            ]
           },
-          "remarks": { "type": "string" },
-          "submittedAt": { "type": "string", "format": "date-time" },
-          "expenseCategory": { "type": "string" },
+          "remarks": {
+            "type": "string"
+          },
+          "submittedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expenseCategory": {
+            "type": "string"
+          },
           "approvedBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
           "proofs": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/ExpenseProofResponse" }
+            "items": {
+              "$ref": "#/components/schemas/ExpenseProofResponse"
+            }
           }
         }
       },
       "ParticipantResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "userName": { "type": "string" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userName": {
+            "type": "string"
+          },
           "documents": {
             "type": "array",
             "items": {
@@ -2420,31 +4375,67 @@
       "ResultParticipantResponse": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer", "format": "int32" },
-          "data": { "$ref": "#/components/schemas/ParticipantResponse" },
-          "message": { "type": "string" },
-          "success": { "type": "boolean" }
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ParticipantResponse"
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
         }
       },
       "ResultTravelPlanResponse": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer", "format": "int32" },
-          "data": { "$ref": "#/components/schemas/TravelPlanResponse" },
-          "message": { "type": "string" },
-          "success": { "type": "boolean" }
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "$ref": "#/components/schemas/TravelPlanResponse"
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
         }
       },
       "TravelPlanResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "title": { "type": "string" },
-          "destination": { "type": "string" },
-          "description": { "type": "string" },
-          "startAt": { "type": "string", "format": "date-time" },
-          "endAt": { "type": "string", "format": "date-time" },
-          "maxExpenseAmountPerDay": { "type": "number", "format": "float" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "destination": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "startAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "maxExpenseAmountPerDay": {
+            "type": "number",
+            "format": "float"
+          },
           "participants": {
             "type": "array",
             "items": {
@@ -2462,40 +4453,70 @@
       "ResultListRoleResponse": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer", "format": "int32" },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
           "data": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/RoleResponse" }
+            "items": {
+              "$ref": "#/components/schemas/RoleResponse"
+            }
           },
-          "message": { "type": "string" },
-          "success": { "type": "boolean" }
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
         }
       },
       "RoleResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
           "createdBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
           "updatedBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
-          "createdAt": { "type": "string", "format": "date-time" },
-          "updatedAt": { "type": "string", "format": "date-time" }
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "JobOpeningSummaryResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "description": { "type": "string" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "description": {
+            "type": "string"
+          },
           "designation": {
             "$ref": "#/components/schemas/DesignationSummaryResponse"
           },
-          "requiredExperience": { "type": "number", "format": "float" },
-          "jdUrl": { "type": "string" },
+          "requiredExperience": {
+            "type": "number",
+            "format": "float"
+          },
+          "jdUrl": {
+            "type": "string"
+          },
           "defaultHr": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
@@ -2505,50 +4526,85 @@
           "updatedBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
-          "closed": { "type": "boolean" }
+          "closed": {
+            "type": "boolean"
+          }
         }
       },
       "ResultListJobOpeningSummaryResponse": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer", "format": "int32" },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
           "data": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/JobOpeningSummaryResponse"
             }
           },
-          "message": { "type": "string" },
-          "success": { "type": "boolean" }
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
         }
       },
       "JobOpeningReferralResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
           "referredBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
-          "name": { "type": "string" },
-          "email": { "type": "string" },
-          "cvUrl": { "type": "string" },
-          "note": { "type": "string" },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "cvUrl": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
           "status": {
             "type": "string",
-            "enum": ["NEW", "IN_REVIEW", "ACCEPTED", "REJECTED"]
+            "enum": [
+              "NEW",
+              "IN_REVIEW",
+              "ACCEPTED",
+              "REJECTED"
+            ]
           }
         }
       },
       "JobOpeningResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "description": { "type": "string" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "description": {
+            "type": "string"
+          },
           "designation": {
             "$ref": "#/components/schemas/DesignationSummaryResponse"
           },
-          "requiredExperience": { "type": "number", "format": "float" },
-          "jdUrl": { "type": "string" },
+          "requiredExperience": {
+            "type": "number",
+            "format": "float"
+          },
+          "jdUrl": {
+            "type": "string"
+          },
           "defaultHr": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
@@ -2576,27 +4632,78 @@
           "updatedBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
-          "closed": { "type": "boolean" }
+          "shareAudits": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobOpeningShareAuditResponse"
+            }
+          },
+          "closed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "JobOpeningShareAuditResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sharedBy": {
+            "$ref": "#/components/schemas/GlobalUserResponseSummary"
+          },
+          "sharedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sharedToEmail": {
+            "type": "string"
+          }
         }
       },
       "ResultJobOpeningResponse": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer", "format": "int32" },
-          "data": { "$ref": "#/components/schemas/JobOpeningResponse" },
-          "message": { "type": "string" },
-          "success": { "type": "boolean" }
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "$ref": "#/components/schemas/JobOpeningResponse"
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
         }
       },
       "GameSummaryResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string" },
-          "slotDuration": { "type": "integer", "format": "int32" },
-          "maxSlotPlayers": { "type": "integer", "format": "int32" },
-          "openTime": { "type": "string" },
-          "closeTime": { "type": "string" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slotDuration": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxSlotPlayers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "openTime": {
+            "type": "string"
+          },
+          "closeTime": {
+            "type": "string"
+          },
           "openingDayOfWeek": {
             "type": "string",
             "enum": [
@@ -2626,24 +4733,48 @@
       "ResultListGameSummaryResponse": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer", "format": "int32" },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
           "data": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/GameSummaryResponse" }
+            "items": {
+              "$ref": "#/components/schemas/GameSummaryResponse"
+            }
           },
-          "message": { "type": "string" },
-          "success": { "type": "boolean" }
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
         }
       },
       "GameResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string" },
-          "slotDuration": { "type": "integer", "format": "int32" },
-          "maxSlotPlayers": { "type": "integer", "format": "int32" },
-          "openTime": { "type": "string" },
-          "closeTime": { "type": "string" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slotDuration": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxSlotPlayers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "openTime": {
+            "type": "string"
+          },
+          "closeTime": {
+            "type": "string"
+          },
           "openingDayOfWeek": {
             "type": "string",
             "enum": [
@@ -2670,178 +4801,506 @@
           },
           "gameSlots": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/GameSlotResponse" }
+            "items": {
+              "$ref": "#/components/schemas/GameSlotResponse"
+            }
           },
           "userGameStats": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/UserGameStatsResponse" }
+            "items": {
+              "$ref": "#/components/schemas/UserGameStatsResponse"
+            }
           }
         }
       },
       "GameSlotResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "startTime": { "type": "string" },
-          "endTime": { "type": "string" },
-          "day": { "type": "string", "format": "date" },
-          "organiser": { "$ref": "#/components/schemas/UserSummaryResponse" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "day": {
+            "type": "string",
+            "format": "date"
+          },
+          "organiser": {
+            "$ref": "#/components/schemas/UserSummaryResponse"
+          },
           "players": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/UserSummaryResponse" }
+            "items": {
+              "$ref": "#/components/schemas/UserSummaryResponse"
+            }
           },
-          "booked": { "type": "boolean" }
+          "booked": {
+            "type": "boolean"
+          }
         }
       },
       "ResultGameResponse": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer", "format": "int32" },
-          "data": { "$ref": "#/components/schemas/GameResponse" },
-          "message": { "type": "string" },
-          "success": { "type": "boolean" }
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "$ref": "#/components/schemas/GameResponse"
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
         }
       },
       "UserGameStatsResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "user": { "$ref": "#/components/schemas/UserSummaryResponse" },
-          "completedSlots": { "type": "integer", "format": "int32" },
-          "lastPlayedAt": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserSummaryResponse"
+          },
+          "completedSlots": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastPlayedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "QueuedSlotOfferResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "queueSlotId": { "type": "string", "format": "uuid" },
-          "cancelledSlotId": { "type": "string", "format": "uuid" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "queueSlotId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "cancelledSlotId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "status": {
             "type": "string",
-            "enum": ["PENDING", "ACCEPTED", "REJECTED", "EXPIRED"]
+            "enum": [
+              "PENDING",
+              "ACCEPTED",
+              "REJECTED",
+              "EXPIRED"
+            ]
           },
-          "expiresAt": { "type": "string", "format": "date-time" }
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "ResultListQueuedSlotOfferResponse": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer", "format": "int32" },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
           "data": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/QueuedSlotOfferResponse" }
+            "items": {
+              "$ref": "#/components/schemas/QueuedSlotOfferResponse"
+            }
           },
-          "message": { "type": "string" },
-          "success": { "type": "boolean" }
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
         }
       },
       "ExpenseCategoryResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
           "createdBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
           "updatedBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
-          "createdAt": { "type": "string", "format": "date-time" },
-          "updatedAt": { "type": "string", "format": "date-time" }
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "ResultListExpenseCategoryResponse": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer", "format": "int32" },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
           "data": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/ExpenseCategoryResponse" }
+            "items": {
+              "$ref": "#/components/schemas/ExpenseCategoryResponse"
+            }
           },
-          "message": { "type": "string" },
-          "success": { "type": "boolean" }
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ResultListTagResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TagResponse"
+            }
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TagResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ResultTagResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "$ref": "#/components/schemas/TagResponse"
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PostCommentResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "author": {
+            "$ref": "#/components/schemas/GlobalUserResponseSummary"
+          },
+          "content": {
+            "type": "string"
+          },
+          "likeCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "likedBy": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GlobalUserResponseSummary"
+            }
+          }
+        }
+      },
+      "PostResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "author": {
+            "$ref": "#/components/schemas/GlobalUserResponseSummary"
+          },
+          "likeCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "commentCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TagResponse"
+            }
+          },
+          "comments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PostCommentResponse"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "$ref": "#/components/schemas/GlobalUserResponseSummary"
+          },
+          "updatedBy": {
+            "$ref": "#/components/schemas/GlobalUserResponseSummary"
+          },
+          "liked": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ResultListPostResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PostResponse"
+            }
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ResultPostResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PostResponse"
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
         }
       },
       "DocumentTypeResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
           "createdBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
           "updatedBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
-          "createdAt": { "type": "string", "format": "date-time" },
-          "updatedAt": { "type": "string", "format": "date-time" }
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "ResultListDocumentTypeResponse": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer", "format": "int32" },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
           "data": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/DocumentTypeResponse" }
+            "items": {
+              "$ref": "#/components/schemas/DocumentTypeResponse"
+            }
           },
-          "message": { "type": "string" },
-          "success": { "type": "boolean" }
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
         }
       },
       "DesignationResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
           "createdBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
           "updatedBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
-          "createdAt": { "type": "string", "format": "date-time" },
-          "updatedAt": { "type": "string", "format": "date-time" }
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "ResultListDesignationResponse": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer", "format": "int32" },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
           "data": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/DesignationResponse" }
+            "items": {
+              "$ref": "#/components/schemas/DesignationResponse"
+            }
           },
-          "message": { "type": "string" },
-          "success": { "type": "boolean" }
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
         }
       },
       "DepartmentResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
           "createdBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
           "updatedBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
-          "createdAt": { "type": "string", "format": "date-time" },
-          "updatedAt": { "type": "string", "format": "date-time" }
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "ResultListDepartmentResponse": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer", "format": "int32" },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
           "data": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/DepartmentResponse" }
+            "items": {
+              "$ref": "#/components/schemas/DepartmentResponse"
+            }
           },
-          "message": { "type": "string" },
-          "success": { "type": "boolean" }
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
         }
       }
     }

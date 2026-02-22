@@ -25,6 +25,7 @@ import z from 'zod';
 import DateTimeSelector from '../ui/date-time-selector';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
+import { useAccessChecker } from '@/hooks/use-has-access';
 
 const createTravelPlanFormSchema = z.object({
     title: z.string().min(1, 'Title is required').max(80),
@@ -34,7 +35,12 @@ const createTravelPlanFormSchema = z.object({
     endAt: z.string().optional(),
 }) satisfies z.ZodType<CreateTravelPlanRequest>;
 
-const CreateTravelPlanDialog = () => {
+type Props = {
+    visibleTo: string[];
+};
+
+const CreateTravelPlanDialog = ({ visibleTo }: Props) => {
+    const canAccess = useAccessChecker();
     const createTravelPlanMutation = useCreateTravelPlan();
     const [open, setOpen] = useState(false);
 
@@ -63,6 +69,8 @@ const CreateTravelPlanDialog = () => {
         const messages = Object.values(errors).map((err) => err.message);
         messages.reverse().forEach((msg) => toast.error(msg));
     };
+
+    if (!canAccess(visibleTo)) return null;
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
