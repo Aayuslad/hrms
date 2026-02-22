@@ -48,6 +48,9 @@ public class GameService {
     private final com.aayush.lad.hrms.modules.games.repositories.QueuedSlotOfferRepository queuedSlotOfferRepository;
 
     public void create(CreateGameRequest request) {
+        if (gameRepository.existsByName(request.getName()))
+            throw new ConflictException("Game with name '" + request.getName() + "' already exists");
+
         Game game = gameMapper.create(request);
         gameRepository.save(game);
     }
@@ -56,6 +59,12 @@ public class GameService {
         Game game = getGameEntityById(request.getId());
         gameMapper.update(request, game);
         gameRepository.save(game);
+    }
+
+    public void delete(UUID gameId) {
+        Game game = getGameEntityById(gameId);
+        // TODO: soft delete
+        gameRepository.delete(game);
     }
 
     // get summary of all

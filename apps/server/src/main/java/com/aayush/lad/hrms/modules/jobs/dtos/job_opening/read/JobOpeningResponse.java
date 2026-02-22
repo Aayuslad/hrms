@@ -2,6 +2,7 @@ package com.aayush.lad.hrms.modules.jobs.dtos.job_opening.read;
 
 import com.aayush.lad.hrms.modules.jobs.dtos.job_opening.read.internal.DesignationSummaryResponse;
 import com.aayush.lad.hrms.modules.jobs.dtos.job_opening.read.internal.JobOpeningReferralResponse;
+import com.aayush.lad.hrms.modules.jobs.dtos.job_opening.read.internal.JobOpeningShareAuditResponse;
 import com.aayush.lad.hrms.shared.dtos.GlobalUserResponseSummary;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,8 +40,8 @@ public class JobOpeningResponse {
     private List<JobOpeningReferralResponse> referrals = new ArrayList<>();
 
     private GlobalUserResponseSummary createdBy;
-    
+
     private GlobalUserResponseSummary updatedBy;
 
-    // TODO: add share audit later on
+    private List<JobOpeningShareAuditResponse> shareAudits = new ArrayList<>();
 }

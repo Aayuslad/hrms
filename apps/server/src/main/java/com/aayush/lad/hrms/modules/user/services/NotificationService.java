@@ -17,6 +17,14 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class NotificationService {
+	public void markNotificationsAsRead(List<UUID> notificationIds) {
+		if (notificationIds == null || notificationIds.isEmpty()) return;
+		List<Notification> notifications = notificationRepository.findAllById(notificationIds);
+		for (Notification notification : notifications) {
+			notification.setIsRead(Boolean.TRUE);
+		}
+		notificationRepository.saveAll(notifications);
+	}
 
 	private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
 

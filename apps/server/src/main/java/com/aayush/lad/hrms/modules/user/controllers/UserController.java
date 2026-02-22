@@ -4,6 +4,7 @@ import com.aayush.lad.hrms.core.result.Result;
 import com.aayush.lad.hrms.core.result.ResultMapper;
 import com.aayush.lad.hrms.core.security.JwtUtil;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.NotificationResponse;
+import com.aayush.lad.hrms.modules.user.dtos.user.read.OrgCharts;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.UserDetailResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.UserSummaryResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.write.*;
@@ -11,10 +12,9 @@ import com.aayush.lad.hrms.modules.user.services.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +24,14 @@ import java.util.UUID;
 @RequestMapping("/api/users")
 @AllArgsConstructor
 public class UserController {
+
+    @PreAuthorize("hasRole('Employee')")
+    @PutMapping("/me/notifications/mark-as-read")
+    public ResponseEntity<Result<Void>> markNotificationsAsRead(
+            @Valid @RequestBody MarkNotificationsReadRequest request) {
+        userService.markNotificationsAsRead(request.getNotificationIds());
+        return ResultMapper.handle(HttpStatus.OK, "Notifications marked as read");
+    }
 
     private final UserService userService;
     private final JwtUtil jwtUtil;
@@ -46,13 +54,13 @@ public class UserController {
         return ResultMapper.handle(HttpStatus.CREATED, "Logged in");
     }
 
-    //    @PreAuthorize("hasRole('Employee')")
     @GetMapping("/me")
     public ResponseEntity<Result<UserDetailResponse>> getMe() {
         UserDetailResponse responseDto = userService.getCurrentUser();
         return ResultMapper.handle(HttpStatus.OK, responseDto);
     }
 
+    @PreAuthorize("hasRole('Employee')")
     @GetMapping("/{id}")
     public ResponseEntity<Result<UserDetailResponse>> getUserById(@PathVariable("id") UUID id) {
         UserDetailResponse responseDto = userService.getUserById(id);
@@ -62,29 +70,31 @@ public class UserController {
     //    @PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PostMapping("/profile")
     public ResponseEntity<Result<Void>> createProfile(
-            @Valid @ModelAttribute CreateUserProfileRequest request) {
+            @Valid @RequestBody CreateUserProfileRequest request) {
         userService.createProfile(request);
         return ResultMapper.handle(HttpStatus.CREATED, "Profile created");
     }
 
     //    @PutMapping(value = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PostMapping("/me")
+    @PutMapping("/me")
     public ResponseEntity<Result<Void>> updateBySelf(
-            @Valid @ModelAttribute UpdateUserBySelfRequest request) {
+            @Valid @RequestBody UpdateUserBySelfRequest request) {
         userService.update(request);
         return ResultMapper.handle(HttpStatus.CREATED, "User updated");
     }
 
     //    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<Result<Void>> updateByAdmin(
             @PathVariable("id") UUID id,
-            @Valid @ModelAttribute UpdateUserByAdminRequest request) {
+            @Valid @RequestBody UpdateUserByAdminRequest request) {
         request.setUserId(id);
         userService.update(request);
-        return ResultMapper.handle(HttpStatus.CREATED, "User updated");
+        return ResultMapper.handle(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('Employee')")
     @GetMapping("/me/notifications")
     public ResponseEntity<Result<List<NotificationResponse>>> getNotifications() {
         List<NotificationResponse> responseDto = userService.getRecentNotifications();
@@ -97,12 +107,21 @@ public class UserController {
         return ResultMapper.handle(HttpStatus.OK, "Logged out");
     }
 
+    @PreAuthorize("hasRole('Employee')")
     @GetMapping("/summary")
-    public ResponseEntity<List<UserSummaryResponse>> getUsersSummary() {
+    public ResponseEntity<Result<List<UserSummaryResponse>>> getUsersSummary() {
         List<UserSummaryResponse> responseDto = userService.getUsersSummary();
-        return ResponseEntity.ok(responseDto);
+        return ResultMapper.handle(HttpStatus.OK, responseDto);
     }
 
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
+    @GetMapping("/details")
+    public ResponseEntity<Result<List<UserDetailResponse>>> getAllUsersDetails() {
+        List<UserDetailResponse> responseDto = userService.getAllUsersDetails();
+        return ResultMapper.handle(HttpStatus.OK, responseDto);
+    }
+
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
     @PutMapping("/{id}/roles")
     public ResponseEntity<Result<Void>> updateRoles(
             @PathVariable("id") UUID id,
@@ -110,5 +129,12 @@ public class UserController {
         request.setUserId(id);
         userService.updateUserRoles(request);
         return ResultMapper.handle(HttpStatus.OK, "User roles updated");
+    }
+
+    @PreAuthorize("hasRole('Employee')")
+    @GetMapping("/org-charts")
+    public ResponseEntity<Result<OrgCharts>> getOrgCharts() {
+        OrgCharts responseDto = userService.getOrgCharts();
+        return ResultMapper.handle(HttpStatus.OK, responseDto);
     }
 }

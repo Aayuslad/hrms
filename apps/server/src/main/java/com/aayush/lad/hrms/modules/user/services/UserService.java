@@ -5,8 +5,10 @@ import com.aayush.lad.hrms.core.exeptions.NotFoundException;
 import com.aayush.lad.hrms.core.exeptions.UnauthorisedException;
 import com.aayush.lad.hrms.core.services.CurrentUserService;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.NotificationResponse;
+import com.aayush.lad.hrms.modules.user.dtos.user.read.OrgCharts;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.UserDetailResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.UserSummaryResponse;
+import com.aayush.lad.hrms.modules.user.dtos.user.read.internal.EmployeeOrgChartNodeResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.write.*;
 import com.aayush.lad.hrms.modules.user.mappers.UserMapper;
 import com.aayush.lad.hrms.modules.user.models.Notification;
@@ -18,18 +20,25 @@ import com.aayush.lad.hrms.modules.user.repositories.DesignationRepository;
 import com.aayush.lad.hrms.modules.user.repositories.RoleRepository;
 import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class UserService {
+    private final NotificationService notificationService;
+    public void markNotificationsAsRead(List<UUID> notificationIds) {
+        notificationService.markNotificationsAsRead(notificationIds);
+    }
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -144,7 +153,22 @@ public class UserService {
 
     public List<UserSummaryResponse> getUsersSummary() {
         List<User> users = userRepository.findAll();
-        return userMapper.toSummaryResponseList(users);
+
+        return users.stream().map(x -> UserSummaryResponse
+                .builder()
+                .id(x.getId())
+                .email(x.getEmail())
+                .userName(x.getUserName())
+                .firstName(x.getProfile() != null ? x.getProfile().getFirstName() : null)
+                .lastName(x.getProfile() != null ? x.getProfile().getLastName() : null)
+                .avatarUrl(x.getProfile() != null ? x.getProfile().getAvatarUrl() : null)
+                .build()
+        ).toList();
+    }
+
+    public List<UserDetailResponse> getAllUsersDetails() {
+        List<User> users = userRepository.findAllWithRoles();
+        return users.stream().map(userMapper::toDetailResponse).toList();
     }
 
     public void updateUserRoles(UpdateUserRolesRequest request) {
@@ -156,6 +180,43 @@ public class UserService {
         }
 
         userRepository.save(user);
+    }
+
+    public OrgCharts getOrgCharts() {
+        List<User> allUsers = userRepository.findAllWithProfiles();
+
+        Map<UUID, List<User>> subordinates = new HashMap<>();
+        List<User> roots = new ArrayList<>();
+
+        for (User user : allUsers) {
+            UUID managerId = user.getProfile() != null && user.getProfile().getManager() != null ? user.getProfile().getManager().getId() : null;
+            if (managerId == null) {
+                roots.add(user);
+            } else {
+                subordinates.computeIfAbsent(managerId, k -> new ArrayList<>()).add(user);
+            }
+        }
+
+        List<EmployeeOrgChartNodeResponse> orgCharts = roots.stream().map(user -> buildNode(user, subordinates)).toList();
+
+        return OrgCharts.builder().orgCharts(orgCharts).build();
+    }
+
+    private EmployeeOrgChartNodeResponse buildNode(User user, Map<UUID, List<User>> subordinates) {
+        List<EmployeeOrgChartNodeResponse> manages = subordinates.getOrDefault(user.getId(), new ArrayList<>()).stream()
+                .map(sub -> buildNode(sub, subordinates))
+                .toList();
+
+        return EmployeeOrgChartNodeResponse.builder()
+                .userId(user.getId())
+                .username(user.getUserName())
+                .firstName(user.getProfile() != null ? user.getProfile().getFirstName() : null)
+                .lastName(user.getProfile() != null ? user.getProfile().getLastName() : null)
+                .designation(user.getProfile() != null && user.getProfile().getDesignation() != null ? user.getProfile().getDesignation().getName() : null)
+                .department(user.getProfile() != null && user.getProfile().getDepartment() != null ? user.getProfile().getDepartment().getName() : null)
+                .avatarUrl(user.getProfile() != null ? user.getProfile().getAvatarUrl() : null)
+                .manages(manages)
+                .build();
     }
 
     private User getUserEntityById(UUID id) {

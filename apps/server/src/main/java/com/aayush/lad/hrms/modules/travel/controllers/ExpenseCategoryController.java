@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,12 +23,14 @@ public class ExpenseCategoryController {
 
     private final ExpenseCategoryService expenseCategoryService;
 
+    @PreAuthorize("hasRole('Employee')")
     @GetMapping
     public ResponseEntity<Result<List<ExpenseCategoryResponse>>> getAll() {
         List<ExpenseCategoryResponse> response = expenseCategoryService.getAll();
         return ResultMapper.handle(HttpStatus.OK, response);
     }
 
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
     @PostMapping
     public ResponseEntity<Result<Void>> create(
             @Valid @RequestBody CreateExpenseCategoryRequest request) {
@@ -35,6 +38,7 @@ public class ExpenseCategoryController {
         return ResultMapper.handle(HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
     @PutMapping("/{id}")
     public ResponseEntity<Result<Void>> update(
             @PathVariable UUID id,
@@ -44,6 +48,7 @@ public class ExpenseCategoryController {
         return ResultMapper.handle(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Result<Void>> delete(@PathVariable UUID id) {
         expenseCategoryService.delete(id);

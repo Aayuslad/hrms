@@ -13,7 +13,7 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // TODO: add proper origin before production
-        configuration.addAllowedOrigin("*");
+        configuration.addAllowedOrigin("http://localhost:5173");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);

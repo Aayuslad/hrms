@@ -1,20 +1,28 @@
 package com.aayush.lad.hrms.modules.games.controllers;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
 import com.aayush.lad.hrms.core.result.Result;
 import com.aayush.lad.hrms.core.result.ResultMapper;
 import com.aayush.lad.hrms.modules.games.dtos.read.GameResponse;
 import com.aayush.lad.hrms.modules.games.dtos.read.GameSummaryResponse;
 import com.aayush.lad.hrms.modules.games.dtos.read.QueuedSlotOfferResponse;
-import com.aayush.lad.hrms.modules.games.dtos.write.*;
+import com.aayush.lad.hrms.modules.games.dtos.write.BookSlotRequest;
+import com.aayush.lad.hrms.modules.games.dtos.write.CreateGameRequest;
+import com.aayush.lad.hrms.modules.games.dtos.write.QueuedSlotActionRequest;
+import com.aayush.lad.hrms.modules.games.dtos.write.UpdateGameRequest;
+import com.aayush.lad.hrms.modules.games.dtos.write.WaitAnySlotRequest;
+import com.aayush.lad.hrms.modules.games.dtos.write.WaitSpecificSlotRequest;
 import com.aayush.lad.hrms.modules.games.services.GameService;
+
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
@@ -23,18 +31,21 @@ public class GameController {
 
     private final GameService gameService;
 
+    @PreAuthorize("hasRole('Employee')")
     @GetMapping("/{id}")
     public ResponseEntity<Result<GameResponse>> get(@PathVariable UUID id) {
         GameResponse response = gameService.getOne(id);
         return ResultMapper.handle(HttpStatus.OK, response);
     }
 
+    @PreAuthorize("hasRole('Employee')")
     @GetMapping
     public ResponseEntity<Result<List<GameSummaryResponse>>> getAll() {
         List<GameSummaryResponse> response = gameService.getAll();
         return ResultMapper.handle(HttpStatus.OK, response);
     }
 
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
     @PostMapping
     public ResponseEntity<Result<Void>> create(
             @Valid @RequestBody CreateGameRequest request) {
@@ -42,6 +53,7 @@ public class GameController {
         return ResultMapper.handle(HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
     @PutMapping("/{id}")
     public ResponseEntity<Result<Void>> update(
             @PathVariable UUID id,
@@ -51,7 +63,15 @@ public class GameController {
         return ResultMapper.handle(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Result<Void>> delete(@PathVariable UUID id) {
+        gameService.delete(id);
+        return ResultMapper.handle(HttpStatus.NO_CONTENT, "Game deleted.");
+    }
+
     // Book a specific slot for current user
+    @PreAuthorize("hasRole('Employee')")
     @PostMapping("/{id}/slots/book")
     public ResponseEntity<Result<Void>> bookSlot(
             @PathVariable UUID id,
@@ -63,6 +83,7 @@ public class GameController {
 
     // Wait for a specific booked slot to be cancelled (option 1)
     // TODO: add notification + timed confirmation flow.
+    @PreAuthorize("hasRole('Employee')")
     @PostMapping("/{gameId}/slots/{slotId}/wait")
     public ResponseEntity<Result<Void>> waitForSpecificSlot(
             @PathVariable UUID gameId,
@@ -75,6 +96,7 @@ public class GameController {
 
     // Wait for any slot on a given day (option 2). Creates a pending any-slot entry.
     // TODO: allocation algorithm + notify user with 10 minute confirmation window.
+    @PreAuthorize("hasRole('Employee')")
     @PostMapping("/{id}/slots/wait")
     public ResponseEntity<Result<Void>> waitForAnySlot(
             @PathVariable UUID id,
@@ -85,6 +107,7 @@ public class GameController {
     }
 
     // Get all offers where current user is organiser
+    @PreAuthorize("hasRole('Employee')")
     @GetMapping("/offers")
     public ResponseEntity<Result<List<QueuedSlotOfferResponse>>> getOffers() {
         List<QueuedSlotOfferResponse> offers = gameService.getOffersForOrganiser();
@@ -92,6 +115,7 @@ public class GameController {
     }
 
     // Cancel a confirmed slot. Only organiser can cancel.
+    @PreAuthorize("hasRole('Employee')")
     @PatchMapping("/{gameId}/slots/{slotId}/cancel")
     public ResponseEntity<Result<Void>> cancelSlot(
             @PathVariable UUID gameId,
@@ -101,6 +125,7 @@ public class GameController {
     }
 
     // to Perform action (accept/reject) on empty slot notification received by a user. (for option 2)
+    @PreAuthorize("hasRole('Employee')")
     @PostMapping("/{gameId}/slots/{queuedSlotId}/{action}")
     public ResponseEntity<Result<Void>> slotAction(
             @PathVariable UUID queuedSlotId,

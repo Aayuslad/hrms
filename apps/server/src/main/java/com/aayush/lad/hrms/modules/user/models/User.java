@@ -25,7 +25,7 @@ public class User extends AuditableModel {
 
     private String passwordHash;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonManagedReference
     private Profile profile;
 

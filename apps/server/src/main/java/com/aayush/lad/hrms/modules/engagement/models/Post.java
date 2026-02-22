@@ -22,6 +22,8 @@ public class Post extends AuditableModel {
     @Column(nullable = false)
     private String title;
 
+    @Lob
+    @Column(columnDefinition = "NVARCHAR(MAX)")
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -16,4 +16,6 @@ public class GlobalUserResponseSummary {
     private UUID id;
 
     private String userName;
+
+    private UserProfileResponseSummary profile;
 }

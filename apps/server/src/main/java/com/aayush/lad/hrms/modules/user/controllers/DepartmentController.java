@@ -23,14 +23,16 @@ public class DepartmentController {
 
     private final DepartmentService departmentService;
 
+    @PreAuthorize("hasRole('Employee')")
     @GetMapping
     public ResponseEntity<Result<List<DepartmentResponse>>> getAll() {
         List<DepartmentResponse> response = departmentService.getAll();
         return ResultMapper.handle(HttpStatus.OK, response);
     }
 
+
     @PostMapping
-    @PreAuthorize("hasRole('HR')")
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
     public ResponseEntity<Result<Void>> create(
             @Valid @RequestBody CreateDepartmentRequest request) {
         departmentService.create(request);
@@ -38,7 +40,7 @@ public class DepartmentController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('HR')")
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
     public ResponseEntity<Result<Void>> update(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateDepartmentRequest request) {
@@ -48,7 +50,7 @@ public class DepartmentController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('HR')")
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
     public ResponseEntity<Result<Void>> delete(@PathVariable UUID id) {
         departmentService.delete(id);
         return ResultMapper.handle(HttpStatus.NO_CONTENT, "Department deleted");

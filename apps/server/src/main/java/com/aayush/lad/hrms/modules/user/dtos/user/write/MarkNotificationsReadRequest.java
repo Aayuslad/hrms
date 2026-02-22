@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -13,5 +15,5 @@ import java.util.Set;
 public class MarkNotificationsReadRequest {
 
     @NotEmpty(message = "Notification IDs cannot be empty")
-    private Set<Long> notificationIds;
+    private List<UUID> notificationIds;
 }
