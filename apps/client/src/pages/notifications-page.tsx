@@ -59,8 +59,8 @@ export function NotificationsPage() {
 
     return (
         <div className="space-y-4 p-6">
-            <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold">Notifications</h2>
+            <div className="flex items-center justify-end">
+                {/* <h2 className="text-2xl font-bold">Notifications</h2> */}
                 {unreadNotificationIds.length > 0 && (
                     <Button
                         onClick={handleMarkAllAsRead}
@@ -74,7 +74,7 @@ export function NotificationsPage() {
                 )}
             </div>
 
-            <div className="space-y-3 w-[600px] mx-auto">
+            <div className="space-y-3 w-[750px] pr-16 mt-10 mx-auto">
                 {sortedNotifications.map((notification) => (
                     <Card
                         key={notification.id}

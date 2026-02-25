@@ -1,7 +1,8 @@
 import { useGetGames, useGetOffers } from '@/api/games-api';
-import CreateGameDialog from '@/components/games/create-game-dialog';
-import GameCard from '@/components/games/game-card';
-import { OfferCard } from '@/components/games/offer-card';
+import GameCard from '@/components/games/cards/game-card';
+import { OfferCard } from '@/components/games/cards/offer-card';
+import CreateGameDialog from '@/components/games/gameDialogs/create-game-dialog';
+import { NoContent } from '@/components/no-content';
 import { Spinner } from '@/components/ui/spinner';
 
 export function Index() {
@@ -24,14 +25,6 @@ export function Index() {
         );
     }
 
-    if (!isLoading && !isError && !games) {
-        return (
-            <div className="w-full h-[80vh] flex items-center justify-center">
-                404 - Not found...!
-            </div>
-        );
-    }
-
     return (
         <div className=" h-full">
             <div className="bg-muted h-[100px] w-full flex items-center">
@@ -45,28 +38,42 @@ export function Index() {
             </div>
 
             <div className="w-full flex justify-evenly py-5 px-8">
-                <div className="w-full flex flex-col items-center">
+                <div className="w-full mr-4 flex flex-col items-center">
                     <div className="mx-auto px-5 py-12 gap-8">
-                        {offers && offers.length > 0 && (
-                            <div className="w-full mb-8">
-                                <h2 className="text-xl font-bold mb-4">
-                                    Offers
-                                </h2>
-                                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                                    {offers.map((offer) => (
-                                        <OfferCard
-                                            key={offer.id}
-                                            offer={offer}
-                                        />
-                                    ))}
+                        {offers?.length !== 0 &&
+                            offers?.some(
+                                (offer) => offer.status === 'PENDING'
+                            ) && (
+                                <div className="mb-10">
+                                    <h2 className="text-xl font-bold mb-4">
+                                        Offers
+                                    </h2>
+                                    {offers && offers.length > 0 && (
+                                        <div className="w-full flex flex-wrap gap-3">
+                                            {offers
+                                                .filter(
+                                                    (offer) =>
+                                                        offer.status ===
+                                                        'PENDING'
+                                                )
+                                                .map((offer) => (
+                                                    <OfferCard
+                                                        key={offer.id}
+                                                        offer={offer}
+                                                    />
+                                                ))}
+                                        </div>
+                                    )}
                                 </div>
-                            </div>
-                        )}
+                            )}
+
                         <div className="w-full grid gap-8 md:grid-cols-2">
                             {games?.map((game) => (
                                 <GameCard key={game.id} game={game} />
                             ))}
                         </div>
+
+                        {!games && !offers && <NoContent />}
                     </div>
                 </div>
             </div>

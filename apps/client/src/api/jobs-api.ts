@@ -1,5 +1,6 @@
 import { axiosClient } from '@/lib/axios-client';
 import { queryClient } from '@/lib/query-client';
+import { handleApiError } from '@/lib/utils';
 import type { components } from '@/types/generated/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
@@ -82,14 +83,8 @@ export function useCreateJobOpening() {
             toast.success('Job opening created');
             queryClient.invalidateQueries({ queryKey: ['job-openings'] });
         },
-        onError: (error: AxiosError<{ error: string }>) => {
-            toast.error(
-                error.response?.data?.error ||
-                    error.message ||
-                    'Failed to create job opening'
-            );
-            console.error('Failed to create job opening', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to create job opening'),
     });
 }
 
@@ -110,14 +105,8 @@ export function useUpdateJobOpening() {
                 queryKey: ['job-opening', vars.id],
             });
         },
-        onError: (error: AxiosError<{ error: string }>) => {
-            toast.error(
-                error.response?.data?.error ||
-                    error.message ||
-                    'Failed to update job opening'
-            );
-            console.error('Failed to update job opening', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to update job opening'),
     });
 }
 
@@ -132,14 +121,8 @@ export function useDeleteJobOpening() {
             queryClient.invalidateQueries({ queryKey: ['job-openings'] });
             queryClient.invalidateQueries({ queryKey: ['job-opening', id] });
         },
-        onError: (error: AxiosError<{ error: string }>) => {
-            toast.error(
-                error.response?.data?.error ||
-                    error.message ||
-                    'Failed to delete job opening'
-            );
-            console.error('Failed to delete job opening', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to delete job opening'),
     });
 }
 
@@ -157,14 +140,8 @@ export function useShareJobOpening() {
             toast.success('Job opening shared');
             queryClient.invalidateQueries({ queryKey: ['job-openings'] });
         },
-        onError: (error: AxiosError<{ error: string }>) => {
-            toast.error(
-                error.response?.data?.error ||
-                    error.message ||
-                    'Failed to share job opening'
-            );
-            console.error('Failed to share job opening', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to share job opening'),
     });
 }
 
@@ -179,14 +156,8 @@ export function useCloseJobOpening() {
             queryClient.invalidateQueries({ queryKey: ['job-openings'] });
             queryClient.invalidateQueries({ queryKey: ['job-opening', id] });
         },
-        onError: (error: AxiosError<{ error: string }>) => {
-            toast.error(
-                error.response?.data?.error ||
-                    error.message ||
-                    'Failed to close job opening'
-            );
-            console.error('Failed to close job opening', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to close job opening'),
     });
 }
 
@@ -205,14 +176,8 @@ export function useCreateJobOpeningReferral() {
                 queryKey: ['job-opening', vars.jobOpeningId],
             });
         },
-        onError: (error: AxiosError<{ error: string }>) => {
-            toast.error(
-                error.response?.data?.error ||
-                    error.message ||
-                    'Failed to create job opening referral'
-            );
-            console.error('Failed to create job opening referral', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to create job opening referral'),
     });
 }
 
@@ -237,13 +202,7 @@ export function useUpdateJobOpeningReferral() {
                 queryKey: ['job-opening', vars.jobOpeningId],
             });
         },
-        onError: (error: AxiosError<{ error: string }>) => {
-            toast.error(
-                error.response?.data?.error ||
-                    error.message ||
-                    'Failed to update job opening referral'
-            );
-            console.error('Failed to update job opening referral', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to update job opening referral'),
     });
 }

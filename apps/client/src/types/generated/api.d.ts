@@ -122,7 +122,7 @@ export interface paths {
   "/api/games/{gameId}/slots/{slotId}/wait": {
     post: operations["waitForSpecificSlot"];
   };
-  "/api/games/{gameId}/slots/{queuedSlotId}/{action}": {
+  "/api/games/slots/{queuedSlotId}/{action}": {
     post: operations["slotAction"];
   };
   "/api/expense-categories": {
@@ -193,6 +193,9 @@ export interface paths {
   };
   "/api/travel-plans/{travelPlanId}/participant/{participantId}": {
     get: operations["getParticipant"];
+  };
+  "/api/travel-plans/{id}/expenses": {
+    get: operations["getExpenses"];
   };
   "/api/roles": {
     get: operations["getAll_9"];
@@ -311,7 +314,6 @@ export interface components {
       name: string;
       email: string;
       cvUrl: string;
-      note?: string;
     };
     UpdateJobOpeningRequest: {
       /** Format: uuid */
@@ -461,7 +463,6 @@ export interface components {
       name: string;
       email: string;
       cvUrl: string;
-      note?: string;
     };
     CreateGameRequest: {
       name: string;
@@ -528,6 +529,20 @@ export interface components {
     CreateDepartmentRequest: {
       name: string;
     };
+    RejectExpenseRequest: {
+      /** Format: uuid */
+      expenseId: string;
+      /** Format: uuid */
+      travelPlanId: string;
+      remarks?: string;
+    };
+    ApproveExpenseRequest: {
+      /** Format: uuid */
+      expenseId: string;
+      /** Format: uuid */
+      travelPlanId: string;
+      remarks?: string;
+    };
     DepartmentSummaryResponse: {
       /** Format: uuid */
       id?: string;
@@ -543,14 +558,12 @@ export interface components {
       id?: string;
       name?: string;
     };
-    ManagerSummaryResponse: {
+    GlobalUserResponseSummary: {
       /** Format: uuid */
       id?: string;
       userName?: string;
-      firstName?: string;
-      lastName?: string;
       email?: string;
-      avatarUrl?: string;
+      profile?: components["schemas"]["UserProfileResponseSummary"];
     };
     ProfileResponse: {
       firstName?: string;
@@ -566,7 +579,7 @@ export interface components {
       avatarUrl?: string;
       department?: components["schemas"]["DepartmentSummaryResponse"];
       designation?: components["schemas"]["DesignationSummaryResponse"];
-      manager?: components["schemas"]["ManagerSummaryResponse"];
+      manager?: components["schemas"]["GlobalUserResponseSummary"];
     };
     ResultUserDetailResponse: {
       /** Format: int32 */
@@ -584,26 +597,25 @@ export interface components {
       roles?: components["schemas"]["UserRoleResponse"][];
       interestedInGames?: components["schemas"]["GameInterestResponse"][];
     };
+    UserProfileResponseSummary: {
+      /** Format: uuid */
+      id?: string;
+      firstName?: string;
+      middleName?: string;
+      lastName?: string;
+      avatarUrl?: string;
+    };
     UserRoleResponse: {
       /** Format: uuid */
       id?: string;
       name?: string;
     };
-    ResultListUserSummaryResponse: {
+    ResultListGlobalUserResponseSummary: {
       /** Format: int32 */
       statusCode?: number;
-      data?: components["schemas"]["UserSummaryResponse"][];
+      data?: components["schemas"]["GlobalUserResponseSummary"][];
       message?: string;
       success?: boolean;
-    };
-    UserSummaryResponse: {
-      /** Format: uuid */
-      id?: string;
-      email?: string;
-      userName?: string;
-      firstName?: string;
-      lastName?: string;
-      avatarUrl?: string;
     };
     EmployeeOrgChartNodeResponse: {
       /** Format: uuid */
@@ -648,12 +660,6 @@ export interface components {
       message?: string;
       success?: boolean;
     };
-    GlobalUserResponseSummary: {
-      /** Format: uuid */
-      id?: string;
-      userName?: string;
-      profile?: components["schemas"]["UserProfileResponseSummary"];
-    };
     ResultListTravelPlanSummaryResponse: {
       /** Format: int32 */
       statusCode?: number;
@@ -673,14 +679,6 @@ export interface components {
       endAt?: string;
       createdBy?: components["schemas"]["GlobalUserResponseSummary"];
       updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
-    };
-    UserProfileResponseSummary: {
-      /** Format: uuid */
-      id?: string;
-      firstName?: string;
-      middleName?: string;
-      lastName?: string;
-      avatarUrl?: string;
     };
     ExpenseProofResponse: {
       /** Format: uuid */
@@ -711,6 +709,7 @@ export interface components {
       submittedAt?: string;
       expenseCategory?: string;
       approvedBy?: components["schemas"]["GlobalUserResponseSummary"];
+      participant?: components["schemas"]["GlobalUserResponseSummary"];
       proofs?: components["schemas"]["ExpenseProofResponse"][];
     };
     ParticipantResponse: {
@@ -749,6 +748,18 @@ export interface components {
       participants?: components["schemas"]["GlobalUserResponseSummary"][];
       createdBy?: components["schemas"]["GlobalUserResponseSummary"];
       updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
+    };
+    ResultTravelPlanExpensesResponse: {
+      /** Format: int32 */
+      statusCode?: number;
+      data?: components["schemas"]["TravelPlanExpensesResponse"];
+      message?: string;
+      success?: boolean;
+    };
+    TravelPlanExpensesResponse: {
+      expenses?: components["schemas"]["ParticipantExpenseResponse"][];
+      /** Format: float */
+      total?: number;
     };
     ResultListRoleResponse: {
       /** Format: int32 */
@@ -795,7 +806,6 @@ export interface components {
       name?: string;
       email?: string;
       cvUrl?: string;
-      note?: string;
       /** @enum {string} */
       status?: "NEW" | "IN_REVIEW" | "ACCEPTED" | "REJECTED";
     };
@@ -877,8 +887,8 @@ export interface components {
       endTime?: string;
       /** Format: date */
       day?: string;
-      organiser?: components["schemas"]["UserSummaryResponse"];
-      players?: components["schemas"]["UserSummaryResponse"][];
+      organiser?: components["schemas"]["GlobalUserResponseSummary"];
+      players?: components["schemas"]["GlobalUserResponseSummary"][];
       booked?: boolean;
     };
     ResultGameResponse: {
@@ -891,7 +901,7 @@ export interface components {
     UserGameStatsResponse: {
       /** Format: uuid */
       id?: string;
-      user?: components["schemas"]["UserSummaryResponse"];
+      user?: components["schemas"]["GlobalUserResponseSummary"];
       /** Format: int32 */
       completedSlots?: number;
       /** Format: date-time */
@@ -967,6 +977,7 @@ export interface components {
       /** Format: date-time */
       createdAt?: string;
       likedBy?: components["schemas"]["GlobalUserResponseSummary"][];
+      liked?: boolean;
     };
     PostResponse: {
       /** Format: uuid */
@@ -2176,6 +2187,11 @@ export interface operations {
         expenseId: string;
       };
     };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RejectExpenseRequest"];
+      };
+    };
     responses: {
       /** @description OK */
       200: {
@@ -2190,6 +2206,11 @@ export interface operations {
       path: {
         travelPlanId: string;
         expenseId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ApproveExpenseRequest"];
       };
     };
     responses: {
@@ -2299,7 +2320,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "*/*": components["schemas"]["ResultListUserSummaryResponse"];
+          "*/*": components["schemas"]["ResultListGlobalUserResponseSummary"];
         };
       };
     };
@@ -2346,6 +2367,21 @@ export interface operations {
       200: {
         content: {
           "*/*": components["schemas"]["ResultParticipantResponse"];
+        };
+      };
+    };
+  };
+  getExpenses: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultTravelPlanExpensesResponse"];
         };
       };
     };

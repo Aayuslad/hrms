@@ -1,6 +1,6 @@
 package com.aayush.lad.hrms.modules.games.dtos.read.internal;
 
-import com.aayush.lad.hrms.modules.games.dtos.read.internal.UserSummaryResponse;
+import com.aayush.lad.hrms.shared.dtos.GlobalUserResponseSummary;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +18,7 @@ public class UserGameStatsResponse {
     private UUID id;
 
     // Use a lightweight user summary here to avoid embedding full User entity
-    private UserSummaryResponse user;
+    private GlobalUserResponseSummary user;
 
     private int completedSlots = 0;
 

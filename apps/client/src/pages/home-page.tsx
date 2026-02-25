@@ -1,5 +1,6 @@
 import { useGetMe } from '@/api/user-api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { useNavigate } from 'react-router-dom';
 
 export function HomePage() {
@@ -34,10 +35,8 @@ export function HomePage() {
 
     return (
         <div className="flex flex-col items-center justify-center p-8">
-            <div className="text-center">
-                <p className="text-base  mb-4 font-semibold">
-                    {date}
-                </p>
+            <div className="text-center mr-12">
+                <p className="text-base  mb-4 font-semibold">{date}</p>
                 <h1 className="text-3xl font-bold text-fuchsia-500">
                     {greeting}, {user?.profile?.firstName}{' '}
                     {user?.profile?.lastName}
@@ -47,66 +46,69 @@ export function HomePage() {
             <div className="w-full py-10 flex flex-wrap justify-center gap-10">
                 <Card
                     onClick={() => navigate('/games')}
-                    className="border-primary max-w-md gap-0 bg-transparent shadow-none transition cursor-pointer"
+                    className="border-none w-[70vw] gap-0 bg-transparent  cursor-pointer flex flex-row"
                 >
-                    <CardHeader>
-                        <CardTitle className="text-2xl text-center mb-2">
-                            Explore Games
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        Lorem ipsum dolor, sit amet consectetur adipisicing
-                        elit. Delectus aperiam nemo, nesciunt aspernatur
-                        distinctio hic quaerat veritatis dolorum ea! Corrupti.
-                    </CardContent>
+                    <div className="flex-[40%] flex justify-center items-center">
+                        <h2 className="text-2xl text-center">
+                            Games & <br /> Slot Booking
+                        </h2>
+                    </div>
+                    <div className="flex-[60%] px-10 text-center">
+                        Book game slots with fair rotation scheduling, daily
+                        limits, and automatic notifications for participants.
+                    </div>
                 </Card>
+
+                <Separator />
 
                 <Card
                     onClick={() => navigate('/travel-plans')}
-                    className="border-primary max-w-md gap-0 bg-transparent shadow-none  transition cursor-pointer"
+                    className="border-none w-[70vw] gap-0 bg-transparent shadow-none transition cursor-pointer flex flex-row-reverse"
                 >
-                    <CardHeader>
-                        <CardTitle className="text-2xl text-center mb-2">
-                            Explore Your Travels
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        Step into a space where design skills are tested, ideas
-                        come alive, and only the boldest concepts win the
-                        spotlight.
-                    </CardContent>
+                    <div className="flex-[40%] flex justify-center items-center">
+                        <div className="text-2xl text-center">
+                            Travel & <br /> Expenses
+                        </div>
+                    </div>
+                    <div className="flex-[60%] px-10 text-center">
+                        Manage assigned trips, upload documents, and submit
+                        verified expenses within policy-controlled timelines and
+                        approvals.
+                    </div>
                 </Card>
+
+                <Separator />
 
                 <Card
                     onClick={() => navigate('/job-openings')}
-                    className="border-primary max-w-md gap-0 bg-transparent shadow-none transition cursor-pointer"
+                    className="border-none w-[70vw] gap-0 bg-transparent shadow-none  transition cursor-pointer flex flex-row"
                 >
-                    <CardHeader>
-                        <CardTitle className="text-2xl text-center mb-2">
-                            Explore Job Opportunities
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Cum magnam quae consequuntur doloribus maxime eius
-                        ducimus suscipit omnis quisquam saepe?
-                    </CardContent>
+                    <div className="flex-[40%] flex justify-center items-center">
+                        <h2 className="text-2xl text-center mb-2">
+                            Job Opportunities <br /> & Referrals
+                        </h2>
+                    </div>
+                    <div className="flex-[60%] px-10 text-center">
+                        Browse openings, share jobs via email, and refer friends
+                        with CV uploads and tracking.
+                    </div>
                 </Card>
+
+                <Separator />
 
                 <Card
                     onClick={() => navigate('/achievements')}
-                    className="border-primary max-w-md gap-0 bg-transparent shadow-none  transition cursor-pointer"
+                    className="border-none w-[70vw] gap-0 bg-transparent shadow-none  transition cursor-pointer flex flex-row-reverse"
                 >
-                    <CardHeader>
-                        <CardTitle className="text-2xl text-center mb-2">
-                            Connect with colleagues
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Cum magnam quae consequuntur doloribus maxime eius
-                        ducimus suscipit omnis quisquam saepe?
-                    </CardContent>
+                    <div className="flex-[40%] flex justify-center items-center">
+                        <h2 className="text-2xl text-center mb-2">
+                            Achievements <br /> & Celebrations
+                        </h2>
+                    </div>
+                    <div className="flex-[60%] px-10 text-center">
+                        Share milestones, celebrate birthdays and anniversaries,
+                        and engage with colleagues through likes and comments.
+                    </div>
                 </Card>
             </div>
         </div>

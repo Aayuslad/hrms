@@ -26,6 +26,4 @@ public class CreateJobOpeningReferralRequest {
 
     @NotBlank(message = "CV can not me empty")
     private String cvUrl;
-
-    private String note;
 }

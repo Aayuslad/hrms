@@ -51,10 +51,10 @@ export const routes: RouteConfigType[] = [
         breadcrumb: 'Configurations',
         path: 'configuration',
         children: [
-            {
-                breadcrumb: 'Roles',
-                path: 'roles',
-            },
+            // {
+            //     breadcrumb: 'Roles',
+            //     path: 'roles',
+            // },
             {
                 breadcrumb: 'Employees',
                 path: 'employees',

@@ -9,6 +9,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { Loader2 } from 'lucide-react';
 
 interface DeleteExpenseDialogProps {
     expenseId: string;
@@ -72,6 +73,9 @@ export function DeleteExpenseDialog({
                         onClick={() => submit(id)}
                         disabled={deleteExpenseMutation.isPending}
                     >
+                        {deleteExpenseMutation.isPending && (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
                         Delete
                     </Button>
                 </DialogFooter>

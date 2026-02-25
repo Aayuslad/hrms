@@ -1,12 +1,13 @@
-import { Send, Heart } from 'lucide-react';
+import { Heart, Send } from 'lucide-react';
 
-import { useGetMe } from '@/api/user-api';
 import {
     useCreateComment,
+    useGetPost,
     useLikeComment,
     useUnlikeComment,
     type Post,
 } from '@/api/engagement-api';
+import { useGetMe } from '@/api/user-api';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,23 +18,35 @@ import {
     SheetTitle,
 } from '@/components/ui/sheet';
 import { useState } from 'react';
+import { CommentCard } from './comment-card';
+import { UpdateCommentDialog } from './dialogs/update-comment-dialog';
+import { DeleteCommentDialog } from './dialogs/delete-comment-dialog';
+import { Textarea } from '../ui/textarea';
+
+type Comment = NonNullable<Post['comments']>[number];
 
 type CommentsSheetProps = {
-    readonly post: Post | null;
-    readonly open: boolean;
-    readonly onOpenChange: (open: boolean) => void;
+    postId?: string;
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
 };
 
 export function CommentsSheet({
-    post,
+    postId,
     open,
     onOpenChange,
-}: CommentsSheetProps) {
+}: Readonly<CommentsSheetProps>) {
     const { data: currentUser } = useGetMe();
     const createCommentMutation = useCreateComment();
     const likeCommentMutation = useLikeComment();
     const unlikeCommentMutation = useUnlikeComment();
     const [newComment, setNewComment] = useState('');
+    const { data: post, isLoading, isError } = useGetPost(postId);
+    const [selectedComment, setSelectedComment] = useState<Comment | null>(
+        null
+    );
+    const [updateOpen, setUpdateOpen] = useState(false);
+    const [deleteOpen, setDeleteOpen] = useState(false);
 
     const handleSubmitComment = () => {
         if (!post?.id || !newComment.trim()) return;
@@ -57,6 +70,16 @@ export function CommentsSheet({
         unlikeCommentMutation.mutate({ postId: post.id, commentId });
     };
 
+    const handleEditComment = (comment: Comment) => {
+        setSelectedComment(comment);
+        setUpdateOpen(true);
+    };
+
+    const handleDeleteComment = (comment: Comment) => {
+        setSelectedComment(comment);
+        setDeleteOpen(true);
+    };
+
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
             <SheetContent side="right" className="w-[400px] sm:max-w-lg">
@@ -66,68 +89,15 @@ export function CommentsSheet({
 
                 <div className="flex flex-col h-full px-3 pb-3">
                     <div className="flex-1 overflow-y-auto space-y-4">
-                        {post?.comments?.map((comment) => {
-                            const isUserLiked = (comment as any).likedBy?.some(
-                                (user: any) => user?.id === currentUser?.id
-                            );
-                            return (
-                                <div key={comment.id} className="flex gap-3">
-                                    {/* <Avatar className="h-8 w-8">
-                                        <AvatarFallback>
-                                            {comment.author?.userName?.[0]?.toUpperCase() || 'U'}
-                                        </AvatarFallback atarFallback>
-                                    </Avatar> */}
-                                    <div className="flex-1">
-                                        <p className="text-sm text-muted-foreground mb-1 ml-1">
-                                            {comment.author?.userName} •{' '}
-                                            {new Date(
-                                                comment.createdAt!
-                                            ).toLocaleDateString()}
-                                        </p>
-                                        <div className="bg-muted rounded-lg p-3">
-                                            <p className="text-sm">
-                                                {comment.content}
-                                            </p>
-                                        </div>
-                                        <div className="flex items-center gap-2 mt-2">
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className={`text-xs h-auto py-1 px-2 ${
-                                                    isUserLiked
-                                                        ? 'text-red-500'
-                                                        : ''
-                                                }`}
-                                                onClick={() => {
-                                                    if (isUserLiked) {
-                                                        handleUnlikeComment(
-                                                            comment.id!
-                                                        );
-                                                    } else {
-                                                        handleLikeComment(
-                                                            comment.id!
-                                                        );
-                                                    }
-                                                }}
-                                                disabled={
-                                                    likeCommentMutation.isPending ||
-                                                    unlikeCommentMutation.isPending
-                                                }
-                                            >
-                                                <Heart
-                                                    className={`h-3 w-3 mr-1 ${
-                                                        isUserLiked
-                                                            ? 'fill-current'
-                                                            : ''
-                                                    }`}
-                                                />
-                                                {comment.likeCount}
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
+                        {post?.comments?.map((comment) => (
+                            <CommentCard
+                                key={comment.id}
+                                comment={comment}
+                                postId={post.id!}
+                                onEditClick={handleEditComment}
+                                onDeleteClick={handleDeleteComment}
+                            />
+                        ))}
                         {(!post?.comments || post.comments.length === 0) && (
                             <p className="text-center text-muted-foreground py-8">
                                 No comments yet. Be the first to comment!
@@ -144,7 +114,7 @@ export function CommentsSheet({
                                 </AvatarFallback>
                             </Avatar>
                             <div className="flex-1 flex gap-2">
-                                <Input
+                                <Textarea
                                     placeholder="Write a comment..."
                                     value={newComment}
                                     onChange={(e) =>
@@ -171,6 +141,18 @@ export function CommentsSheet({
                     </div>
                 </div>
             </SheetContent>
+            <UpdateCommentDialog
+                comment={selectedComment}
+                postId={post?.id || ''}
+                open={updateOpen}
+                onOpenChange={setUpdateOpen}
+            />
+            <DeleteCommentDialog
+                comment={selectedComment}
+                postId={post?.id || ''}
+                open={deleteOpen}
+                onOpenChange={setDeleteOpen}
+            />
         </Sheet>
     );
 }

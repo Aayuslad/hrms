@@ -1,8 +1,8 @@
 import type { TravelPlanSummary } from '@/api/travel-api';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Calendar, MapPin } from 'lucide-react';
-import { Button } from '../ui/button';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '../ui/button';
 
 type Props = {
     travelPlan: TravelPlanSummary;
@@ -12,7 +12,7 @@ const TravelPlanCard = ({ travelPlan }: Props) => {
     const navigate = useNavigate();
 
     return (
-        <Card className="w-[420px] border-primary/40 bg-transparent shadow-none p-6 rounded-2xl">
+        <Card className="w-[420px] shadow-none p-6 rounded-2xl">
             {/* HEADER */}
             <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1">
@@ -62,7 +62,7 @@ const TravelPlanCard = ({ travelPlan }: Props) => {
 
                 {/* Description */}
                 <p className="text-sm text-foreground/90 leading-relaxed">
-                    {travelPlan.description}
+                    {travelPlan.description?.slice(0, 100)}...
                 </p>
             </CardContent>
         </Card>

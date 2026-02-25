@@ -8,9 +8,7 @@ export function TagPage() {
             <div className="bg-muted  h-[100px] w-full flex items-center">
                 <div className="px-10 flex-1">
                     <h1 className="text-2xl font-bold">Tags</h1>
-                    <p>
-                        Manage tags for posts and engagement content.
-                    </p>
+                    <p>Categorize and organize achievement and social posts.</p>
                 </div>
                 <div className="w-[230px] mb-4">
                     <CreateTagDialog visibleTo={['Admin', 'HR']} />

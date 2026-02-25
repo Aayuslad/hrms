@@ -17,5 +17,7 @@ public class GlobalUserResponseSummary {
 
     private String userName;
 
+    private String email;
+
     private UserProfileResponseSummary profile;
 }

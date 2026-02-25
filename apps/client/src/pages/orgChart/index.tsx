@@ -34,8 +34,8 @@ export function Index() {
                 <div className="px-10 flex-1">
                     <h1 className="text-2xl font-bold">Organisation Chart</h1>
                     <p>
-                        Lorem ipsum dolor sit amet consectetur, adipisicing
-                        elit. Deserunt, nesciunt?
+                        Visualize reporting structure and explore team
+                        hierarchy.
                     </p>
                 </div>
                 <div className="w-57.5 mb-4">
@@ -49,7 +49,10 @@ export function Index() {
                     const tree = transformUser(orgChart);
                     const key = `${tree.name}-${tree.title}-${tree.department}`;
                     return (
-                        <div key={key} className="mb-10 overflow-y-auto flex justify-center items-center">
+                        <div
+                            key={key}
+                            className="mb-10 overflow-y-auto flex justify-center items-center"
+                        >
                             <CustomOrgChart tree={tree} />
                         </div>
                     );

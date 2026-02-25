@@ -10,7 +10,7 @@ import {
     DialogDescription,
     DialogFooter,
     DialogHeader,
-    DialogTitle
+    DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,6 +19,7 @@ import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import z from 'zod';
+import { Loader2 } from 'lucide-react';
 
 const updateDesignationFormSchema = z.object({
     id: z.string().nonempty('Designation ID is required'),
@@ -53,12 +54,15 @@ export function UpdateDesignationDialog() {
 
     const onInvalid = (errors: typeof form.formState.errors) => {
         const messages = Object.values(errors).map((err) => err.message);
-        messages.slice().reverse().forEach((msg) => toast.error(msg));
+        messages
+            .slice()
+            .reverse()
+            .forEach((msg) => toast.error(msg));
     };
 
     return (
         <Dialog open={true}>
-            <DialogContent className="sm:max-w-lg">
+            <DialogContent className="sm:max-w-[425px]">
                 <form
                     onSubmit={form.handleSubmit(onSubmit, onInvalid)}
                     className="grid gap-7"
@@ -94,6 +98,9 @@ export function UpdateDesignationDialog() {
                             type="submit"
                             disabled={updateDesignationMutation.isPending}
                         >
+                            {updateDesignationMutation.isPending && (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            )}
                             Save
                         </Button>
                     </DialogFooter>

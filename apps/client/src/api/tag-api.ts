@@ -1,5 +1,6 @@
 import { axiosClient } from '@/lib/axios-client';
 import { queryClient } from '@/lib/query-client';
+import { handleApiError } from '@/lib/utils';
 import type { components } from '@/types/generated/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
@@ -49,14 +50,8 @@ export function useCreateTag() {
             toast.success('Tag created');
             queryClient.invalidateQueries({ queryKey: ['tags'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to create tag'
-            );
-            console.error('Failed to create tag', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to create tag'),
     });
 }
 
@@ -69,14 +64,8 @@ export function useUpdateTag() {
             toast.success('Tag updated');
             queryClient.invalidateQueries({ queryKey: ['tags'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to update tag'
-            );
-            console.error('Failed to update tag', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to update tag'),
     });
 }
 
@@ -89,13 +78,7 @@ export function useDeleteTag() {
             toast.success('Tag deleted');
             queryClient.invalidateQueries({ queryKey: ['tags'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to delete tag'
-            );
-            console.error('Failed to delete tag', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to delete tag'),
     });
 }

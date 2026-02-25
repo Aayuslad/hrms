@@ -48,7 +48,7 @@ export function CollapsibleNavGroup({
     return (
         <SidebarGroup className="-mt-5">
             {title && <SidebarGroupLabel>{title}</SidebarGroupLabel>}
-            <SidebarMenu className="font-semibold">
+            <SidebarMenu className="font-semibold space-y-1">
                 {items.map((item) => (
                     <Collapsible
                         key={item.title}

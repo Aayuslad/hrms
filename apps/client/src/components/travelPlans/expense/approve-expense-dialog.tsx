@@ -8,6 +8,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { Loader2 } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
 
@@ -32,10 +33,12 @@ export function ApproveExpenseDialog({
     const handleApprove = () => {
         approveExpenseMutation.mutate(
             {
-                travelPlanId,
                 participantId,
-                expenseId,
-                remarks: remarks || undefined,
+                payload: {
+                    expenseId,
+                    travelPlanId,
+                    remarks: remarks.trim() || undefined,
+                },
             },
             {
                 onSuccess: () => {
@@ -74,6 +77,9 @@ export function ApproveExpenseDialog({
                         onClick={handleApprove}
                         disabled={approveExpenseMutation.isPending}
                     >
+                        {approveExpenseMutation.isPending && (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
                         Approve
                     </Button>
                 </DialogFooter>

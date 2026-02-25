@@ -9,8 +9,7 @@ export function DesignationPage() {
                 <div className="px-10 flex-1">
                     <h1 className="text-2xl font-bold">Designations</h1>
                     <p>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Aut, voluptatum.
+                        Define job titles and organizational hierarchy levels.
                     </p>
                 </div>
                 <div className="w-[230px] mb-4">

@@ -2,14 +2,17 @@ package com.aayush.lad.hrms.modules.travel.services;
 
 import com.aayush.lad.hrms.core.exeptions.NotFoundException;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.ParticipantResponse;
+import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.TravelPlanExpensesResponse;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.TravelPlanResponse;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.TravelPlanSummaryResponse;
+import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.internal.ParticipantExpenseResponse;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateTravelPlanRequest;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.UpdateTravelPlanRequest;
 import com.aayush.lad.hrms.modules.travel.mappers.TravelPlanMapper;
 import com.aayush.lad.hrms.modules.travel.models.TravelPlan;
 import com.aayush.lad.hrms.modules.travel.models.TravelPlanDocument;
 import com.aayush.lad.hrms.modules.travel.models.TravelPlanExpense;
+import com.aayush.lad.hrms.modules.travel.enums.ExpenseStatus;
 import com.aayush.lad.hrms.modules.travel.repositories.TravelPlanRepository;
 import com.aayush.lad.hrms.modules.user.models.User;
 import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
@@ -102,6 +105,23 @@ public class TravelPlanService {
         response.setExpenses(travelPlanMapper.toExpenseResponseList(expenses));
 
         return response;
+    }
+
+    public TravelPlanExpensesResponse getExpenses(UUID travelPlanId) {
+        TravelPlan travelPlan = travelPlanRepository.findByIdWithAll(travelPlanId)
+                .orElseThrow(() -> new NotFoundException("Travel plan not found"));
+
+        List<TravelPlanExpense> expenses = travelPlan.getExpenses().stream()
+                .filter(e -> e.getStatus() != ExpenseStatus.DRAFTING)
+                .toList();
+
+        List<ParticipantExpenseResponse> expenseResponses = travelPlanMapper.toExpenseResponseList(expenses);
+
+        float total = (float) expenses.stream()
+                .filter(x -> x.getStatus().equals(ExpenseStatus.APPROVED))
+                .mapToDouble(TravelPlanExpense::getAmount).sum();
+
+        return new TravelPlanExpensesResponse(expenseResponses, total);
     }
 
     private TravelPlan getTravelPlanEntityById(UUID id) {

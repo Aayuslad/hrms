@@ -1869,7 +1869,7 @@
         }
       }
     },
-    "/api/games/{gameId}/slots/{queuedSlotId}/{action}": {
+    "/api/games/slots/{queuedSlotId}/{action}": {
       "post": {
         "tags": [
           "game-controller"
@@ -2313,6 +2313,16 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RejectExpenseRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -2353,6 +2363,16 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApproveExpenseRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -2592,7 +2612,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResultListUserSummaryResponse"
+                  "$ref": "#/components/schemas/ResultListGlobalUserResponseSummary"
                 }
               }
             }
@@ -2693,6 +2713,37 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ResultParticipantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/travel-plans/{id}/expenses": {
+      "get": {
+        "tags": [
+          "travel-plan-controller"
+        ],
+        "operationId": "getExpenses",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultTravelPlanExpensesResponse"
                 }
               }
             }
@@ -3065,9 +3116,6 @@
           "cvUrl": {
             "type": "string",
             "minLength": 1
-          },
-          "note": {
-            "type": "string"
           }
         },
         "required": [
@@ -3579,9 +3627,6 @@
           "cvUrl": {
             "type": "string",
             "minLength": 1
-          },
-          "note": {
-            "type": "string"
           }
         },
         "required": [
@@ -3842,6 +3887,46 @@
           "name"
         ]
       },
+      "RejectExpenseRequest": {
+        "type": "object",
+        "properties": {
+          "expenseId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "travelPlanId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "remarks": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "expenseId",
+          "travelPlanId"
+        ]
+      },
+      "ApproveExpenseRequest": {
+        "type": "object",
+        "properties": {
+          "expenseId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "travelPlanId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "remarks": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "expenseId",
+          "travelPlanId"
+        ]
+      },
       "DepartmentSummaryResponse": {
         "type": "object",
         "properties": {
@@ -3878,7 +3963,7 @@
           }
         }
       },
-      "ManagerSummaryResponse": {
+      "GlobalUserResponseSummary": {
         "type": "object",
         "properties": {
           "id": {
@@ -3888,17 +3973,11 @@
           "userName": {
             "type": "string"
           },
-          "firstName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
           "email": {
             "type": "string"
           },
-          "avatarUrl": {
-            "type": "string"
+          "profile": {
+            "$ref": "#/components/schemas/UserProfileResponseSummary"
           }
         }
       },
@@ -3943,7 +4022,7 @@
             "$ref": "#/components/schemas/DesignationSummaryResponse"
           },
           "manager": {
-            "$ref": "#/components/schemas/ManagerSummaryResponse"
+            "$ref": "#/components/schemas/GlobalUserResponseSummary"
           }
         }
       },
@@ -3997,6 +4076,27 @@
           }
         }
       },
+      "UserProfileResponseSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "middleName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "avatarUrl": {
+            "type": "string"
+          }
+        }
+      },
       "UserRoleResponse": {
         "type": "object",
         "properties": {
@@ -4009,7 +4109,7 @@
           }
         }
       },
-      "ResultListUserSummaryResponse": {
+      "ResultListGlobalUserResponseSummary": {
         "type": "object",
         "properties": {
           "statusCode": {
@@ -4019,7 +4119,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/UserSummaryResponse"
+              "$ref": "#/components/schemas/GlobalUserResponseSummary"
             }
           },
           "message": {
@@ -4027,30 +4127,6 @@
           },
           "success": {
             "type": "boolean"
-          }
-        }
-      },
-      "UserSummaryResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "email": {
-            "type": "string"
-          },
-          "userName": {
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "avatarUrl": {
-            "type": "string"
           }
         }
       },
@@ -4177,21 +4253,6 @@
           }
         }
       },
-      "GlobalUserResponseSummary": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "userName": {
-            "type": "string"
-          },
-          "profile": {
-            "$ref": "#/components/schemas/UserProfileResponseSummary"
-          }
-        }
-      },
       "ResultListTravelPlanSummaryResponse": {
         "type": "object",
         "properties": {
@@ -4242,27 +4303,6 @@
           },
           "updatedBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
-          }
-        }
-      },
-      "UserProfileResponseSummary": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "middleName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "avatarUrl": {
-            "type": "string"
           }
         }
       },
@@ -4338,6 +4378,9 @@
             "type": "string"
           },
           "approvedBy": {
+            "$ref": "#/components/schemas/GlobalUserResponseSummary"
+          },
+          "participant": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
           "proofs": {
@@ -4447,6 +4490,39 @@
           },
           "updatedBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
+          }
+        }
+      },
+      "ResultTravelPlanExpensesResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "$ref": "#/components/schemas/TravelPlanExpensesResponse"
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TravelPlanExpensesResponse": {
+        "type": "object",
+        "properties": {
+          "expenses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParticipantExpenseResponse"
+            }
+          },
+          "total": {
+            "type": "number",
+            "format": "float"
           }
         }
       },
@@ -4569,9 +4645,6 @@
             "type": "string"
           },
           "cvUrl": {
-            "type": "string"
-          },
-          "note": {
             "type": "string"
           },
           "status": {
@@ -4831,12 +4904,12 @@
             "format": "date"
           },
           "organiser": {
-            "$ref": "#/components/schemas/UserSummaryResponse"
+            "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
           "players": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/UserSummaryResponse"
+              "$ref": "#/components/schemas/GlobalUserResponseSummary"
             }
           },
           "booked": {
@@ -4870,7 +4943,7 @@
             "format": "uuid"
           },
           "user": {
-            "$ref": "#/components/schemas/UserSummaryResponse"
+            "$ref": "#/components/schemas/GlobalUserResponseSummary"
           },
           "completedSlots": {
             "type": "integer",
@@ -5065,6 +5138,9 @@
             "items": {
               "$ref": "#/components/schemas/GlobalUserResponseSummary"
             }
+          },
+          "liked": {
+            "type": "boolean"
           }
         }
       },

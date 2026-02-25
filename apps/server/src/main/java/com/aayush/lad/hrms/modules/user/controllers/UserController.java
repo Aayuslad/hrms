@@ -6,9 +6,9 @@ import com.aayush.lad.hrms.core.security.JwtUtil;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.NotificationResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.OrgCharts;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.UserDetailResponse;
-import com.aayush.lad.hrms.modules.user.dtos.user.read.UserSummaryResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.write.*;
 import com.aayush.lad.hrms.modules.user.services.UserService;
+import com.aayush.lad.hrms.shared.dtos.GlobalUserResponseSummary;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -109,8 +109,8 @@ public class UserController {
 
     @PreAuthorize("hasRole('Employee')")
     @GetMapping("/summary")
-    public ResponseEntity<Result<List<UserSummaryResponse>>> getUsersSummary() {
-        List<UserSummaryResponse> responseDto = userService.getUsersSummary();
+    public ResponseEntity<Result<List<GlobalUserResponseSummary>>> getUsersSummary() {
+        List<GlobalUserResponseSummary> responseDto = userService.getUsersSummary();
         return ResultMapper.handle(HttpStatus.OK, responseDto);
     }
 

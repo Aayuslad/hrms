@@ -18,6 +18,7 @@ import com.aayush.lad.hrms.modules.travel.models.TravelPlanDocument;
 import com.aayush.lad.hrms.modules.travel.models.TravelPlanExpense;
 import com.aayush.lad.hrms.modules.user.models.User;
 import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
+import com.aayush.lad.hrms.shared.dtos.GlobalUserResponseSummary;
 
 import lombok.RequiredArgsConstructor;
 
@@ -62,6 +63,7 @@ public class TravelPlanMapper {
         return expenses.stream().map(x -> {
             ParticipantExpenseResponse r = modelMapper.map(x, ParticipantExpenseResponse.class);
             r.setExpenseCategory(x.getExpenseCategory().getName());
+            r.setParticipant(modelMapper.map(x.getParticipant(), GlobalUserResponseSummary.class));
             return r;
         }).toList();
     }

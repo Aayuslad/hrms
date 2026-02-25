@@ -7,7 +7,6 @@ import com.aayush.lad.hrms.core.services.CurrentUserService;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.NotificationResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.OrgCharts;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.UserDetailResponse;
-import com.aayush.lad.hrms.modules.user.dtos.user.read.UserSummaryResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.internal.EmployeeOrgChartNodeResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.write.*;
 import com.aayush.lad.hrms.modules.user.mappers.UserMapper;
@@ -19,23 +18,19 @@ import com.aayush.lad.hrms.modules.user.repositories.DepartmentRepository;
 import com.aayush.lad.hrms.modules.user.repositories.DesignationRepository;
 import com.aayush.lad.hrms.modules.user.repositories.RoleRepository;
 import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
+import com.aayush.lad.hrms.shared.dtos.GlobalUserResponseSummary;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
 public class UserService {
     private final NotificationService notificationService;
+
     public void markNotificationsAsRead(List<UUID> notificationIds) {
         notificationService.markNotificationsAsRead(notificationIds);
     }
@@ -151,19 +146,8 @@ public class UserService {
         return userMapper.toNotificationResponseList(notifications);
     }
 
-    public List<UserSummaryResponse> getUsersSummary() {
-        List<User> users = userRepository.findAll();
-
-        return users.stream().map(x -> UserSummaryResponse
-                .builder()
-                .id(x.getId())
-                .email(x.getEmail())
-                .userName(x.getUserName())
-                .firstName(x.getProfile() != null ? x.getProfile().getFirstName() : null)
-                .lastName(x.getProfile() != null ? x.getProfile().getLastName() : null)
-                .avatarUrl(x.getProfile() != null ? x.getProfile().getAvatarUrl() : null)
-                .build()
-        ).toList();
+    public List<GlobalUserResponseSummary> getUsersSummary() {
+        return userMapper.toResponse(userRepository.findAll().stream().toList());
     }
 
     public List<UserDetailResponse> getAllUsersDetails() {

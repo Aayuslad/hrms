@@ -51,7 +51,7 @@ export function ExpenseCategorySelector({
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-[300px] justify-between"
+                    className="w-full justify-between"
                 >
                     {selectedExpenseCatrgory
                         ? expenseCatrgories?.find(

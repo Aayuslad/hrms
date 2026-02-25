@@ -1,6 +1,7 @@
 package com.aayush.lad.hrms.modules.user.dtos.user.read.internal;
 
 import com.aayush.lad.hrms.modules.user.enums.Gender;
+import com.aayush.lad.hrms.shared.dtos.GlobalUserResponseSummary;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,5 +33,5 @@ public class ProfileResponse {
 
     private DesignationSummaryResponse designation;
 
-    private ManagerSummaryResponse manager;
+    private GlobalUserResponseSummary manager;
 }

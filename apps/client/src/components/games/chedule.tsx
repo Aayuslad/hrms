@@ -1,23 +1,28 @@
-import { useState } from 'react';
-import {
-    format,
-    startOfWeek,
-    addDays,
-    parse,
-    addMinutes,
-    getWeek,
-} from 'date-fns';
-import type { components } from '@/types/generated/api';
 import {
     Table,
-    TableHeader,
     TableBody,
-    TableRow,
-    TableHead,
     TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from '@/components/ui/table';
-import BookSlotDialog from './book-slot-dialog';
-import BookedSlotDialog from './booked-slot-dialog';
+import type { components } from '@/types/generated/api';
+import {
+    addDays,
+    addMinutes,
+    format,
+    getWeek,
+    parse,
+    startOfWeek,
+} from 'date-fns';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+
+import { useGetMe } from '@/api/user-api';
+import BookSlotDialog from './slotDialogs/book-slot-dialog';
+import BookedSlotDialog from './slotDialogs/booked-slot-dialog';
+import WaitForAnySlotDialog from './slotDialogs/wait-for-any-slot-dialog';
 
 type GameSlotResponse = components['schemas']['GameSlotResponse'];
 type GameResponse = components['schemas']['GameResponse'];
@@ -38,6 +43,7 @@ export default function Schedule({
         day: string;
         time: string;
     } | null>(null);
+    const { data: me } = useGetMe();
     const [bookedSlotDialogOpen, setBookedSlotDialogOpen] = useState(false);
     const [selectedBookedSlot, setSelectedBookedSlot] =
         useState<GameSlotResponse | null>(null);
@@ -123,22 +129,46 @@ export default function Schedule({
 
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="bg-accent h-[50px] font-semibold rounded-tl-lg text-sm text-center sticky top-0 z-20 border-muted/50">
+                            <TableHead className="bg-muted h-[60px] font-semibold rounded-tl-lg text-sm text-center sticky top-0 z-20 border-muted/50">
                                 Week {weekNumber}
                             </TableHead>
                             {days.map((d, idx) => (
                                 <TableHead
                                     key={d.toString()}
                                     className={
-                                        'bg-accent text-center text-sm  sticky top-0 z-20  border-muted/50 ' +
+                                        'bg-muted text-center text-sm  sticky top-0 z-20  border-muted/50 ' +
                                         (idx === days.length - 1
                                             ? ' rounded-tr-lg'
                                             : '')
                                     }
                                 >
                                     <div className="text-sm font-semibold">
-                                        {format(d, 'EEE')} {format(d, 'd')}
+                                        {format(d, 'EEE')} {format(d, 'dd/MM')}
                                     </div>
+                                    {(() => {
+                                        const dayKey = format(d, 'yyyy-MM-dd');
+                                        const daySlots = Array.from(
+                                            slotMap.entries()
+                                        ).filter(([key]) =>
+                                            key.startsWith(dayKey + ' ')
+                                        );
+                                        const allBooked =
+                                            daySlots.length > 0 &&
+                                            daySlots.every(
+                                                ([_, slot]) => slot.booked
+                                            );
+
+                                        console.log(allBooked, daySlots);
+
+                                        return (
+                                            allBooked && (
+                                                <WaitForAnySlotDialog
+                                                    gameId={game.id}
+                                                    day={dayKey}
+                                                />
+                                            )
+                                        );
+                                    })()}
                                 </TableHead>
                             ))}
                         </TableRow>
@@ -147,7 +177,7 @@ export default function Schedule({
                         {slots.map((t) => (
                             <TableRow
                                 key={t.toString()}
-                                className="h-[80px] hover:bg-transparent"
+                                className="h-[80px] hover:bg-transparent cursor-default"
                             >
                                 <TableCell className="text-sm pb-12 text-center text-muted-foreground pr-4 border-2 border-l-0 border-b-0 border-muted/50 w-24">
                                     {format(t, 'h:mm a')}
@@ -158,9 +188,18 @@ export default function Schedule({
                                     const slot = slotMap.get(
                                         `${dayKey} ${timeKey}`
                                     );
+                                    const isPast =
+                                        new Date(`${dayKey}T${timeKey}`) <
+                                        new Date();
 
                                     const handleSlotClick = () => {
                                         // Open dialog for booked slots
+                                        if (isPast) {
+                                            toast.error(
+                                                'Selected slot is in the past'
+                                            );
+                                            return;
+                                        }
                                         if (slot?.booked) {
                                             setSelectedBookedSlot(slot);
                                             setBookedSlotDialogOpen(true);
@@ -175,53 +214,85 @@ export default function Schedule({
                                     };
 
                                     return (
-                                        <TableCell
-                                            key={dayKey}
-                                            onClick={handleSlotClick}
-                                            className={
-                                                'text-sm border-2 border-muted/50 hover:bg-muted/30 cursor-pointer border-r-0 border-b-0' +
-                                                (slot?.booked
-                                                    ? ' bg-red-100 text-red-800'
-                                                    : '')
-                                            }
-                                        >
-                                            {slot ? (
-                                                <span className="text-sm">
-                                                    {slot.booked ? (
-                                                        <div className="flex flex-col items-center justify-center py-0.5 rounded-xl bg-foreground/5 dark:bg-foreground/10 text-sm">
-                                                            <span className="font-semibold ">
-                                                                {
-                                                                    slot
-                                                                        .organiser
-                                                                        ?.userName
-                                                                }
-                                                            </span>
+                                        <Tooltip key={dayKey}>
+                                            <TooltipTrigger asChild>
+                                                <TableCell
+                                                    onClick={handleSlotClick}
+                                                    className={
+                                                        'text-sm border-2 border-muted/50 hover:bg-muted/30 cursor-pointer border-r-0 border-b-0 rounded-lg ' +
+                                                        (slot?.booked
+                                                            ? isPast
+                                                                ? 'bg-gray-200 dark:bg-gray-800 dark:opacity-70'
+                                                                : 'bg-red-100 dark:bg-red-950 dark:opacity-70'
+                                                            : '')
+                                                    }
+                                                >
+                                                    {slot ? (
+                                                        <span className="text-sm">
+                                                            {slot.booked ? (
+                                                                <div className="flex flex-col items-center justify-center rounded-xl  text-xs   ">
+                                                                    <span className="font-mono underline">
+                                                                        {
+                                                                            slot
+                                                                                .organiser
+                                                                                ?.userName
+                                                                        }
+                                                                        {slot
+                                                                            .organiser
+                                                                            ?.id ===
+                                                                            me?.id &&
+                                                                            '(you)'}
+                                                                    </span>
 
-                                                            <span className="text-muted-foreground">
-                                                                booked this slot
-                                                            </span>
-
-                                                            {slot.players
-                                                                ?.length >
-                                                                0 && (
-                                                                <span className="text-muted-foreground">
-                                                                    with{' '}
-                                                                    {
+                                                                    <span className="text-muted-foreground">
+                                                                        booked
+                                                                        this
                                                                         slot
-                                                                            .players
-                                                                            .length
-                                                                    }
-                                                                    {'  '}
-                                                                    others
-                                                                </span>
+                                                                    </span>
+
+                                                                    {slot
+                                                                        .players
+                                                                        ?.length >
+                                                                        0 && (
+                                                                        <span className="text-muted-foreground">
+                                                                            with{' '}
+                                                                            {
+                                                                                slot
+                                                                                    .players
+                                                                                    .length
+                                                                            }
+                                                                            {
+                                                                                '  '
+                                                                            }
+                                                                            others
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            ) : (
+                                                                ''
                                                             )}
-                                                        </div>
-                                                    ) : (
-                                                        ''
-                                                    )}
-                                                </span>
-                                            ) : null}
-                                        </TableCell>
+                                                        </span>
+                                                    ) : null}
+                                                </TableCell>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                {isPast && slot?.booked ? (
+                                                    <p>Past booked slot</p>
+                                                ) : isPast ? (
+                                                    <p>Past unbooked slot</p>
+                                                ) : slot?.booked ? (
+                                                    <p>
+                                                        Booked slot - click to
+                                                        view details
+                                                    </p>
+                                                ) : (
+                                                    <p>
+                                                        Available slot - click
+                                                        to book
+                                                    </p>
+                                                )}
+                                            </TooltipContent>
+                                        </Tooltip>
                                     );
                                 })}
                             </TableRow>
@@ -230,14 +301,16 @@ export default function Schedule({
                 </Table>
             </div>
 
-            <BookSlotDialog
-                gameId={game.id}
-                maxPlayers={game.maxSlotPlayers}
-                preFillDay={selectedSlot?.day}
-                preFillTime={selectedSlot?.time}
-                isOpen={bookSlotOpen}
-                onOpenChange={setBookSlotOpen}
-            />
+            {
+                <BookSlotDialog
+                    gameId={game.id}
+                    maxPlayers={game.maxSlotPlayers}
+                    preFillDay={selectedSlot?.day}
+                    preFillTime={selectedSlot?.time}
+                    isOpen={bookSlotOpen}
+                    onOpenChange={setBookSlotOpen}
+                />
+            }
 
             <BookedSlotDialog
                 gameId={game.id}

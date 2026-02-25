@@ -29,11 +29,11 @@ export function ProfilePage() {
     const interests = user.interestedInGames || [];
 
     return (
-        <div className="container mx-auto py-10 px-4 max-w-4xl">
-            <div className="space-y-8">
+        <div className="container mx-auto py-5 px-4 max-w-4xl">
+            <div className="space-y-5">
                 {/* Header Section */}
-                <Card className="shadow-lg rounded-2xl bg-linear-to-br  border-none">
-                    <CardContent className="pt-8 pb-6">
+                <div className="">
+                    <div className="pt-8 pb-6">
                         <div className="flex items-center space-x-6">
                             <Avatar className="size-24 shadow-md border-4 border-zinc-700">
                                 <AvatarImage
@@ -50,91 +50,69 @@ export function ProfilePage() {
                                     {profile?.firstName} {profile?.middleName}{' '}
                                     {profile?.lastName}
                                 </h1>
-                                <p className=" mt-1">
-                                    {user.email}
-                                </p>
-                                <p className="text-sm ">
-                                    @{user.userName}
-                                </p>
+                                <p className=" mt-1">{user.email}</p>
+                                <p className="text-sm ">@{user.userName}</p>
                             </div>
                         </div>
-                    </CardContent>
-                </Card>
+                    </div>
+                </div>
 
                 {/* Personal Information */}
-                <Card className="shadow-md rounded-xl">
-                    <CardHeader className=" rounded-t-xl">
-                        <CardTitle className="">
+                <div className="w-[800px] mx-auto mb-12">
+                    <div className="mb-4">
+                        <h2 className="border-b text-xl">
                             Personal Information
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4  rounded-b-xl">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <span className="text-xs font-semibold ">
-                                    First Name
-                                </span>
-                                <p className="text-base mt-1">
-                                    {profile?.firstName || 'N/A'}
-                                </p>
-                            </div>
-                            <div>
-                                <span className="text-xs font-semibold ">
-                                    Middle Name
-                                </span>
-                                <p className="text-base  mt-1">
-                                    {profile?.middleName || 'N/A'}
-                                </p>
-                            </div>
-                            <div>
-                                <span className="text-xs font-semibold ">
-                                    Last Name
-                                </span>
-                                <p className="text-base  mt-1">
-                                    {profile?.lastName || 'N/A'}
-                                </p>
-                            </div>
-                            <div>
-                                <span className="text-xs font-semibold ">
-                                    Contact Number
-                                </span>
-                                <p className="text-base  mt-1">
-                                    {profile?.contactNumber || 'N/A'}
-                                </p>
-                            </div>
-                            <div>
-                                <span className="text-xs font-semibold ">
-                                    Date of Birth
-                                </span>
-                                <p className="text-base  mt-1">
-                                    {profile?.dateOfBirth
-                                        ? new Date(
-                                              profile.dateOfBirth
-                                          ).toLocaleDateString()
-                                        : 'N/A'}
-                                </p>
-                            </div>
-                            <div>
-                                <span className="text-xs font-semibold ">
-                                    Gender
-                                </span>
-                                <p className="text-base  mt-1">
-                                    {profile?.gender || 'N/A'}
-                                </p>
-                            </div>
+                        </h2>
+                    </div>
+                    <div className="px-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <span className="text-xs font-semibold ">
+                                Full name
+                            </span>
+                            <p className="text-base mt-1">
+                                {profile?.firstName} {profile?.middleName || ''}{' '}
+                                {profile?.lastName || ''}
+                            </p>
                         </div>
-                    </CardContent>
-                </Card>
+
+                        <div>
+                            <span className="text-xs font-semibold ">
+                                Contact Number
+                            </span>
+                            <p className="text-base  mt-1">
+                                {profile?.contactNumber || 'N/A'}
+                            </p>
+                        </div>
+                        <div>
+                            <span className="text-xs font-semibold ">
+                                Date of Birth
+                            </span>
+                            <p className="text-base  mt-1">
+                                {profile?.dateOfBirth
+                                    ? new Date(
+                                          profile.dateOfBirth
+                                      ).toLocaleDateString()
+                                    : 'N/A'}
+                            </p>
+                        </div>
+                        <div>
+                            <span className="text-xs font-semibold ">
+                                Gender
+                            </span>
+                            <p className="text-base  mt-1">
+                                {profile?.gender || 'N/A'}
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
                 {/* Work Information */}
-                <Card className="shadow-md rounded-xl">
-                    <CardHeader className=" rounded-t-xl">
-                        <CardTitle className="">
-                            Work Information
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4  rounded-b-xl">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="w-[800px] mx-auto mb-12">
+                    <div className="mb-4">
+                        <h2 className="border-b text-xl">Work Information</h2>
+                    </div>
+                    <div>
+                        <div className="px-10 grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <span className="text-xs font-semibold ">
                                     Department
@@ -153,7 +131,6 @@ export function ProfilePage() {
                             </div>
                             <div>
                                 <span className="text-xs font-semibold ">
-
                                     Joining Date
                                 </span>
                                 <p className="text-base  mt-1">
@@ -164,11 +141,8 @@ export function ProfilePage() {
                                         : 'N/A'}
                                 </p>
                             </div>
-                        </div>
 
-                        {profile?.manager && (
-                            <>
-                                <Separator className="my-4 " />
+                            {profile?.manager && (
                                 <div>
                                     <span className="text-xs font-semibold ">
                                         Manager
@@ -176,18 +150,33 @@ export function ProfilePage() {
                                     <div className="flex items-center space-x-3 mt-2">
                                         <Avatar className="size-10 border-2 ">
                                             <AvatarImage
-                                                src={profile.manager.avatarUrl}
-                                                alt={`${profile.manager.firstName} ${profile.manager.lastName}`}
+                                                src={
+                                                    profile.manager?.profile
+                                                        ?.avatarUrl
+                                                }
+                                                alt={`${profile.manager?.profile?.firstName} ${profile.manager.profile?.lastName}`}
                                             />
                                             <AvatarFallback className="text-sm font-semibold  ">
-                                                {profile.manager.firstName?.[0]}
-                                                {profile.manager.lastName?.[0]}
+                                                {
+                                                    profile.manager?.profile
+                                                        ?.firstName?.[0]
+                                                }
+                                                {
+                                                    profile.manager?.profile
+                                                        ?.lastName?.[0]
+                                                }
                                             </AvatarFallback>
                                         </Avatar>
                                         <div>
-                                            <p className="text-base font-medium ">
-                                                {profile.manager.firstName}{' '}
-                                                {profile.manager.lastName}
+                                            <p className="text-sm font-medium ">
+                                                {
+                                                    profile.manager?.profile
+                                                        ?.firstName
+                                                }{' '}
+                                                {
+                                                    profile.manager?.profile
+                                                        ?.lastName
+                                                }
                                             </p>
                                             <p className="text-xs ">
                                                 {profile.manager.email}
@@ -195,42 +184,38 @@ export function ProfilePage() {
                                         </div>
                                     </div>
                                 </div>
-                            </>
-                        )}
-                    </CardContent>
-                </Card>
+                            )}
+                        </div>
+                    </div>
+                </div>
 
                 {/* Roles */}
                 {roles.length > 0 && (
-                    <Card className="shadow-md rounded-xl">
-                        <CardHeader className=" rounded-t-xl">
-                            <CardTitle className="">
-                                Roles
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className=" rounded-b-xl">
+                    <div className="w-[800px] mx-auto mb-12">
+                        <div className="mb-4">
+                            <h2 className="border-b text-xl">Roles</h2>
+                        </div>
+                        <div className=" rounded-b-xl">
                             <div className="flex flex-wrap gap-3">
                                 {roles.map((role) => (
                                     <Badge
                                         key={role.id}
-                                        variant="secondary"
-                                        className="px-4 py-2 text-base rounded-lg"
+                                        variant="outline"
+                                        className="text-base"
                                     >
                                         {role.name}
                                     </Badge>
                                 ))}
                             </div>
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </div>
                 )}
 
                 {/* Game Interests */}
                 {interests.length > 0 && (
                     <Card className="shadow-md rounded-xl">
                         <CardHeader className=" rounded-t-xl">
-                            <CardTitle className="">
-                                Game Interests
-                            </CardTitle>
+                            <CardTitle className="">Game Interests</CardTitle>
                         </CardHeader>
                         <CardContent className=" rounded-b-xl">
                             <div className="flex flex-wrap gap-3">

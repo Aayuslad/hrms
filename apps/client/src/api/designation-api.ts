@@ -1,5 +1,6 @@
 import { axiosClient } from '@/lib/axios-client';
 import { queryClient } from '@/lib/query-client';
+import { handleApiError } from '@/lib/utils';
 import type { components } from '@/types/generated/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
@@ -40,14 +41,8 @@ export function useCreateDesignation() {
             toast.success('Designation created');
             queryClient.invalidateQueries({ queryKey: ['designations'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to create Designation'
-            );
-            console.error('Failed to create designation', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to create designation'),
     });
 }
 
@@ -62,14 +57,8 @@ export function useUpdateDesignation() {
             toast.success('Designation updated');
             queryClient.invalidateQueries({ queryKey: ['designations'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to update designation'
-            );
-            console.error('Failed to update designation', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to update designation'),
     });
 }
 
@@ -81,13 +70,7 @@ export function useDeleteDesignation() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['designations'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to delete designation'
-            );
-            console.error('Failed to delete designation', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to delete designation'),
     });
 }

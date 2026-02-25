@@ -34,5 +34,7 @@ public class ParticipantExpenseResponse {
 
     private GlobalUserResponseSummary approvedBy;
 
+    private GlobalUserResponseSummary participant;
+
     private List<ExpenseProofResponse> proofs = new ArrayList<>();
 }

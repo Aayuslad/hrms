@@ -9,8 +9,7 @@ export function DepartmentPage() {
                 <div className="px-10 flex-1">
                     <h1 className="text-2xl font-bold">Departments</h1>
                     <p>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Aut, voluptatum.
+                        Structure teams into clear functional business units.
                     </p>
                 </div>
                 <div className="w-[230px] mb-4">

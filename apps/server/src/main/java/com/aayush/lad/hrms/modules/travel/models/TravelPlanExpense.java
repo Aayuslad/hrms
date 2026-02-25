@@ -38,7 +38,7 @@ public class TravelPlanExpense extends BaseModel {
     @Column(nullable = false)
     @CreationTimestamp
     private LocalDateTime submittedAt;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "travel_plan_id", nullable = false)
     private TravelPlan travelPlan;

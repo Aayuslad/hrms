@@ -85,7 +85,7 @@ const CreateDocumentDialog = ({
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button>Add Document</Button>
+                <Button variant={'secondary'}>+ Add Document</Button>
             </DialogTrigger>
 
             <DialogContent className="flex w-[400px] max-h-[min(700px,85vh)] flex-col gap-0 p-0 sm:max-w-lg">
@@ -118,7 +118,7 @@ const CreateDocumentDialog = ({
                                     <Input
                                         id="doc"
                                         type="file"
-                                        className=''
+                                        className=""
                                         accept="image/*,.pdf,.doc,.docx"
                                         {...form.register('doc')}
                                     />

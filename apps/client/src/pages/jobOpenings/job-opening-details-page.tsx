@@ -1,17 +1,18 @@
 import { useGetJobOpening } from '@/api/jobs-api';
-import CloseJobOpeningDialog from '@/components/jobOpenings/close-job-opening-dialog';
-import DeleteJobOpeningDialog from '@/components/jobOpenings/delete-job-opening-dialog';
-import { ReferralsTable } from '@/components/jobOpenings/referrals-table';
-import { SharesTable } from '@/components/jobOpenings/shares-table';
-import UpdateJobOpeningDialog from '@/components/jobOpenings/update-job-opening-dialog';
+import CloseJobOpeningDialog from '@/components/jobOpenings/dialogs/close-job-opening-dialog';
+import DeleteJobOpeningDialog from '@/components/jobOpenings/dialogs/delete-job-opening-dialog';
+import UpdateJobOpeningDialog from '@/components/jobOpenings/dialogs/update-job-opening-dialog';
+import { ReferralsTable } from '@/components/jobOpenings/tables/referrals-table';
+import { SharesTable } from '@/components/jobOpenings/tables/shares-table';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
-    DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import { Spinner } from '@/components/ui/spinner';
+import { UserPill } from '@/components/user-pill';
 import { useAccessChecker } from '@/hooks/use-has-access';
 import { BriefcaseBusiness, Dot, ExternalLink, User } from 'lucide-react';
 import { useParams } from 'react-router-dom';
@@ -43,19 +44,19 @@ export function JobOpeningDetailsPage() {
 
     return (
         <div className="h-full">
-            <div className="bg h-[180px] w-full flex items-center">
-                <div className="px-10 flex-1 flex items-center gap-6">
+            <div className="bg h-[130px] w-full flex items-center ">
+                <div className="px-10 flex-1 flex items-center">
                     <div className="space-y-4">
                         <h1 className="text-3xl font-semibold tracking-tight">
                             {jobOpening.designation?.name}
                         </h1>
 
-                        <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm text-muted-foreground">
+                        <div className="flex flex-wrap items-center gap-x-1 gap-y-2 text-sm text-muted-foreground">
                             <div className="flex items-center gap-2">
                                 <BriefcaseBusiness className="h-4 w-4 shrink-0" />
                                 <span>
-                                    Required Experience:{' '}
-                                    {jobOpening.requiredExperience} years
+                                    {jobOpening.requiredExperience} years of
+                                    experience
                                 </span>
                             </div>
 
@@ -70,14 +71,14 @@ export function JobOpeningDetailsPage() {
                                 </span>
                             </div>
 
-                            <Dot />
+                            {/* <Dot /> */}
 
-                            <div className="flex items-center gap-2">
+                            {/* <div className="flex items-center gap-2">
                                 <span>
                                     Status:{' '}
                                     {jobOpening.closed ? 'Closed' : 'Open'}
                                 </span>
-                            </div>
+                            </div> */}
 
                             {jobOpening.jdUrl && (
                                 <>
@@ -96,31 +97,30 @@ export function JobOpeningDetailsPage() {
                                 </>
                             )}
                         </div>
-
-                        <p className="text-sm text-foreground/90 leading-relaxed max-w-3xl">
-                            {jobOpening.description}
-                        </p>
                     </div>
                 </div>
+
                 <div className="mr-10 mb-4 flex gap-2">
                     {canAccess(['Admin', 'HR']) && (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="outline">Other Actions</Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-36">
-                                <DropdownMenuItem asChild>
-                                    <UpdateJobOpeningDialog
-                                        jobOpening={jobOpening}
-                                    />
-                                </DropdownMenuItem>
+                            <DropdownMenuContent align="end" className="">
+                                <UpdateJobOpeningDialog
+                                    jobOpening={jobOpening}
+                                />
+                                <DropdownMenuSeparator />
                                 <DeleteJobOpeningDialog
                                     jobOpeningId={jobOpening.id!}
                                 />
                                 {!jobOpening.closed && (
-                                    <CloseJobOpeningDialog
-                                        jobOpeningId={jobOpening.id!}
-                                    />
+                                    <>
+                                        <DropdownMenuSeparator />
+                                        <CloseJobOpeningDialog
+                                            jobOpeningId={jobOpening.id!}
+                                        />
+                                    </>
                                 )}
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -129,52 +129,46 @@ export function JobOpeningDetailsPage() {
             </div>
 
             <div className="w-full flex justify-center pt-2 pb-10">
-                <div className="w-full max-w-6xl px-8 space-y-6">
-                    <div className="flex gap-8 mb-10">
-                        {jobOpening.hrs && jobOpening.hrs.length > 0 && (
-                            <div>
-                                <h4 className="font-semibold mb-2">HRs:</h4>
-                                <div className="flex flex-wrap gap-2">
-                                    {jobOpening.hrs.map((hr) => (
-                                        <span
-                                            key={hr.id}
-                                            className="bg-muted px-2 py-1 rounded text-sm"
-                                        >
-                                            {hr?.profile?.firstName}{' '}
-                                            {hr?.profile?.lastName}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
+                <div className="w-full mr-12 max-w-6xl px-8 space-y-10">
+                    <p className="text-sm px-3 text-foreground/90 leading-relaxed ">
+                        {jobOpening.description}
+                    </p>
 
-                        {jobOpening.reviewers &&
-                            jobOpening.reviewers.length > 0 && (
-                                <div>
-                                    <h4 className="font-semibold mb-2">
-                                        Reviewers:
-                                    </h4>
-                                    <div className="flex flex-wrap gap-2">
-                                        {jobOpening.reviewers.map(
-                                            (reviewer) => (
-                                                <span
-                                                    key={reviewer.id}
-                                                    className="bg-muted px-2 py-1 rounded text-sm"
-                                                >
-                                                    {
-                                                        reviewer?.profile
-                                                            ?.firstName
-                                                    }{' '}
-                                                    {
-                                                        reviewer?.profile
-                                                            ?.lastName
-                                                    }
-                                                </span>
-                                            )
-                                        )}
-                                    </div>
-                                </div>
-                            )}
+                    <div className="flex gap-8 pb-5 mx-10">
+                        <div className="flex-1">
+                            <h4 className="font-semibold mb-2 border-b">HRs</h4>
+                            <div className="flex flex-wrap gap-2">
+                                {jobOpening?.hrs?.map((hr) => (
+                                    <UserPill key={hr.id} user={hr} />
+                                ))}
+                                {!jobOpening.hrs ||
+                                jobOpening.hrs.length === 0 ? (
+                                    <span className="text-sm text-muted-foreground">
+                                        No HRs assigned
+                                    </span>
+                                ) : null}
+                            </div>
+                        </div>
+
+                        <div className="flex-1">
+                            <h4 className="font-semibold mb-2 border-b">
+                                Reviewers
+                            </h4>
+                            <div className="flex flex-wrap gap-2">
+                                {jobOpening?.reviewers?.map((reviewer) => (
+                                    <UserPill
+                                        key={reviewer.id}
+                                        user={reviewer}
+                                    />
+                                ))}
+                                {!jobOpening.reviewers ||
+                                jobOpening.reviewers.length === 0 ? (
+                                    <span className="text-sm text-muted-foreground">
+                                        No reviewers assigned
+                                    </span>
+                                ) : null}
+                            </div>
+                        </div>
                     </div>
 
                     {/* Referrals */}

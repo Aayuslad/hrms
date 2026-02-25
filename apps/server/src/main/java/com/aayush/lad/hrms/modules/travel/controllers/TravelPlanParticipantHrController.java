@@ -2,7 +2,9 @@ package com.aayush.lad.hrms.modules.travel.controllers;
 
 import com.aayush.lad.hrms.core.result.Result;
 import com.aayush.lad.hrms.core.result.ResultMapper;
+import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.ApproveExpenseRequest;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateDocumentRequest;
+import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.RejectExpenseRequest;
 import com.aayush.lad.hrms.modules.travel.services.TravelPlanDocumentService;
 import com.aayush.lad.hrms.modules.travel.services.TravelPlanExpenseService;
 import jakarta.validation.Valid;
@@ -27,8 +29,10 @@ public class TravelPlanParticipantHrController {
     @PatchMapping("/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/approve")
     public ResponseEntity<Result<Void>> approveExpense(
             @PathVariable UUID travelPlanId,
-            @PathVariable UUID expenseId) {
-        travelPlanExpenseService.approveExpense(travelPlanId, expenseId);
+            @PathVariable UUID expenseId, @RequestBody ApproveExpenseRequest request) {
+        request.setExpenseId(expenseId);
+        request.setTravelPlanId(travelPlanId);
+        travelPlanExpenseService.approveExpense(request);
         return ResultMapper.handle(HttpStatus.OK);
     }
 
@@ -36,8 +40,12 @@ public class TravelPlanParticipantHrController {
     @PatchMapping("/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/reject")
     public ResponseEntity<Result<Void>> rejectExpense(
             @PathVariable UUID travelPlanId,
-            @PathVariable UUID expenseId) {
-        travelPlanExpenseService.rejectExpense(travelPlanId, expenseId);
+            @PathVariable UUID expenseId,
+            @RequestBody RejectExpenseRequest request
+    ) {
+        request.setTravelPlanId(travelPlanId);
+        request.setExpenseId(expenseId);
+        travelPlanExpenseService.rejectExpense(request);
         return ResultMapper.handle(HttpStatus.OK);
     }
 

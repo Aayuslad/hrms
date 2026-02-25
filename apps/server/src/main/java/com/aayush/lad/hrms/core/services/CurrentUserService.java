@@ -8,4 +8,6 @@ public interface CurrentUserService {
     String getUsername();
 
     User getCurrentUserEntity();
+
+    boolean isUserAdminOrHR();
 }

@@ -43,7 +43,7 @@ export function NumberInputWithEndButtons({
                     maxValue={maxValue}
                     step={step}
                     isDisabled={disabled}
-                    className={`w-full max-w-xs space-y-2 ${className ?? ''}`}
+                    className={`w-full space-y-2 ${className ?? ''}`}
                 >
                     <Label className="flex items-center gap-2 text-sm leading-none font-medium select-none">
                         {label}

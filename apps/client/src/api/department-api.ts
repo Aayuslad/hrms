@@ -1,5 +1,6 @@
 import { axiosClient } from '@/lib/axios-client';
 import { queryClient } from '@/lib/query-client';
+import { handleApiError } from '@/lib/utils';
 import type { components } from '@/types/generated/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
@@ -38,14 +39,8 @@ export function useCreateDepartment() {
             toast.success('Department created');
             queryClient.invalidateQueries({ queryKey: ['departments'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to create department'
-            );
-            console.error('Failed to create department', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to create department'),
     });
 }
 
@@ -58,14 +53,8 @@ export function useUpdateDepartment() {
             toast.success('Department updated');
             queryClient.invalidateQueries({ queryKey: ['departments'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to update department'
-            );
-            console.error('Failed to update department', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to update department'),
     });
 }
 
@@ -77,13 +66,7 @@ export function useDeleteDepartment() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['departments'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to delete department'
-            );
-            console.error('Failed to delete department', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to delete department'),
     });
 }

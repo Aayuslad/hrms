@@ -1,4 +1,5 @@
 import { useGetTravelPlans } from '@/api/travel-api';
+import { NoContent } from '@/components/no-content';
 import CreateTravelPlanDialog from '@/components/travelPlans/create-travel-plan-dialog';
 import TravelPlanCard from '@/components/travelPlans/travel-plan-card';
 import { Spinner } from '@/components/ui/spinner';
@@ -38,14 +39,14 @@ export function Index() {
             </div>
 
             <div className="w-full flex justify-evenly pt-5">
-                <div className="w-full flex flex-col items-center">
-                    <div className="w-fit">
-                        <div className="mx-auto max-w-7xl px-5 py-12 grid gap-8 md:grid-cols-2">
-                            {travels?.map((travel) => (
-                                <TravelPlanCard travelPlan={travel} />
-                            ))}
-                        </div>
+                <div className="w-full mr-4 flex flex-col items-center">
+                    <div className="mx-auto max-w-7xl px-5 py-12 grid gap-8 md:grid-cols-2">
+                        {travels?.map((travel) => (
+                            <TravelPlanCard travelPlan={travel} />
+                        ))}
                     </div>
+
+                    {!travels && <NoContent />}
                 </div>
             </div>
         </div>

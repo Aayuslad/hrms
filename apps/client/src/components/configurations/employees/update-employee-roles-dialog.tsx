@@ -1,5 +1,9 @@
 import { useGetRoles } from '@/api/role-api';
-import { useEditUserRoles, type UpdateUserRolesRequest, type User } from '@/api/user-api';
+import {
+    useEditUserRoles,
+    type UpdateUserRolesRequest,
+    type User,
+} from '@/api/user-api';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -18,6 +22,7 @@ import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import z from 'zod';
+import { Loader2 } from 'lucide-react';
 
 const updateEmployeeRolesFormSchema = z.object({
     userId: z.string(),
@@ -60,51 +65,65 @@ export function UpdateEmployeeRolesDialog() {
 
     const onInvalid = (errors: typeof form.formState.errors) => {
         const messages = Object.values(errors).map((err) => err.message);
-        messages.slice().reverse().forEach((msg) => toast.error(msg));
+        messages
+            .slice()
+            .reverse()
+            .forEach((msg) => toast.error(msg));
     };
 
     return (
         <Dialog open={true}>
-            <DialogContent className="flex max-h-[min(600px,80vh)] flex-col gap-0 p-0 sm:max-w-sm">
+            <DialogContent className="flex max-h-[min(600px,80vh)] flex-col gap-0 p-0 sm:w-[300px]">
                 <form
                     onSubmit={form.handleSubmit(onSubmit, onInvalid)}
                     className="flex flex-col h-full"
                 >
                     <DialogHeader className="contents space-y-0 text-left">
-                        <ScrollArea className="flex max-h-full flex-col overflow-hidden">
-                            <DialogTitle className="px-6 pt-6">Update Employee Roles</DialogTitle>
-                            <DialogDescription asChild>
-                                <div className="p-6">
-                                    Update the employee roles and click Save.
-                                </div>
-                            </DialogDescription>
-                            <div className="grid gap-4 px-6 pb-6">
-                                <div className="grid gap-3">
-                                    <Label>Roles</Label>
-                                    <div className="space-y-2">
-                                        {roles?.map((role) => (
-                                            <div key={role.id!} className="flex items-center space-x-2">
-                                                <Checkbox
-                                                    id={role.id!}
-                                                    checked={selectedRoles.includes(role.id!)}
-                                                    onCheckedChange={(checked) => {
-                                                        if (checked) {
-                                                            setSelectedRoles([...selectedRoles, role.id!]);
-                                                        } else {
-                                                            setSelectedRoles(
-                                                                selectedRoles.filter((id) => id !== role.id!)
-                                                            );
-                                                        }
-                                                    }}
-                                                />
-                                                <Label htmlFor={role.id!}>{role.name}</Label>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </ScrollArea>
+                        <DialogHeader>
+                            <DialogTitle className="px-6 pt-6">
+                                Update Employee Roles
+                            </DialogTitle>
+                        </DialogHeader>
                     </DialogHeader>
+
+                    <div className="grid gap-4 px-6 py-6">
+                        <div className="grid gap-3">
+                            <div className="space-y-2">
+                                {roles?.map((role) => (
+                                    <div
+                                        key={role.id!}
+                                        className="flex items-center justify-between space-x-2"
+                                    >
+                                        <Label htmlFor={role.id!}>
+                                            {role.name}
+                                        </Label>
+                                        <Checkbox
+                                            id={role.id!}
+                                            checked={selectedRoles.includes(
+                                                role.id!
+                                            )}
+                                            onCheckedChange={(checked) => {
+                                                if (checked) {
+                                                    setSelectedRoles([
+                                                        ...selectedRoles,
+                                                        role.id!,
+                                                    ]);
+                                                } else {
+                                                    setSelectedRoles(
+                                                        selectedRoles.filter(
+                                                            (id) =>
+                                                                id !== role.id!
+                                                        )
+                                                    );
+                                                }
+                                            }}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
                     <DialogFooter className="flex-row items-center justify-end border-t px-6 py-4">
                         <Button
                             variant="outline"
@@ -114,7 +133,13 @@ export function UpdateEmployeeRolesDialog() {
                         >
                             Cancel
                         </Button>
-                        <Button type="submit" disabled={updateRolesMutation.isPending}>
+                        <Button
+                            type="submit"
+                            disabled={updateRolesMutation.isPending}
+                        >
+                            {updateRolesMutation.isPending && (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            )}
                             Save
                         </Button>
                     </DialogFooter>

@@ -46,7 +46,7 @@ public class PostMapper {
         modelMapper.map(request, existing);
 
         existing.setUpdatedBy(currentUserService.getCurrentUserEntity());
-        
+
         // Update tags
         existing.getTags().clear();
         if (request.getTagIds() != null && !request.getTagIds().isEmpty()) {
@@ -57,9 +57,19 @@ public class PostMapper {
 
     public PostResponse toResponse(Post post) {
         PostResponse response = modelMapper.map(post, PostResponse.class);
-        // Set isLiked for current user
+
         var currentUser = currentUserService.getCurrentUserEntity();
         response.setLiked(post.getLikedBy() != null && post.getLikedBy().contains(currentUser));
+
+        for (var commentResponse : response.getComments()) {
+            var comment = post.getComments().stream()
+                    .filter(c -> c.getId().equals(commentResponse.getId()))
+                    .findFirst().orElse(null);
+
+            commentResponse.setLiked(
+                    comment != null && comment.getLikedBy() != null && comment.getLikedBy().contains(currentUser));
+        }
+
         return response;
     }
 

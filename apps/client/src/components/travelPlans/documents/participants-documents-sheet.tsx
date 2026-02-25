@@ -1,5 +1,12 @@
+import { useGetParticipant } from '@/api/travel-api';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardTitle,
+} from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
     Sheet,
     SheetClose,
@@ -10,33 +17,9 @@ import {
     SheetTitle,
     SheetTrigger,
 } from '@/components/ui/sheet';
-import { useGetParticipant } from '@/api/travel-api';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import { ExternalLink, Scroll } from 'lucide-react';
-import React from 'react';
+import { ExternalLink } from 'lucide-react';
 import HrCreateDocumentDialog from './hr-create-document-dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
-
-type Document = {
-    id?: string;
-    owner?: {
-        id?: string;
-        userName?: string;
-    };
-    docUrl?: string;
-    documentType?: string;
-    uploadedAt?: string;
-    uploadedBy?: {
-        id?: string;
-        userName?: string;
-    };
-};
+import { DocumentCard } from './document-card';
 
 interface ParticipantDocumentsSheetProps {
     travelPlanId: string;
@@ -66,7 +49,7 @@ export function ParticipantDocumentsSheet({
                     Documents
                 </button>
             </SheetTrigger>
-            <SheetContent className="w-[35vw]">
+            <SheetContent className="w-[38vw]">
                 <SheetHeader>
                     <SheetTitle>{participantName}'s Documents</SheetTitle>
                     <SheetDescription>
@@ -76,35 +59,7 @@ export function ParticipantDocumentsSheet({
                 <ScrollArea className="flex-1 px-4">
                     {documents.length ? (
                         documents.map((doc) => (
-                            <Card key={doc.id} className="py-3 mb-3">
-                                <CardContent className="flex justify-between items-center">
-                                    <div>
-                                        <CardTitle>
-                                            {doc.documentType}
-                                        </CardTitle>
-                                        <CardDescription>
-                                            belongs to - {doc.owner?.userName}
-                                        </CardDescription>
-                                    </div>
-                                    <p className="text-sm text-muted-foreground flex flex-col text-center">
-                                        <span>Uploaded on: </span>
-                                        <span>
-                                            {new Date(
-                                                doc.uploadedAt!
-                                            ).toLocaleDateString()}
-                                        </span>
-                                    </p>
-                                    <a
-                                        href={doc.docUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-1 text-sm underline hover:cursor-pointer mt-2"
-                                    >
-                                        <span>View</span>
-                                        <ExternalLink className="w-4 h-4" />
-                                    </a>
-                                </CardContent>
-                            </Card>
+                            <DocumentCard key={doc.id} document={doc} />
                         ))
                     ) : (
                         <p className="text-center text-muted-foreground">

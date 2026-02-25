@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { Loader2 } from 'lucide-react';
 
 const loginFormSchema = z.object({
     emailOrUserName: z.string().min(1, 'Username or Email is required'),
@@ -85,13 +86,12 @@ export function LoginForm({
                             </div>
                             <Button
                                 type="submit"
-                                className={`w-full hover:cursor-pointer ${
-                                    loginUserMutation.isPending
-                                        ? 'cursor-not-allowed opacity-70'
-                                        : ''
-                                }`}
+                                className="w-full hover:cursor-pointer"
                                 disabled={loginUserMutation.isPending}
                             >
+                                {loginUserMutation.isPending && (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                )}
                                 Login
                             </Button>
 

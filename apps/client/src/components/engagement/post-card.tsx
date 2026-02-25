@@ -53,7 +53,7 @@ export function PostCard({
     };
 
     return (
-        <Card className="w-[500px] pb-3 px-0 gap-3">
+        <Card className="w-[600px] pb-3 px-0 gap-3 bg-transparent shadow-xl/30 rounded-lg">
             <CardHeader className="">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -67,7 +67,7 @@ export function PostCard({
                             </p>
                         </div>
                     </div>
-                    {/* <h2 className="text-xl font-semibold">{post.title}</h2> */}
+
                     {(isAuthor || canAccess(['Admin', 'HR'])) && (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -76,11 +76,13 @@ export function PostCard({
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                <DropdownMenuItem
-                                    onClick={() => onEditClick(post)}
-                                >
-                                    Edit
-                                </DropdownMenuItem>
+                                {isAuthor && (
+                                    <DropdownMenuItem
+                                        onClick={() => onEditClick(post)}
+                                    >
+                                        Edit
+                                    </DropdownMenuItem>
+                                )}
                                 <DropdownMenuItem
                                     onClick={() => onDeleteClick(post)}
                                     className="text-destructive"
@@ -95,6 +97,7 @@ export function PostCard({
             <CardContent className="">
                 <p className="text-sm">{post.content}</p>
                 {post.tags && post.tags.length > 0 && (
+                    
                     <div className="flex flex-wrap gap-2 mt-3">
                         {post.tags.map((tag) => (
                             <Badge key={tag.id} variant="secondary">
@@ -125,31 +128,6 @@ export function PostCard({
                         <MessageCircle className="h-4 w-4 mr-1" />
                         {post.commentCount}
                     </Button>
-                </div>
-
-                <div className="flex items-center justify-between">
-                    {isAuthor && (
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                    <MoreHorizontal className="h-4 w-4" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuItem
-                                    onClick={() => onEditClick(post)}
-                                >
-                                    Edit
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    onClick={() => onDeleteClick(post)}
-                                    className="text-destructive"
-                                >
-                                    Delete
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    )}
                 </div>
             </CardFooter>
         </Card>

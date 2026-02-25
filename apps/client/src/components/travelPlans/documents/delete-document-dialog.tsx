@@ -9,6 +9,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { Loader2 } from 'lucide-react';
 
 interface DeleteDocumentDialogProps {
     documentId: string;
@@ -72,6 +73,9 @@ export function DeleteDocumentDialog({
                         onClick={() => submit(id)}
                         disabled={deleteDocumentMutation.isPending}
                     >
+                        {deleteDocumentMutation.isPending && (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
                         Delete
                     </Button>
                 </DialogFooter>

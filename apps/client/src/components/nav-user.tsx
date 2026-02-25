@@ -50,8 +50,9 @@ export function NavUser() {
                             <ChevronsUpDown className="ml-auto size-4" />
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
+
                     <DropdownMenuContent
-                        className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+                        className="w-(--radix-dropdown-menu-trigger-width) bg-sidebar min-w-56 rounded-lg"
                         side={isMobile ? 'bottom' : 'right'}
                         align="end"
                         sideOffset={4}
@@ -88,10 +89,6 @@ export function NavUser() {
                             >
                                 <Bell />
                                 Notifications
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <Settings />
-                                Settings
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />

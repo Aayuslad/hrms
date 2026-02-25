@@ -126,7 +126,7 @@ public class GameController {
 
     // to Perform action (accept/reject) on empty slot notification received by a user. (for option 2)
     @PreAuthorize("hasRole('Employee')")
-    @PostMapping("/{gameId}/slots/{queuedSlotId}/{action}")
+    @PostMapping("/slots/{queuedSlotId}/{action}")
     public ResponseEntity<Result<Void>> slotAction(
             @PathVariable UUID queuedSlotId,
             @PathVariable String action, @RequestBody QueuedSlotActionRequest request) {

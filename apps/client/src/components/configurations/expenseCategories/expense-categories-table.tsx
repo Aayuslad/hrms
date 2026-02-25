@@ -1,19 +1,22 @@
 import {
-    type ColumnDef,
-    type ColumnFiltersState,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
-    type SortingState,
     useReactTable,
+    type ColumnDef,
+    type ColumnFiltersState,
+    type SortingState,
     type VisibilityState,
 } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import * as React from 'react';
 
-import { useGetDesignations, type Designation } from '@/api/designation-api';
+import {
+    useGetExpenseCategories,
+    type ExpenseCategory,
+} from '@/api/expense-category-api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
@@ -26,10 +29,6 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { useAccessChecker } from '@/hooks/use-has-access';
-import {
-    useGetExpenseCategories,
-    type ExpenseCategory,
-} from '@/api/expense-category-api';
 import { useNavigate } from 'react-router-dom';
 
 export function ExpenseCatrgoriesTable() {
@@ -63,7 +62,7 @@ export function ExpenseCatrgoriesTable() {
                 </div>
             ),
         },
-        ...(canAccess(['Admin'])
+        ...(canAccess(['Admin', 'HR'])
             ? ([
                   {
                       accessorKey: 'actions',

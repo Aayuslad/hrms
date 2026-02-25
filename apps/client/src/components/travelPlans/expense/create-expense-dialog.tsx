@@ -11,17 +11,9 @@ import {
 import { Form } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { CloudUpload, Loader2, Upload, X } from 'lucide-react';
+import { CloudUpload, Loader2, X } from 'lucide-react';
 
-import { useCreateExpense } from '@/api/travel-api';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import z from 'zod';
-import { Label } from '@/components/ui/label';
-import { NumberInputWithEndButtons } from '@/components/ui/number-input-with-end-buttons';
-import { ExpenseCategorySelector } from './expense-category-selector';
+import { useCreateExpense, type CreateExpenseRequest } from '@/api/travel-api';
 import {
     FileUpload,
     FileUploadDropzone,
@@ -32,13 +24,25 @@ import {
     FileUploadList,
     FileUploadTrigger,
 } from '@/components/ui/file-upload';
+import { Label } from '@/components/ui/label';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import z from 'zod';
+import { ExpenseCategorySelector } from './expense-category-selector';
+import { NumberInputWithEndButtons } from '@/components/ui/number-input-with-end-buttons';
+import { EXPENSE_STATUS } from '@/types/enums';
 
 const createExpenseFormSchema = z.object({
-    date: z.string().optional(),
+    participantId: z.string().min(1, 'Participant is required').optional(),
+    travelPlanId: z.string().min(1, 'Travel Plan is required'),
     amount: z.string().min(0, 'Amount must be positive'),
+    date: z.string().optional(),
+    status: z.enum(EXPENSE_STATUS).optional(),
     expenseCategoryId: z.string().min(1, 'Category is required'),
-    proofs: z.array(z.file()).optional(),
-});
+    proofs: z.string().array().optional(),
+}) satisfies z.ZodType<CreateExpenseRequest>;
 
 interface CreateExpenseDialogProps {
     travelPlanId: string;
@@ -56,29 +60,31 @@ const CreateExpenseDialog = ({
     const form = useForm({
         resolver: zodResolver(createExpenseFormSchema),
         defaultValues: {
-            date: '',
-            amount: '',
-            expenseCategoryId: '',
+            travelPlanId,
+            participantId,
+            amount: undefined,
         },
-    } as const);
+    });
 
-    const onSubmit = async (data: z.infer<typeof createExpenseFormSchema>) => {
+    const onSubmit = async (data: z.infer<typeof createExpenseFormSchema>, status: string) => {
         const formData = new FormData();
-        if (data.date) formData.append('date', data.date);
+
+        formData.append('travelPlanId', data.travelPlanId);
+        formData.append('participantId', data.participantId ?? '');
         formData.append('amount', data.amount);
+        data.date && formData.append('date', data.date);
+        formData.append('status', status);
         formData.append('expenseCategoryId', data.expenseCategoryId);
 
-        if (data.proofs) {
-            for (let i = 0; i < data.proofs.length; i++) {
-                formData.append('proofs[]', data.proofs[i]);
-            }
+        for (const element of proofs) {
+            formData.append('proofs[]', element);
         }
 
         createExpenseMutation.mutate(
             {
+                payload: formData,
                 travelPlanId,
                 participantId,
-                payload: formData as any,
             },
             {
                 onSuccess: () => {
@@ -95,41 +101,34 @@ const CreateExpenseDialog = ({
         reversed.forEach((msg) => toast.error(msg));
     };
 
-    console.log(form.getValues('proofs'));
-
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button>Add Expense</Button>
+                <Button variant={'secondary'}>+ Add Expense</Button>
             </DialogTrigger>
 
-            <DialogContent className="flex max-h-[min(700px,85vh)] flex-col gap-0 p-0 sm:max-w-lg">
+            <DialogContent className="flex max-h-[min(700px,85vh)] flex-col gap-0 p-0 sm:w-[450px]">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
+                    <form>
                         <DialogHeader className="px-6 pt-6">
                             <DialogTitle>Add Expense</DialogTitle>
                         </DialogHeader>
 
                         <ScrollArea className="px-6 py-4">
                             <div className="space-y-5">
-                                <div className="flex justify-between gap-5">
-                                    <div className="grid gap-3 flex-1">
-                                        <Label htmlFor="amount">Amount*</Label>
-                                        <Input
-                                            id="amount"
-                                            type="number"
-                                            {...form.register('amount')}
-                                        />
-                                    </div>
-
-                                    <div className="grid gap-3 flex-1">
-                                        <Label htmlFor="date">Date*</Label>
-                                        <Input
-                                            id="date"
-                                            type="date"
-                                            {...form.register('date')}
-                                        />
-                                    </div>
+                                <NumberInputWithEndButtons
+                                    control={form.control}
+                                    name="amount"
+                                    minValue={0}
+                                    label="Amount*"
+                                />
+                                <div className="grid gap-3 flex-1">
+                                    <Label htmlFor="date">Date*</Label>
+                                    <Input
+                                        id="date"
+                                        type="date"
+                                        {...form.register('date')}
+                                    />
                                 </div>
 
                                 <div className="grid gap-3">
@@ -204,13 +203,25 @@ const CreateExpenseDialog = ({
                                 </Button>
                             </DialogClose>
                             <Button
-                                type="submit"
+                                type="button"
+                                variant="secondary"
+                                onClick={form.handleSubmit((data) => onSubmit(data, EXPENSE_STATUS.DRAFTING), onInvalid)}
                                 disabled={createExpenseMutation.isPending}
                             >
                                 {createExpenseMutation.isPending && (
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                 )}
-                                Add Expense
+                                Save as Draft
+                            </Button>
+                            <Button
+                                type="button"
+                                onClick={form.handleSubmit((data) => onSubmit(data, EXPENSE_STATUS.SUBMITTED), onInvalid)}
+                                disabled={createExpenseMutation.isPending}
+                            >
+                                {createExpenseMutation.isPending && (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                )}
+                                Submit
                             </Button>
                         </DialogFooter>
                     </form>

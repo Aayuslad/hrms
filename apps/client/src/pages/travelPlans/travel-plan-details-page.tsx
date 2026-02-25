@@ -1,5 +1,7 @@
 import { useGetTravelPlan } from '@/api/travel-api';
+import { useGetMe } from '@/api/user-api';
 import DeleteTravelPlanDialog from '@/components/travelPlans/delete-travel-plan-dialog';
+import { AllExpenses } from '@/components/travelPlans/tabContents/all-expenses';
 import { MyDocuments } from '@/components/travelPlans/tabContents/my-documents';
 import { MyExpenses } from '@/components/travelPlans/tabContents/my-expenses';
 import { Participants } from '@/components/travelPlans/tabContents/participants';
@@ -20,6 +22,7 @@ import { useParams } from 'react-router-dom';
 
 export function TravelPlanDetailsPage() {
     const canAccess = useAccessChecker();
+    const { data: me } = useGetMe();
     const { travelPlanId } = useParams<{ travelPlanId?: string }>();
     const {
         data: travelPlan,
@@ -32,16 +35,29 @@ export function TravelPlanDetailsPage() {
             name: 'Participants',
             value: 'participants',
             content: <Participants travelPlanId={travelPlanId!} />,
+            roles: ['Employee', 'Admin', 'HR'],
+            onlyShowToParticipants: false,
         },
         {
             name: 'My Expenses',
             value: 'my-expenses',
             content: <MyExpenses travelPlanId={travelPlanId!} />,
+            roles: ['Employee', 'Admin', 'HR'],
+            onlyShowToParticipants: true,
         },
         {
             name: 'My Documents',
             value: 'my-documents',
             content: <MyDocuments travelPlanId={travelPlanId!} />,
+            roles: ['Employee', 'Admin', 'HR'],
+            onlyShowToParticipants: true,
+        },
+        {
+            name: 'All Expenses',
+            value: 'all-expenses',
+            content: <AllExpenses travelPlanId={travelPlanId!} />,
+            roles: ['Admin', 'HR'],
+            onlyShowToParticipants: false,
         },
     ];
 
@@ -67,7 +83,7 @@ export function TravelPlanDetailsPage() {
 
     return (
         <div className=" h-full">
-            <div className="bg  h-[180px] w-full flex items-center">
+            <div className="bg  h-[130px] w-full flex items-center">
                 <div className="px-10 flex-1 flex items-center gap-6">
                     <div className="space-y-4">
                         <h1 className="text-3xl font-semibold tracking-tight">
@@ -104,12 +120,6 @@ export function TravelPlanDetailsPage() {
                                 </span>
                             </div>
                         </div>
-
-                        {/* <div className="h-px bg-border/60" /> */}
-
-                        <p className="text-sm text-foreground/90 leading-relaxed max-w-3xl">
-                            {travelPlan.description}
-                        </p>
                     </div>
                 </div>
                 <div className="mr-10 mb-4 flex gap-2">
@@ -134,28 +144,65 @@ export function TravelPlanDetailsPage() {
             </div>
 
             <div className="w-full flex justify-evenly pt-2 pb-10">
-                <div className="w-full mr-12 flex flex-col items-center px-8">
-                    <div className="w-[700px]">
+                <div className="w-full mr-12 flex flex-col items-center px-8 space-y-10">
+                    <p className="text-sm px-2 w-full text-foreground/90 leading-relaxed">
+                        {travelPlan.description}
+                    </p>
+
+                    <div className="w-[800px]">
                         <Tabs defaultValue={tabs[0].value} className="gap-4">
                             <TabsList className="bg-background rounded-none border-b p-0">
-                                {tabs.map((tab) => (
-                                    <TabsTrigger
-                                        key={tab.value}
-                                        value={tab.value}
-                                        className="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
-                                    >
-                                        {tab.name}
-                                    </TabsTrigger>
-                                ))}
+                                {tabs.map((tab) => {
+                                    if (!canAccess(tab.roles)) {
+                                        return null;
+                                    }
+
+                                    if (
+                                        tab.onlyShowToParticipants &&
+                                        !travelPlan?.participants?.some(
+                                            (p) => p.id === me?.id
+                                        )
+                                    ) {
+                                        return null;
+                                    }
+
+                                    return (
+                                        <TabsTrigger
+                                            key={tab.value}
+                                            value={tab.value}
+                                            className="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+                                        >
+                                            {tab.name}
+                                        </TabsTrigger>
+                                    );
+                                })}
                             </TabsList>
 
-                            {tabs.map((tab) => (
-                                <TabsContent key={tab.value} value={tab.value}>
-                                    <p className="text-muted-foreground text-sm">
-                                        {tab.content}
-                                    </p>
-                                </TabsContent>
-                            ))}
+                            {tabs.map((tab) => {
+                                if (!canAccess(tab.roles)) {
+                                    return null;
+                                }
+
+                                if (
+                                    tab.onlyShowToParticipants &&
+                                    !travelPlan?.participants?.some(
+                                        (p) => p.id === me?.id
+                                    )
+                                ) {
+                                    return null;
+                                }
+
+                                return (
+                                    <TabsContent
+                                        key={tab.value}
+                                        value={tab.value}
+                                    >
+                                        <p className="text-muted-foreground text-sm">
+                                            {tab.content}
+                                        </p>
+                                    </TabsContent>
+                                );
+                            })}
                         </Tabs>
                     </div>
                 </div>

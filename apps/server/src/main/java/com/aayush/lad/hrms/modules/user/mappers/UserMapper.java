@@ -3,7 +3,6 @@ package com.aayush.lad.hrms.modules.user.mappers;
 import com.aayush.lad.hrms.core.services.CurrentUserService;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.NotificationResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.UserDetailResponse;
-import com.aayush.lad.hrms.modules.user.dtos.user.read.UserSummaryResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.write.CreateUserProfileRequest;
 import com.aayush.lad.hrms.modules.user.dtos.user.write.RegisterUserRequest;
 import com.aayush.lad.hrms.modules.user.dtos.user.write.UpdateUserByAdminRequest;
@@ -11,9 +10,9 @@ import com.aayush.lad.hrms.modules.user.dtos.user.write.UpdateUserBySelfRequest;
 import com.aayush.lad.hrms.modules.user.models.Notification;
 import com.aayush.lad.hrms.modules.user.models.Profile;
 import com.aayush.lad.hrms.modules.user.models.User;
+import com.aayush.lad.hrms.shared.dtos.GlobalUserResponseSummary;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -50,6 +49,12 @@ public class UserMapper {
     public List<NotificationResponse> toNotificationResponseList(List<Notification> notifications) {
         return notifications.stream().map(x ->
                 modelMapper.map(x, NotificationResponse.class)
+        ).toList();
+    }
+
+    public List<GlobalUserResponseSummary> toResponse(List<User> users) {
+        return users.stream().map(x ->
+                modelMapper.map(x, GlobalUserResponseSummary.class)
         ).toList();
     }
 }

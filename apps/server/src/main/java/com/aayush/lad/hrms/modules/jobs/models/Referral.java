@@ -37,8 +37,6 @@ public class Referral extends BaseModel {
     @Column(nullable = false)
     private String cvUrl;
 
-    private String note;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ReferralStatus status = ReferralStatus.NEW;

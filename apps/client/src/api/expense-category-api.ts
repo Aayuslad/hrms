@@ -1,5 +1,6 @@
 import { axiosClient } from '@/lib/axios-client';
 import { queryClient } from '@/lib/query-client';
+import { handleApiError } from '@/lib/utils';
 import type { components } from '@/types/generated/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
@@ -41,14 +42,8 @@ export function useCreateExpenseCategory() {
             queryClient.invalidateQueries({ queryKey: ['expense-categories'] });
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to create expense category'
-            );
-            console.error('Failed to create expense category', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to create expense category'),
     });
 }
 
@@ -64,14 +59,8 @@ export function useUpdateExpenseCategory() {
             queryClient.invalidateQueries({ queryKey: ['expense-categories'] });
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to update expense category'
-            );
-            console.error('Failed to update expense category', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to update expense category'),
     });
 }
 
@@ -84,13 +73,7 @@ export function useDeleteExpenseCategory() {
             queryClient.invalidateQueries({ queryKey: ['expense-categories'] });
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to delete expense category'
-            );
-            console.error('Failed to delete expense category', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to delete expense category'),
     });
 }

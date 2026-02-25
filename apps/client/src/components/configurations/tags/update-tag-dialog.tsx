@@ -1,8 +1,4 @@
-import {
-    useUpdateTag,
-    type Tag,
-    type UpdateTagRequest,
-} from '@/api/tag-api';
+import { useUpdateTag, type Tag, type UpdateTagRequest } from '@/api/tag-api';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -21,6 +17,7 @@ import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import z from 'zod';
+import { Loader2 } from 'lucide-react';
 
 const updateTagFormSchema = z.object({
     name: z
@@ -97,9 +94,7 @@ export function UpdateTagDialog() {
                             <Button
                                 variant="outline"
                                 disabled={updateTagMutation.isPending}
-                                onClick={() =>
-                                    navigate('/configuration/tags')
-                                }
+                                onClick={() => navigate('/configuration/tags')}
                             >
                                 Cancel
                             </Button>
@@ -107,8 +102,9 @@ export function UpdateTagDialog() {
                         <Button
                             type="submit"
                             disabled={updateTagMutation.isPending}
-                        >
-                            Update
+                        >                            {updateTagMutation.isPending && (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            )}                            Update
                         </Button>
                     </DialogFooter>
                 </form>

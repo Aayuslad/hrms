@@ -11,8 +11,8 @@ interface OrgChartNodeProps {
 
 export function OrgChartNode({ node }: OrgChartNodeProps) {
     return (
-        <Card className="w-36 p-0.5 shadow-lg border-2 border-primary/20 hover:shadow-xl transition-shadow duration-300">
-            <CardContent className="p-3 flex flex-col items-center text-center space-y-2">
+        <Card className="w- p-0.5 shadow-lg border-2 border-primary/20 hover:shadow-xl transition-shadow duration-300">
+            <CardContent className="p-1 px-4 flex flex-col items-center text-center space-y-2">
                 {/* <Avatar className="w-16 h-16 border-2 border-primary/30">
                     <AvatarImage src={node.avatarUrl || undefined} />
                     <AvatarFallback className="bg-primary/10 text-primary font-semibold">

@@ -15,6 +15,8 @@ import { useBreadCrumbs } from '@/hooks/use-bread-crumbs';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
+import { Bell } from 'lucide-react';
+import { Button } from './ui/button';
 
 function AppHeader() {
     const { data: notifications } = useGetNotificationns();
@@ -61,26 +63,23 @@ function AppHeader() {
                 </Breadcrumb>
             </div>
 
-            <button
-                className="relative p-2 rounded-full hover:bg-zinc-100/10 transition-colors"
+            <Button
+                variant="ghost"
+                className="relative "
                 aria-label="Notifications"
                 onClick={() => navigate('/notifications')}
             >
-                <BellIcon
-                    filled={unreadCount > 0}
-                    className={
-                        'w-6 h-6 ' +
-                        (unreadCount > 0
-                            ? 'text-fuchsia-500 animate-bounce'
-                            : 'text-zinc-400')
-                    }
+                <Bell
+                    fill={unreadCount > 0 ? 'black' : undefined}
+                    className="h-4 w-4"
                 />
+
                 {unreadCount > 0 && (
                     <span className="absolute -top-1 -right-1 bg-fuchsia-500 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[1.2em] flex items-center justify-center border border-white shadow">
                         {unreadCount}
                     </span>
                 )}
-            </button>
+            </Button>
 
             <ThemeToggleButton />
         </header>

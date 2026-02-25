@@ -2,6 +2,7 @@ package com.aayush.lad.hrms.modules.travel.controllers;
 
 import com.aayush.lad.hrms.core.result.Result;
 import com.aayush.lad.hrms.core.result.ResultMapper;
+import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.TravelPlanExpensesResponse;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.TravelPlanResponse;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.TravelPlanSummaryResponse;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateTravelPlanRequest;
@@ -61,5 +62,12 @@ public class TravelPlanController {
     public ResponseEntity<Result<Void>> delete(@PathVariable UUID id) {
         travelPlanService.delete(id);
         return ResultMapper.handle(HttpStatus.NO_CONTENT);
+    }
+
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
+    @GetMapping("/{id}/expenses")
+    public ResponseEntity<Result<TravelPlanExpensesResponse>> getExpenses(@PathVariable UUID id) {
+        TravelPlanExpensesResponse response = travelPlanService.getExpenses(id);
+        return ResultMapper.handle(HttpStatus.OK, response);
     }
 }

@@ -10,6 +10,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 
 export function DeleteDesignationDialog() {
     const location = useLocation();
@@ -58,6 +59,9 @@ export function DeleteDesignationDialog() {
                         onClick={() => submit(id)}
                         disabled={deleteDesignationMutation.isPending}
                     >
+                        {deleteDesignationMutation.isPending && (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
                         Delete
                     </Button>
                 </DialogFooter>

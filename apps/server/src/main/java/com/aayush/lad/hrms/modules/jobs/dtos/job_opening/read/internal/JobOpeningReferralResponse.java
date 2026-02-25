@@ -25,10 +25,7 @@ public class JobOpeningReferralResponse {
 
     private String cvUrl;
 
-    private String note;
-
     private ReferralStatus status;
 
     // TODO: add status audits later
-
 }

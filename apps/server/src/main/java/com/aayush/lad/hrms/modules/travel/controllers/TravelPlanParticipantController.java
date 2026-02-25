@@ -38,7 +38,7 @@ public class TravelPlanParticipantController {
         return ResultMapper.handle(HttpStatus.OK, response);
     }
 
-    @PreAuthorize("hasAnyRole('Admin', 'HR')")
+    @PreAuthorize("hasRole('Employee')")
     @PostMapping(value = "/{travelPlanId}/participant/{participantId}/expenses", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Result<Void>> createExpense(
             @PathVariable UUID travelPlanId,
@@ -50,7 +50,7 @@ public class TravelPlanParticipantController {
         return ResultMapper.handle(HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAnyRole('Admin', 'HR')")
+    @PreAuthorize("hasRole('Employee')")
     @PutMapping(value = "/{travelPlanId}/participant/{participantId}/expenses/{expenseId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Result<Void>> updateExpense(
             @PathVariable UUID expenseId,

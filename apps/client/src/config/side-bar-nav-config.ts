@@ -54,10 +54,10 @@ export const sidebarNavConfig = {
             isActive: false,
             roles: ['Admin', 'HR'],
             items: [
-                {
-                    title: 'Roles',
-                    url: 'configuration/roles',
-                },
+                // {
+                //     title: 'Roles',
+                //     url: 'configuration/roles',
+                // },
                 {
                     title: 'Employees',
                     url: 'configuration/employees',

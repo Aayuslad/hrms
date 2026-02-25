@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { useRegisterUser, type RegisterUserRequest } from '@/api/user-api';
 import { cn } from '@/lib/utils';
+import { Loader2 } from 'lucide-react';
 
 const registerFormSchema = z.object({
     userName: z.string().min(1, 'Username is required'),
@@ -99,13 +100,12 @@ export function RegistrationForm({
                             </div>
                             <Button
                                 type="submit"
-                                className={`w-full hover:cursor-pointer ${
-                                    registerUserMutation.isPending
-                                        ? 'cursor-not-allowed opacity-70'
-                                        : ''
-                                }`}
+                                className="w-full hover:cursor-pointer"
                                 disabled={registerUserMutation.isPending}
                             >
+                                {registerUserMutation.isPending && (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                )}
                                 Register
                             </Button>
 

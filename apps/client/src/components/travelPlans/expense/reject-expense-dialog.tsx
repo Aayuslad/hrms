@@ -8,6 +8,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { Loader2 } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
 
@@ -32,10 +33,12 @@ export function RejectExpenseDialog({
     const handleReject = () => {
         rejectExpenseMutation.mutate(
             {
-                travelPlanId,
                 participantId,
-                expenseId,
-                remarks: remarks || undefined,
+                payload: {
+                    travelPlanId,
+                    expenseId,
+                    remarks: remarks.trim() || undefined,
+                },
             },
             {
                 onSuccess: () => {
@@ -74,8 +77,13 @@ export function RejectExpenseDialog({
                     <Button
                         variant="destructive"
                         onClick={handleReject}
-                        disabled={rejectExpenseMutation.isPending || !remarks.trim()}
+                        disabled={
+                            rejectExpenseMutation.isPending || !remarks.trim()
+                        }
                     >
+                        {rejectExpenseMutation.isPending && (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
                         Reject
                     </Button>
                 </DialogFooter>
