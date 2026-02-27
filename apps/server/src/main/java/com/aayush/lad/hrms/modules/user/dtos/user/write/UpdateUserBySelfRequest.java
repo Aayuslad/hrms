@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -18,5 +19,5 @@ public class UpdateUserBySelfRequest {
 
 //    private MultipartFile avatar;
 
-    private List<GameInterestRequest> gameInterests = new ArrayList<>();
+    private List<UUID> gameInterests = new ArrayList<>();
 }

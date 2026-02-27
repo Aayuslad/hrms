@@ -6,6 +6,7 @@ import ShareJobOpeningDialog from './dialogs/share-job-opening-dialog';
 import ReferJobOpeningDialog from './dialogs/refer-job-opening-dialog';
 import type { JobOpeningSummary } from '@/api/jobs-api';
 import { useAccessChecker } from '@/hooks/use-has-access';
+import { GearIcon } from '@radix-ui/react-icons';
 
 type Props = {
     jobOpening: JobOpeningSummary;
@@ -29,11 +30,19 @@ const JobOpeningCard = ({ jobOpening }: Props) => {
                         size="sm"
                         onClick={(e) => {
                             e.stopPropagation();
-                            navigate(`${jobOpening.id}`);
+                            navigate(`${jobOpening.id}`, {
+                                state: {
+                                    childBreadCrumbName:
+                                        jobOpening.designation?.name ||
+                                        'Opening',
+                                },
+                            });
                         }}
                         variant={'outline'}
+                        className="gap-2"
                     >
-                        View Details
+                        <GearIcon className="w-4 h-4" />
+                        Manage
                     </Button>
                 )}
             </div>
@@ -65,9 +74,22 @@ const JobOpeningCard = ({ jobOpening }: Props) => {
                     <p>{jobOpening.description?.slice(0, 150)}...</p>
                 </div>
 
-                <div className="flex gap-2 pt-4">
-                    <ShareJobOpeningDialog jobOpeningId={jobOpening.id!} />
-                    <ReferJobOpeningDialog jobOpeningId={jobOpening.id!} />
+                <div className="flex gap-2 ">
+                    {!jobOpening.closed && (
+                        <>
+                            <ShareJobOpeningDialog
+                                jobOpeningId={jobOpening.id!}
+                            />
+                            <ReferJobOpeningDialog
+                                jobOpeningId={jobOpening.id!}
+                            />
+                        </>
+                    )}
+                    {jobOpening.closed && (
+                        <Button variant="outline" className="w-full" disabled>
+                            Closed
+                        </Button>
+                    )}
                 </div>
             </CardContent>
         </Card>

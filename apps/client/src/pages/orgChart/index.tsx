@@ -1,32 +1,8 @@
-import type { OrgChartNodeType } from '@/api/user-api';
-import { useGetOrgCharts } from '@/api/user-api';
-
-import { CustomOrgChart } from '@/components/orgChart/CustomOrgChart';
-
-interface ChartNode {
-    name: string;
-    title: string;
-    department: string | null;
-    avatarUrl: string | null;
-    children: ChartNode[];
-}
-
-function transformUser(user: OrgChartNodeType): ChartNode {
-    return {
-        name: `${user.firstName} ${user.lastName}`,
-        title: user.designation || 'N/A',
-        department: user?.department ?? 'N/A',
-        avatarUrl: user?.avatarUrl ?? null,
-        children: user?.manages?.map(transformUser) ?? [],
-    };
-}
+import { useGetMe } from '@/api/user-api';
+import { OrgChartSection } from '@/components/orgChart/org-chart-section';
 
 export function Index() {
-    const { data: orgCharts, isLoading } = useGetOrgCharts();
-
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
+    const { data: me } = useGetMe();
 
     return (
         <div className="h-full">
@@ -39,24 +15,14 @@ export function Index() {
                     </p>
                 </div>
                 <div className="w-57.5 mb-4">
-                    {/* <CreateJobOpeningSheet visibleTo={['Admin', 'Recruiter']} /> */}
+                    {/* <CreateJobOpeningSheet visibleTo={[*/
+            }
                 </div>
             </div>
 
             <div className="w-full pt-10">
                 {/* Custom Org Chart will be rendered here */}
-                {orgCharts?.map((orgChart) => {
-                    const tree = transformUser(orgChart);
-                    const key = `${tree.name}-${tree.title}-${tree.department}`;
-                    return (
-                        <div
-                            key={key}
-                            className="mb-10 overflow-y-auto flex justify-center items-center"
-                        >
-                            <CustomOrgChart tree={tree} />
-                        </div>
-                    );
-                })}
+                <OrgChartSection userId={me?.id} />
             </div>
         </div>
     );

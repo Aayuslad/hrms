@@ -30,11 +30,19 @@ export function PostsList() {
     };
 
     if (isLoading) {
-        return <Spinner />;
+        return (
+            <div className="w-full h-[80vh] flex items-center justify-center">
+                <Spinner className="size-8" />
+            </div>
+        );
     }
 
     if (isError) {
-        return <div>Error loading posts</div>;
+        return (
+            <div className="w-full h-[80vh] flex items-center justify-center">
+                Error fetching data...!
+            </div>
+        );
     }
 
     return (

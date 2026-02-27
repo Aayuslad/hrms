@@ -1,4 +1,4 @@
-import { useGetParticipant } from '@/api/travel-api';
+import type { Participant } from '@/api/travel-api';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
@@ -18,20 +18,15 @@ import { RejectExpenseDialog } from './reject-expense-dialog';
 
 interface ParticipantExpensesSheetProps {
     travelPlanId: string;
-    participantId: string;
+    participant: Participant;
     participantName: string;
 }
 
 export function ParticipantExpensesSheet({
     travelPlanId,
-    participantId,
+    participant,
     participantName,
 }: Readonly<ParticipantExpensesSheetProps>) {
-    const { data: participant } = useGetParticipant(
-        travelPlanId,
-        participantId
-    );
-
     const expenses = participant?.expenses || [];
 
     const [approveDialogOpen, setApproveDialogOpen] = React.useState(false);
@@ -43,12 +38,13 @@ export function ParticipantExpensesSheet({
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <button
+                <Button
+                    variant="link"
                     type="button"
-                    className="text-gray-400 font-semibold hover:cursor-pointer"
+                    className="h-auto p-0 text-sm"
                 >
                     Expenses
-                </button>
+                </Button>
             </SheetTrigger>
             <SheetContent className="w-[38vw]">
                 <SheetHeader>
@@ -92,7 +88,7 @@ export function ParticipantExpensesSheet({
             {selectedExpenseId && (
                 <ApproveExpenseDialog
                     travelPlanId={travelPlanId}
-                    participantId={participantId}
+                    participantId={participant.id as string}
                     expenseId={selectedExpenseId}
                     open={approveDialogOpen}
                     onOpenChange={setApproveDialogOpen}
@@ -101,7 +97,7 @@ export function ParticipantExpensesSheet({
             {selectedExpenseId && (
                 <RejectExpenseDialog
                     travelPlanId={travelPlanId}
-                    participantId={participantId}
+                    participantId={participant.id as string}
                     expenseId={selectedExpenseId}
                     open={rejectDialogOpen}
                     onOpenChange={setRejectDialogOpen}

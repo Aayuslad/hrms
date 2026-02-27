@@ -75,8 +75,8 @@ export function useDeleteTag() {
             await axiosClient.delete(`/engagement/tags/${id}`);
         },
         onSuccess: () => {
-            toast.success('Tag deleted');
             queryClient.invalidateQueries({ queryKey: ['tags'] });
+            toast.success('Tag deleted');
         },
         onError: (error: AxiosError<{ message: string }>) =>
             handleApiError(error, 'Failed to delete tag'),

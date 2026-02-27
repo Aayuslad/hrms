@@ -3,7 +3,7 @@ package com.aayush.lad.hrms.modules.engagement.services;
 import java.util.List;
 import java.util.UUID;
 
-import com.aayush.lad.hrms.core.exeptions.AccessDeniedException;
+import com.aayush.lad.hrms.core.exeptions.CustomAccessDeniedException;
 import com.aayush.lad.hrms.modules.user.services.NotificationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,7 +56,7 @@ public class PostService {
         Post post = getPostEntityById(request.getId());
 
         if (!currentUserService.getUsername().equals(post.getAuthor().getUserName())) {
-            throw new AccessDeniedException();
+            throw new CustomAccessDeniedException();
         }
 
         mapper.update(request, post);
@@ -67,8 +67,8 @@ public class PostService {
     public void delete(UUID postId) {
         Post post = getPostEntityById(postId);
 
-        if (!currentUserService.getUsername().equals(post.getAuthor().getUserName()) && currentUserService.isUserAdminOrHR()) {
-            throw new AccessDeniedException();
+        if (!currentUserService.getUsername().equals(post.getAuthor().getUserName()) && !currentUserService.isUserAdminOrHR()) {
+            throw new CustomAccessDeniedException();
         }
 
         User currentUser = currentUserService.getCurrentUserEntity();
@@ -123,7 +123,7 @@ public class PostService {
         PostComment comment = getCommentEntityById(commentId);
 
         if (!currentUserService.getUsername().equals(comment.getAuthor().getUserName())) {
-            throw new AccessDeniedException();
+            throw new CustomAccessDeniedException();
         }
 
         mapper.updateComment(request, comment);
@@ -135,8 +135,8 @@ public class PostService {
         PostComment comment = getCommentEntityById(commentId);
         User currentUser = currentUserService.getCurrentUserEntity();
 
-        if (!currentUserService.getUsername().equals(comment.getAuthor().getUserName()) && currentUserService.isUserAdminOrHR()) {
-            throw new AccessDeniedException();
+        if (!currentUserService.getUsername().equals(comment.getAuthor().getUserName()) && !currentUserService.isUserAdminOrHR()) {
+            throw new CustomAccessDeniedException();
         }
 
         if (!currentUser.getId().equals(comment.getAuthor().getId())) {

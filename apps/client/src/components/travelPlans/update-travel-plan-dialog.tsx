@@ -172,12 +172,6 @@ const UpdateTravelPlanDialog = ({ travelPlan }: Props) => {
                                         step={100}
                                     />
                                 </div>
-
-                                <ParticipantSelector
-                                    fields={form.watch('participants') ?? []}
-                                    append={participantsFieldArray.append}
-                                    remove={participantsFieldArray.remove}
-                                />
                             </div>
                         </ScrollArea>
 

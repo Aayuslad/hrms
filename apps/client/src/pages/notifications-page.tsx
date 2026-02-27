@@ -113,11 +113,23 @@ export function NotificationsPage() {
                                         {notification.content}
                                     </p>
                                 </div>
-                                {!notification.isRead && (
-                                    <span className="shrink-0 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
-                                        New
-                                    </span>
-                                )}
+                                <div className="flex flex-col-reverse items-end gap-2">
+                                    {!notification.isRead && (
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => markAsReadMutation.mutate([notification.id!])}
+                                            disabled={markAsReadMutation.isPending}
+                                        >
+                                            Mark as Read
+                                        </Button>
+                                    )}
+                                    {!notification.isRead && (
+                                        <span className="shrink-0 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
+                                            New
+                                        </span>
+                                    )}
+                                </div>
                             </div>
                         </CardContent>
                     </Card>

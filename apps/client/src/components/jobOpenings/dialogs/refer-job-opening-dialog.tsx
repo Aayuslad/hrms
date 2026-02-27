@@ -29,9 +29,10 @@ const referJobOpeningFormSchema = z.object({
 
 type Props = {
     jobOpeningId: string;
+    disabled?: boolean;
 };
 
-const ReferJobOpeningDialog = ({ jobOpeningId }: Props) => {
+const ReferJobOpeningDialog = ({ jobOpeningId, disabled }: Props) => {
     const createReferralMutation = useCreateJobOpeningReferral();
     const [open, setOpen] = useState(false);
 
@@ -61,7 +62,7 @@ const ReferJobOpeningDialog = ({ jobOpeningId }: Props) => {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button size="sm" variant="outline" className="flex-1">
+                <Button size="sm" variant="outline" className="flex-1" disabled={disabled}>
                     <UserPlus className="w-4 h-4 mr-2" />
                     Refer
                 </Button>

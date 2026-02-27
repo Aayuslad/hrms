@@ -2,6 +2,7 @@ package com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read;
 
 import com.aayush.lad.hrms.shared.dtos.GlobalUserResponseSummary;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class TravelPlanResponse {
 
     private UUID id;
@@ -28,7 +30,7 @@ public class TravelPlanResponse {
 
     private float maxExpenseAmountPerDay;
 
-    private List<GlobalUserResponseSummary> participants;
+    private List<ParticipantResponse> participants;
 
     private GlobalUserResponseSummary createdBy;
 

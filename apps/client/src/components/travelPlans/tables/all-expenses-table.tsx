@@ -1,4 +1,11 @@
+import { UserProfileDialog } from '@/components/auth/user-profile-dialog';
 import { Button } from '@/components/ui/button';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import {
     Table,
@@ -8,6 +15,8 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { useAppStore } from '@/store';
+import { useParams } from 'react-router-dom';
 import {
     flexRender,
     getCoreRowModel,
@@ -20,8 +29,9 @@ import {
     type SortingState,
     type VisibilityState,
 } from '@tanstack/react-table';
-import { ArrowUpDown, ReceiptText } from 'lucide-react';
+import { ArrowUpDown, MoreHorizontal, ReceiptText, User } from 'lucide-react';
 import React from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 type Expense = {
     id?: string | undefined;
@@ -66,24 +76,26 @@ export function AllExpensesTable({
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
+    const { openProofsDialog, openApproveDialog, openRejectDialog } =
+        useAppStore(
+            useShallow((s) => ({
+                openProofsDialog: s.openProofsDialog,
+                openApproveDialog: s.openApproveDialog,
+                openRejectDialog: s.openRejectDialog,
+            }))
+        );
+
+    const { travelPlanId } = useParams<{ travelPlanId?: string }>();
 
     const columns: ColumnDef<Expense>[] = [
         {
             accessorKey: 'participant.userName',
-            header: ({ column }) => (
-                <Button
-                    variant="ghost"
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === 'asc')
-                    }
-                >
-                    Participant
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            ),
+            header: () => <div className="ml-3 min-w-[100px]">Participant</div>,
             cell: ({ row }) => (
-                <div className="font-medium pl-3 w-[120px]">
-                    {row.original.participant?.userName}
+                <div className=" ml-3 min-w-[100px]">
+                    <UserProfileDialog userId={row.original.participant?.id!}>
+                        {row.original.participant?.userName}
+                    </UserProfileDialog>
                 </div>
             ),
         },
@@ -97,11 +109,11 @@ export function AllExpensesTable({
                     }
                 >
                     Date
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                    <ArrowUpDown className=" h-4 w-4" />
                 </Button>
             ),
             cell: ({ row }) => (
-                <div className="font-medium pl-3 w-[120px]">
+                <div className="">
                     {new Date(row.getValue('date')).toLocaleDateString()}
                 </div>
             ),
@@ -114,34 +126,111 @@ export function AllExpensesTable({
                     onClick={() =>
                         column.toggleSorting(column.getIsSorted() === 'asc')
                     }
+                    className="w-[80px]"
                 >
                     Amount
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                    <ArrowUpDown className="h-4 w-4" />
                 </Button>
             ),
             cell: ({ row }) => (
-                <div className="font-medium ml-3 w-[100px]">
-                    ₹{row.original.amount}
-                </div>
+                <div className=" w-[80px]">₹{row.original.amount}</div>
             ),
         },
         {
             accessorKey: 'category',
             header: 'Category',
             cell: ({ row }) => (
-                <div className="font-medium w-[120px]">
-                    {row.original.expenseCategory}
-                </div>
+                <div className="">{row.original.expenseCategory}</div>
             ),
+        },
+        {
+            accessorKey: 'proofs',
+            header: 'Proofs',
+            cell: ({ row }) => {
+                const proofs = row.original.proofs;
+                if (!proofs || proofs.length === 0) {
+                    return <div className="pl-5">-</div>;
+                }
+                return (
+                    <Button
+                        variant="link"
+                        size="sm"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            openProofsDialog(proofs);
+                        }}
+                        type="button"
+                        className="h-auto p-0 text-sm"
+                    >
+                        View ({proofs.length})
+                    </Button>
+                );
+            },
         },
         {
             accessorKey: 'status',
             header: 'Status',
             cell: ({ row }) => (
-                <div className="font-medium w-[100px]">
+                <div
+                    className={`  capitalize ${row.original?.status === 'DRAFTING' ? 'text-yellow-500' : ''} ${row.original?.status === 'SUBMITTED' ? 'text-blue-500' : ''} ${row.original?.status === 'REJECTED' ? 'text-red-500' : ''} ${row.original?.status === 'APPROVED' ? 'text-green-500' : ''}`}
+                >
                     {row.getValue('status')}
                 </div>
             ),
+        },
+        {
+            id: 'actions',
+            header: '',
+            cell: ({ row }) => {
+                return (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-auto w-8 p-0">
+                                <span className="sr-only">Open menu</span>
+                                <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            {(row.original.status === 'SUBMITTED' ||
+                                row.original.status === 'REJECTED') && (
+                                <DropdownMenuItem
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (!travelPlanId) return;
+                                        openApproveDialog({
+                                            travelPlanId: travelPlanId!,
+                                            participantId:
+                                                row.original.participant?.id!,
+                                            expenseId: row.original.id!,
+                                        });
+                                    }}
+                                    className="text-green-500"
+                                >
+                                    Approve
+                                </DropdownMenuItem>
+                            )}
+                            {(row.original.status === 'SUBMITTED' ||
+                                row.original.status === 'APPROVED') && (
+                                <DropdownMenuItem
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (!travelPlanId) return;
+                                        openRejectDialog({
+                                            travelPlanId: travelPlanId!,
+                                            participantId:
+                                                row.original.participant?.id!,
+                                            expenseId: row.original.id!,
+                                        });
+                                    }}
+                                    className="text-red-500"
+                                >
+                                    Reject
+                                </DropdownMenuItem>
+                            )}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                );
+            },
         },
     ];
 
@@ -181,13 +270,15 @@ export function AllExpensesTable({
                     }
                     className="max-w-sm"
                 />
-                <div className="flex items-center justify-between">
-                    <div className="bg-muted px-4 py-1 space-x-2 rounded-lg text-right">
-                        <span className="text-xs text-muted-foreground">
-                            Total Approved expenses
-                        </span>
-                        <span className="text-base font-semibold">₹300.00</span>
-                    </div>
+
+                <div className="inline-flex items-center gap-2 rounded-lg border px-3 py-2 bg-muted/40">
+                    {/* <IndianRupee className="h-4 w-4 text-primary" /> */}
+
+                    <span className="text-sm text-muted-foreground">
+                        Total Approved expenses:
+                    </span>
+
+                    <span className="text-sm font-semibold">₹{total}</span>
                 </div>
             </div>
             <div className="overflow-hidden rounded-md border">

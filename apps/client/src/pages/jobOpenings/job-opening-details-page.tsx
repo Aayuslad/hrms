@@ -1,6 +1,7 @@
 import { useGetJobOpening } from '@/api/jobs-api';
 import CloseJobOpeningDialog from '@/components/jobOpenings/dialogs/close-job-opening-dialog';
 import DeleteJobOpeningDialog from '@/components/jobOpenings/dialogs/delete-job-opening-dialog';
+import ReopenJobOpeningDialog from '@/components/jobOpenings/dialogs/re-open-job-opening-dialog';
 import UpdateJobOpeningDialog from '@/components/jobOpenings/dialogs/update-job-opening-dialog';
 import { ReferralsTable } from '@/components/jobOpenings/tables/referrals-table';
 import { SharesTable } from '@/components/jobOpenings/tables/shares-table';
@@ -15,10 +16,14 @@ import { Spinner } from '@/components/ui/spinner';
 import { UserPill } from '@/components/user-pill';
 import { useAccessChecker } from '@/hooks/use-has-access';
 import { BriefcaseBusiness, Dot, ExternalLink, User } from 'lucide-react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 export function JobOpeningDetailsPage() {
     const canAccess = useAccessChecker();
+    const [descriptionView, setDescriptionView] = useState<'short' | 'full'>(
+        'short'
+    );
     const { jobOpeningId } = useParams<{ jobOpeningId: string }>();
     const {
         data: jobOpening,
@@ -122,6 +127,14 @@ export function JobOpeningDetailsPage() {
                                         />
                                     </>
                                 )}
+                                {jobOpening.closed && (
+                                    <>
+                                        <DropdownMenuSeparator />
+                                        <ReopenJobOpeningDialog
+                                            jobOpeningId={jobOpening.id!}
+                                        />
+                                    </>
+                                )}
                             </DropdownMenuContent>
                         </DropdownMenu>
                     )}
@@ -130,8 +143,24 @@ export function JobOpeningDetailsPage() {
 
             <div className="w-full flex justify-center pt-2 pb-10">
                 <div className="w-full mr-12 max-w-6xl px-8 space-y-10">
-                    <p className="text-sm px-3 text-foreground/90 leading-relaxed ">
-                        {jobOpening.description}
+                    <p className="text-sm px-2 w-full text-foreground/90 leading-relaxed">
+                        {descriptionView === 'short'
+                            ? jobOpening.description?.slice(0, 100) + '...'
+                            : jobOpening.description}
+                        <button
+                            className="ml-2 text-sm text-blue-500 hover:underline cursor-pointer"
+                            onClick={() =>
+                                setDescriptionView(
+                                    descriptionView === 'short'
+                                        ? 'full'
+                                        : 'short'
+                                )
+                            }
+                        >
+                            {descriptionView === 'short'
+                                ? 'read more'
+                                : 'read less'}
+                        </button>
                     </p>
 
                     <div className="flex gap-8 pb-5 mx-10">

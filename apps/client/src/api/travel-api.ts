@@ -35,6 +35,9 @@ export type ApproveExpenseRequest =
 export type RejectExpenseRequest =
     components['schemas']['RejectExpenseRequest'];
 
+export type AddParticipantsRequest = components['schemas']['AddParticipantsRequest'];
+export type RemoveParticipantsRequest = components['schemas']['RemoveParticipantsRequest'];
+
 // get a list of travel plan
 const travelPlansQuery = {
     queryKey: ['travel-plans'],
@@ -108,7 +111,8 @@ export function useCreateTravelPlan() {
             toast.success('Travel plan created');
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => handleApiError(error, 'Failed to create travel plan'),
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to create travel plan'),
     });
 }
 
@@ -127,7 +131,8 @@ export function useUpdateTravelPlan() {
                 queryKey: ['travel-plan', vars.id],
             });
         },
-        onError: (error: AxiosError<{ message: string }>) => handleApiError(error, 'Failed to update travel plan'),
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to update travel plan'),
     });
 }
 
@@ -144,7 +149,8 @@ export function useDeleteTravelPlan() {
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
             navigate('/travel-plans');
         },
-        onError: (error: AxiosError<{ message: string }>) => handleApiError(error, 'Failed to delete travel plan'),
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to delete travel plan'),
     });
 }
 
@@ -161,6 +167,51 @@ export function useGetParticipant(
             return data.data ?? null;
         },
         enabled: !!travelPlanId && !!participantId,
+    });
+}
+
+// ---- new hooks for managing participants --------------------------------------------------
+export function useAddParticipants() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (params: {
+            travelPlanId: string;
+            payload: AddParticipantsRequest;
+        }): Promise<void> => {
+            await axiosClient.post(
+                `/travel-plans/${params.travelPlanId}/participants`,
+                params.payload
+            );
+        },
+        onSuccess: (_, vars) => {
+            toast.success('Participants added');
+            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
+            queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
+        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to add participants'),
+    });
+}
+
+export function useRemoveParticipants() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (params: {
+            travelPlanId: string;
+            payload: RemoveParticipantsRequest;
+        }): Promise<void> => {
+            await axiosClient.delete(
+                `/travel-plans/${params.travelPlanId}/participants`,
+                { data: params.payload }
+            );
+        },
+        onSuccess: (_, vars) => {
+            toast.success('Participants removed');
+            queryClient.invalidateQueries({ queryKey: ['travel-plan', vars.travelPlanId] });
+            queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
+        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to remove participants'),
     });
 }
 
@@ -197,7 +248,8 @@ export function useCreateExpense() {
                 queryKey: ['travel-plan', vars.travelPlanId],
             });
         },
-        onError: (error: AxiosError<{ message: string }>) => handleApiError(error, 'Failed to create expense'),
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to create expense'),
     });
 }
 
@@ -233,7 +285,8 @@ export function useUpdateExpense() {
                 ],
             });
         },
-        onError: (error: AxiosError<{ message: string }>) => handleApiError(error, 'Failed to update expense'),
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to update expense'),
     });
 }
 
@@ -264,7 +317,8 @@ export function useDeleteExpense() {
                 ],
             });
         },
-        onError: (error: AxiosError<{ message: string }>) => handleApiError(error, 'Failed to delete expense'),
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to delete expense'),
     });
 }
 
@@ -295,7 +349,8 @@ export function useSubmitExpense() {
                 ],
             });
         },
-        onError: (error: AxiosError<{ message: string }>) => handleApiError(error, 'Failed to submit expense'),
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to submit expense'),
     });
 }
 
@@ -330,7 +385,8 @@ export function useCreateDocument() {
                 ],
             });
         },
-        onError: (error: AxiosError<{ message: string }>) => handleApiError(error, 'Failed to create document'),
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to create document'),
     });
 }
 
@@ -366,7 +422,8 @@ export function useUpdateDocument() {
                 ],
             });
         },
-        onError: (error: AxiosError<{ message: string }>) => handleApiError(error, 'Failed to update document'),
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to update document'),
     });
 }
 
@@ -397,7 +454,8 @@ export function useDeleteDocument() {
                 ],
             });
         },
-        onError: (error: AxiosError<{ message: string }>) => handleApiError(error, 'Failed to delete document'),
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to delete document'),
     });
 }
 
@@ -432,7 +490,8 @@ export function useCreateDocumentByHr() {
                 ],
             });
         },
-        onError: (error: AxiosError<{ message: string }>) => handleApiError(error, 'Failed to create document by HR'),
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to create document by HR'),
     });
 }
 
@@ -462,7 +521,8 @@ export function useApproveExpense() {
                 ],
             });
         },
-        onError: (error: AxiosError<{ message: string }>) => handleApiError(error, 'Failed to approve expense'),
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to approve expense'),
     });
 }
 
@@ -492,6 +552,7 @@ export function useRejectExpense() {
                 ],
             });
         },
-        onError: (error: AxiosError<{ message: string }>) => handleApiError(error, 'Failed to reject expense'),
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to reject expense'),
     });
 }

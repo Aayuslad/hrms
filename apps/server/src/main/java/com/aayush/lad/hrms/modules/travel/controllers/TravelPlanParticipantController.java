@@ -3,6 +3,8 @@ package com.aayush.lad.hrms.modules.travel.controllers;
 import com.aayush.lad.hrms.core.result.Result;
 import com.aayush.lad.hrms.core.result.ResultMapper;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.ParticipantResponse;
+import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.AddParticipantsRequest;
+import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.RemoveParticipantsRequest;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateExpenseRequest;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.CreateDocumentRequest;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.write.UpdateExpenseRequest;
@@ -36,6 +38,26 @@ public class TravelPlanParticipantController {
             @PathVariable UUID participantId) {
         ParticipantResponse response = travelPlanService.getTravelParticipant(travelPlanId, participantId);
         return ResultMapper.handle(HttpStatus.OK, response);
+    }
+
+    // add multiple participants to a travel plan
+    @PreAuthorize("hasRole('Admin') or hasRole('HR')")
+    @PostMapping("/{travelPlanId}/participants")
+    public ResponseEntity<Result<Void>> addParticipants(
+            @PathVariable UUID travelPlanId,
+            @Valid @RequestBody AddParticipantsRequest request) {
+        travelPlanService.addParticipants(travelPlanId, request.getParticipantIds());
+        return ResultMapper.handle(HttpStatus.OK);
+    }
+
+    // remove one or more participants from a travel plan
+    @PreAuthorize("hasRole('Admin') or hasRole('HR')")
+    @DeleteMapping("/{travelPlanId}/participants")
+    public ResponseEntity<Result<Void>> removeParticipants(
+            @PathVariable UUID travelPlanId,
+            @Valid @RequestBody RemoveParticipantsRequest request) {
+        travelPlanService.removeParticipants(travelPlanId, request.getParticipantIds());
+        return ResultMapper.handle(HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('Employee')")

@@ -18,6 +18,7 @@ import {
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { UserProfileDialog } from '@/components/auth/user-profile-dialog';
 
 import { useGetMe } from '@/api/user-api';
 import BookSlotDialog from './slotDialogs/book-slot-dialog';
@@ -231,17 +232,11 @@ export default function Schedule({
                                                         <span className="text-sm">
                                                             {slot.booked ? (
                                                                 <div className="flex flex-col items-center justify-center rounded-xl  text-xs   ">
-                                                                    <span className="font-mono underline">
-                                                                        {
-                                                                            slot
-                                                                                .organiser
-                                                                                ?.userName
-                                                                        }
-                                                                        {slot
-                                                                            .organiser
-                                                                            ?.id ===
-                                                                            me?.id &&
-                                                                            '(you)'}
+                                                                    <span className="font-mono underline cursor-pointer">
+                                                                        <UserProfileDialog userId={slot.organiser?.id!}>
+                                                                            {slot.organiser?.userName}
+                                                                        </UserProfileDialog>
+                                                                        {slot.organiser?.id === me?.id && '(you)'}
                                                                     </span>
 
                                                                     <span className="text-muted-foreground">

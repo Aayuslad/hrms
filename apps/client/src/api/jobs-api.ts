@@ -161,6 +161,22 @@ export function useCloseJobOpening() {
     });
 }
 
+export function useReopenJobOpening() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (id: string): Promise<void> => {
+            await axiosClient.patch(`/job-openings/${id}/reopen`);
+        },
+        onSuccess: (_, id) => {
+            toast.success('Job opening reopened');
+            queryClient.invalidateQueries({ queryKey: ['job-openings'] });
+            queryClient.invalidateQueries({ queryKey: ['job-opening', id] });
+        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to reopen job opening'),
+    });
+}
+
 export function useCreateJobOpeningReferral() {
     const queryClient = useQueryClient();
     return useMutation({

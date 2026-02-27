@@ -87,17 +87,19 @@ export function MyDocumentsTable({
         },
         {
             accessorKey: 'doc',
-            header: 'Document File',
+            header: () => <div className="w-[150px]">Document</div>,
             cell: ({ row }) => (
                 <div className="font-medium w-[150px]">
                     <a
                         href={row.original.docUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex w-fit items-center gap-1 text-sm underline hover:cursor-pointer"
+                        className=""
                     >
-                        <span className="text-sm">View Document</span>
-                        <ExternalLink className="w-4 h-4" />
+                        <Button variant={'link'} className="-ml-3">
+                            <span className="text-sm">View Document</span>
+                            <ExternalLink className="w-4 h-4" />
+                        </Button>
                     </a>
                 </div>
             ),
@@ -123,7 +125,7 @@ export function MyDocumentsTable({
         },
         {
             id: 'actions',
-            header: () => <div className="w-[100px]">Actions</div>,
+            header: '',
             cell: ({ row }) => {
                 return (
                     <DropdownMenu>

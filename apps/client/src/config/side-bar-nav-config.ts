@@ -34,12 +34,6 @@ export const sidebarNavConfig = {
             roles: ['Employee'],
         },
         {
-            name: 'Org Chart',
-            url: '/org-chart',
-            icon: Users,
-            roles: ['Employee'],
-        },
-        {
             name: 'Achievements & Social',
             url: '/engagement',
             icon: MessageSquare,

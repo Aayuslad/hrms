@@ -24,11 +24,17 @@ type Props = {
     fields: string[];
     append: (x: string) => void;
     remove: (index: number) => void;
+    existingIds?: string[];
 };
 
-export function ParticipantSelector({ fields, append, remove }: Props) {
+export function ParticipantSelector({ fields, append, remove, existingIds = [] }: Props) {
     const [open, setOpen] = React.useState(false);
     const { data: users, isLoading } = useGetUserList();
+
+    const availableUsers = (users || []).filter(
+        (u) => !existingIds.includes(u.id as string) && !fields.includes(u.id as string)
+    );
+
 
     const handleSelect = (user: UserSummary) => {
         if (fields.includes(user.id as string)) {
@@ -73,7 +79,7 @@ export function ParticipantSelector({ fields, append, remove }: Props) {
                                     No participant found.
                                 </CommandEmpty>
                                 <CommandGroup className="overflow-y-auto">
-                                    {users?.map((user) => (
+                                    {availableUsers?.map((user) => (
                                         <CommandItem
                                             key={user.id}
                                             value={user.id as string}

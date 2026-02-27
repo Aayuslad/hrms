@@ -1,6 +1,7 @@
 package com.aayush.lad.hrms.modules.travel.services;
 
 import com.aayush.lad.hrms.core.exeptions.NotFoundException;
+import com.aayush.lad.hrms.core.services.CurrentUserService;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.ParticipantResponse;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.TravelPlanExpensesResponse;
 import com.aayush.lad.hrms.modules.travel.dtos.travel_plan.read.TravelPlanResponse;
@@ -31,6 +32,7 @@ public class TravelPlanService {
     private final UserRepository userRepository;
     private final TravelPlanMapper travelPlanMapper;
     private final NotificationService notificationService;
+    private final CurrentUserService currentUserService;
 
     public void create(CreateTravelPlanRequest request) {
         TravelPlan travelPlan = travelPlanMapper.create(request);
@@ -69,13 +71,39 @@ public class TravelPlanService {
 
     public TravelPlanResponse getById(UUID id) {
         TravelPlan travelPlan = getTravelPlanEntityById(id);
-        return travelPlanMapper.toResponse(travelPlan);
+        TravelPlanResponse response = TravelPlanResponse.builder()
+                .id(travelPlan.getId())
+                .title(travelPlan.getTitle())
+                .destination(travelPlan.getDestination())
+                .description(travelPlan.getDescription())
+                .startAt(travelPlan.getStartAt())
+                .endAt(travelPlan.getEndAt())
+                .maxExpenseAmountPerDay(travelPlan.getMaxExpenseAmountPerDay())
+                .build();
+
+        // build full participant responses using existing helper
+        List<ParticipantResponse> participantResponses = travelPlan.getParticipants() == null ? List.of()
+                : travelPlan.getParticipants().stream()
+                        .map(u -> getTravelParticipant(travelPlan.getId(), u.getId()))
+                        .toList();
+        response.setParticipants(participantResponses);
+
+        return response;
     }
 
     public List<TravelPlanSummaryResponse> getAll() {
         List<TravelPlan> travelPlans = travelPlanRepository.findAll();
+        User currentUser = currentUserService.getCurrentUserEntity();
 
-        return travelPlanMapper.toSumaryResponseList(travelPlans);
+        if (currentUserService.isUserAdminOrHR()) {
+
+            return travelPlanMapper.toSumaryResponseList(travelPlans);
+        }
+
+        List<TravelPlan> filteredTravelPlan = travelPlans.stream()
+                .filter(x -> x.getParticipants().contains(currentUser)).toList();
+
+        return travelPlanMapper.toSumaryResponseList(filteredTravelPlan);
     }
 
     public void delete(UUID id) {
@@ -103,6 +131,9 @@ public class TravelPlanService {
         response.setUserName(participant.getUserName());
         response.setDocuments(travelPlanMapper.toDocumentResponseList(documents));
         response.setExpenses(travelPlanMapper.toExpenseResponseList(expenses));
+        response.setTotalClaimedAmount((float) expenses.stream()
+                .filter(x -> x.getStatus().equals(ExpenseStatus.APPROVED))
+                .mapToDouble(TravelPlanExpense::getAmount).sum());
 
         return response;
     }
@@ -122,6 +153,40 @@ public class TravelPlanService {
                 .mapToDouble(TravelPlanExpense::getAmount).sum();
 
         return new TravelPlanExpensesResponse(expenseResponses, total);
+    }
+
+    public void addParticipants(UUID travelPlanId, List<UUID> participantIds) {
+        TravelPlan travelPlan = getTravelPlanEntityById(travelPlanId);
+        if (participantIds == null || participantIds.isEmpty()) {
+            return;
+        }
+        List<User> users = userRepository.findAllById(participantIds);
+        for (User u : users) {
+            if (travelPlan.getParticipants().contains(u))
+                continue;
+            travelPlan.getParticipants().add(u);
+            String content = "You are added in a travel plan by " +
+                    currentUserService.getCurrentUserEntity().getUserName();
+            notificationService.createNotification(u.getId(), content);
+        }
+        travelPlanRepository.save(travelPlan);
+    }
+
+    public void removeParticipants(UUID travelPlanId, List<UUID> participantIds) {
+        TravelPlan travelPlan = getTravelPlanEntityById(travelPlanId);
+        if (participantIds == null || participantIds.isEmpty()) {
+            return;
+        }
+        List<User> users = userRepository.findAllById(participantIds);
+        for (User u : users) {
+            if (!travelPlan.getParticipants().contains(u))
+                continue;
+            travelPlan.getParticipants().remove(u);
+            String content = "You are removed from a travel plan by " +
+                    currentUserService.getCurrentUserEntity().getUserName();
+            notificationService.createNotification(u.getId(), content);
+        }
+        travelPlanRepository.save(travelPlan);
     }
 
     private TravelPlan getTravelPlanEntityById(UUID id) {

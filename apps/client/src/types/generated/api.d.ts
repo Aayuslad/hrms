@@ -90,6 +90,10 @@ export interface paths {
     get: operations["getAll"];
     post: operations["create"];
   };
+  "/api/travel-plans/{travelPlanId}/participants": {
+    post: operations["addParticipants"];
+    delete: operations["removeParticipants"];
+  };
   "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses": {
     post: operations["createExpense"];
   };
@@ -244,10 +248,6 @@ export interface components {
       userId: string;
       roles?: string[];
     };
-    GameInterestRequest: {
-      /** Format: uuid */
-      gameId: string;
-    };
     UpdateProfileBySelfRequest: {
       firstName: string;
       middleName?: string;
@@ -262,7 +262,7 @@ export interface components {
     };
     UpdateUserBySelfRequest: {
       profile?: components["schemas"]["UpdateProfileBySelfRequest"];
-      gameInterests?: components["schemas"]["GameInterestRequest"][];
+      gameInterests?: string[];
     };
     MarkNotificationsReadRequest: {
       notificationIds: string[];
@@ -412,6 +412,9 @@ export interface components {
       startAt?: string;
       /** Format: date-time */
       endAt?: string;
+    };
+    AddParticipantsRequest: {
+      participantIds: string[];
     };
     CreateExpenseRequest: {
       /** Format: uuid */
@@ -563,6 +566,8 @@ export interface components {
       id?: string;
       userName?: string;
       email?: string;
+      /** Format: float */
+      totalClaimedAmount?: number;
       profile?: components["schemas"]["UserProfileResponseSummary"];
     };
     ProfileResponse: {
@@ -679,6 +684,7 @@ export interface components {
       endAt?: string;
       createdBy?: components["schemas"]["GlobalUserResponseSummary"];
       updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
+      meParticipant?: boolean;
     };
     ExpenseProofResponse: {
       /** Format: uuid */
@@ -716,6 +722,8 @@ export interface components {
       /** Format: uuid */
       id?: string;
       userName?: string;
+      /** Format: float */
+      totalClaimedAmount?: number;
       documents?: components["schemas"]["ParticipantDocumentResponse"][];
       expenses?: components["schemas"]["ParticipantExpenseResponse"][];
     };
@@ -745,7 +753,7 @@ export interface components {
       endAt?: string;
       /** Format: float */
       maxExpenseAmountPerDay?: number;
-      participants?: components["schemas"]["GlobalUserResponseSummary"][];
+      participants?: components["schemas"]["ParticipantResponse"][];
       createdBy?: components["schemas"]["GlobalUserResponseSummary"];
       updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
     };
@@ -1066,6 +1074,9 @@ export interface components {
       data?: components["schemas"]["DepartmentResponse"][];
       message?: string;
       success?: boolean;
+    };
+    RemoveParticipantsRequest: {
+      participantIds: string[];
     };
   };
   responses: never;
@@ -1753,6 +1764,46 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["CreateTravelPlanRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  addParticipants: {
+    parameters: {
+      path: {
+        travelPlanId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AddParticipantsRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
+  removeParticipants: {
+    parameters: {
+      path: {
+        travelPlanId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RemoveParticipantsRequest"];
       };
     };
     responses: {

@@ -1,4 +1,11 @@
+import { useSubmitExpense, type TravelPlanExpense } from '@/api/travel-api';
 import { Button } from '@/components/ui/button';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import {
     Table,
@@ -8,6 +15,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { useAppStore } from '@/store';
 import {
     flexRender,
     getCoreRowModel,
@@ -20,53 +28,26 @@ import {
     type SortingState,
     type VisibilityState,
 } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import { ArrowUpDown, IndianRupee, MoreHorizontal } from 'lucide-react';
 import React from 'react';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import type { components } from '@/types/generated/api';
-import CreateExpenseDialog from '../expense/create-expense-dialog';
-import { useSubmitExpense } from '@/api/travel-api';
-import UpdateExpenseDialog from '../expense/update-expense-dialog';
-import { DeleteExpenseDialog } from '../expense/delete-expense-dialog';
 import { toast } from 'sonner';
-
-type Expense = {
-    id?: string | undefined;
-    amount?: number | undefined;
-    date?: string | undefined;
-    status?: 'DRAFTING' | 'SUBMITTED' | 'APPROVED' | 'REJECTED' | undefined;
-    remarks?: string | undefined;
-    submittedAt?: string | undefined;
-    expenseCategory?: string | undefined;
-    approvedBy?:
-        | {
-              id?: string | undefined;
-              userName?: string | undefined;
-          }
-        | undefined;
-    proofs?:
-        | {
-              id?: string | undefined;
-              docUrl?: string | undefined;
-          }[]
-        | undefined;
-};
+import { useShallow } from 'zustand/react/shallow';
+import CreateExpenseDialog from '../expense/create-expense-dialog';
+import { DeleteExpenseDialog } from '../expense/delete-expense-dialog';
+import UpdateExpenseDialog from '../expense/update-expense-dialog';
 
 interface MyExpensesTableProps {
-    expenses: Expense[];
+    expenses: TravelPlanExpense[];
     travelPlanId: string;
     participantId?: string;
+    total?: number;
 }
 
 export function MyExpensesTable({
     expenses,
     travelPlanId,
     participantId,
+    total,
 }: Readonly<MyExpensesTableProps>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] =
@@ -79,9 +60,13 @@ export function MyExpensesTable({
     const [updateDialogOpen, setUpdateDialogOpen] = React.useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
     const [selectedExpense, setSelectedExpense] =
-        React.useState<Expense | null>(null);
+        React.useState<TravelPlanExpense | null>(null);
 
-    const columns: ColumnDef<Expense>[] = [
+    const { openProofsDialog } = useAppStore(
+        useShallow((s) => ({ openProofsDialog: s.openProofsDialog }))
+    );
+
+    const columns: ColumnDef<TravelPlanExpense>[] = [
         {
             accessorKey: 'date',
             header: ({ column }) => (
@@ -133,14 +118,39 @@ export function MyExpensesTable({
             accessorKey: 'status',
             header: 'Status',
             cell: ({ row }) => (
-                <div className="font-medium w-[100px]">
+                <div
+                    className={`font-medium w-[100px] capitalize ${row.original?.status === 'DRAFTING' ? 'text-yellow-500' : ''} ${row.original?.status === 'SUBMITTED' ? 'text-blue-500' : ''} ${row.original?.status === 'REJECTED' ? 'text-red-500' : ''} ${row.original?.status === 'APPROVED' ? 'text-green-500' : ''}`}
+                >
                     {row.getValue('status')}
                 </div>
             ),
         },
         {
+            accessorKey: 'proofs',
+            header: 'Proofs',
+            cell: ({ row }) => {
+                const proofs = row.original.proofs;
+                if (!proofs || proofs.length === 0) {
+                    return <div className="pl-9">-</div>;
+                }
+                return (
+                    <Button
+                        variant="link"
+                        size="sm"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            openProofsDialog(proofs);
+                        }}
+                    >
+                        View ({proofs.length})
+                    </Button>
+                );
+            },
+        },
+
+        {
             id: 'actions',
-            header: () => <div className="w-[100px]">Actions</div>,
+            header: '',
             cell: ({ row }) => {
                 return (
                     <DropdownMenu>
@@ -216,21 +226,17 @@ export function MyExpensesTable({
     return (
         <div className="">
             {/* header */}
-            <div className="flex items-center py-4">
-                <Input
-                    placeholder="Filter expenses..."
-                    value={
-                        (table
-                            .getColumn('category')
-                            ?.getFilterValue() as string) ?? ''
-                    }
-                    onChange={(event) =>
-                        table
-                            .getColumn('category')
-                            ?.setFilterValue(event.target.value)
-                    }
-                    className="max-w-sm"
-                />
+            <div className="flex items-center py-2">
+                <div className="inline-flex items-center gap-2 rounded-lg border px-3 py-2 bg-muted/40">
+                    {/* <IndianRupee className="h-4 w-4 text-primary" /> */}
+
+                    <span className="text-sm text-muted-foreground">
+                        Claimed amount:
+                    </span>
+
+                    <span className="text-sm font-semibold">₹{total ?? 0}</span>
+                </div>
+
                 {participantId && (
                     <div className="ml-auto">
                         <CreateExpenseDialog
@@ -320,7 +326,7 @@ export function MyExpensesTable({
                 <UpdateExpenseDialog
                     travelPlanId={travelPlanId}
                     participantId={participantId!}
-                    expense={selectedExpense as Expense}
+                    expense={selectedExpense}
                     open={updateDialogOpen}
                     onOpenChange={setUpdateDialogOpen}
                 />

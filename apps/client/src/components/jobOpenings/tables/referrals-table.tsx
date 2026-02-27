@@ -15,6 +15,7 @@ import {
     createColumnHelper,
     flexRender,
 } from '@tanstack/react-table';
+import { UserProfileDialog } from '@/components/auth/user-profile-dialog';
 
 type Props = {
     readonly referrals: readonly JobOpeningReferralResponse[];
@@ -42,13 +43,14 @@ const columns = [
         header: 'Referred By',
         cell: (info) => {
             const referredBy = info.getValue();
+            const fullName =
+                `${referredBy?.profile?.firstName || ''} ${referredBy?.profile?.lastName || ''}`.trim();
             return (
                 <div className="flex items-center gap-2">
                     <User className="h-4 w-4 shrink-0 text-muted-foreground" />
-                    <span>
-                        {referredBy?.profile?.firstName}{' '}
-                        {referredBy?.profile?.lastName}
-                    </span>
+                    <UserProfileDialog userId={referredBy?.id as string}>
+                        <span>{fullName}</span>
+                    </UserProfileDialog>
                 </div>
             );
         },

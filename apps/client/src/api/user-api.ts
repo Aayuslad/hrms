@@ -24,6 +24,8 @@ export type UpdateUserByAdminRequest =
     components['schemas']['UpdateUserByAdminRequest'];
 export type UpdateUserRolesRequest =
     components['schemas']['UpdateUserRolesRequest'];
+export type UpdateUserBySelfRequest =
+    components['schemas']['UpdateUserBySelfRequest'];
 
 export function useGetUserById(id?: string) {
     return useQuery({
@@ -118,20 +120,23 @@ export function useMarkNotificationsAsRead() {
     });
 }
 
-const orgChartQuery = {
-    queryKey: ['org-charts'] as const,
+const orgChartQuery = (userId?: string) => ({
+    queryKey: ['org-charts', userId] as const,
     queryFn: async (): Promise<OrgChartType> => {
-        const { data } = await axiosClient.get('users/org-charts');
+        const { data } = await axiosClient.get(
+            `users/org-charts?userId=${userId}`
+        );
         return data.data.orgCharts || [];
     },
-};
+    enabled: !!userId,
+});
 
-export function useGetOrgCharts() {
-    return useQuery<OrgChartType, AxiosError>(orgChartQuery);
+export function useGetOrgCharts(userId?: string) {
+    return useQuery<OrgChartType, AxiosError>(orgChartQuery(userId));
 }
 
-export const orgChartsLoader = async () => {
-    return await queryClient.ensureQueryData(orgChartQuery);
+export const orgChartsLoader = async (userId: string) => {
+    return await queryClient.ensureQueryData(orgChartQuery(userId));
 };
 
 export function useLoginUser() {
@@ -223,6 +228,22 @@ export function useUpdateUserByAdmin() {
         },
         onError: (error: AxiosError<{ message: string }>) =>
             handleApiError(error, 'Failed to update user'),
+    });
+}
+
+export function useUpdateUserBySelf() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (payload: UpdateUserBySelfRequest): Promise<void> => {
+            await axiosClient.put('/users/me', payload);
+        },
+        onSuccess: () => {
+            toast.success('Profile updated!');
+            queryClient.invalidateQueries({ queryKey: ['me'] });
+        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to update profile'),
     });
 }
 

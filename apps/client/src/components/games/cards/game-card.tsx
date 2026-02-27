@@ -23,13 +23,15 @@ const GameCard = ({ game }: Props) => {
         >
             <CardHeader className="pt-6 w-full">
                 <div className="flex justify-between  ">
-                    <CardTitle className="font-bold text-2xl">
+                    <CardTitle className="font-semibold text-2xl">
                         {game.name}
                     </CardTitle>
                     <Button
                         onClick={(e) => {
                             e.stopPropagation();
-                            navigate(`${game.id}`);
+                            navigate(`${game.id}`, {
+                                state: { childBreadCrumbName: game.name },
+                            });
                         }}
                         className=""
                         variant={'outline'}

@@ -1,11 +1,5 @@
-import { useGetParticipant } from '@/api/travel-api';
+import type { Participant } from '@/api/travel-api';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardTitle,
-} from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
     Sheet,
@@ -17,37 +11,32 @@ import {
     SheetTitle,
     SheetTrigger,
 } from '@/components/ui/sheet';
-import { ExternalLink } from 'lucide-react';
-import HrCreateDocumentDialog from './hr-create-document-dialog';
 import { DocumentCard } from './document-card';
+import HrCreateDocumentDialog from './hr-create-document-dialog';
 
 interface ParticipantDocumentsSheetProps {
     travelPlanId: string;
-    participantId: string;
+    participant: Participant;
     participantName: string;
 }
 
 export function ParticipantDocumentsSheet({
     travelPlanId,
-    participantId,
+    participant,
     participantName,
 }: Readonly<ParticipantDocumentsSheetProps>) {
-    const { data: participant } = useGetParticipant(
-        travelPlanId,
-        participantId
-    );
-
     const documents = participant?.documents || [];
 
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <button
+                <Button
+                    variant="link"
                     type="button"
-                    className="text-gray-400 font-semibold hover:cursor-pointer"
+                    className="h-auto p-0 text-sm"
                 >
                     Documents
-                </button>
+                </Button>
             </SheetTrigger>
             <SheetContent className="w-[38vw]">
                 <SheetHeader>
@@ -70,7 +59,7 @@ export function ParticipantDocumentsSheet({
                 <SheetFooter>
                     <HrCreateDocumentDialog
                         travelPlanId={travelPlanId}
-                        participantId={participantId}
+                        participantId={participant.id as string}
                         participantName={participantName}
                     />
                     <SheetClose asChild>

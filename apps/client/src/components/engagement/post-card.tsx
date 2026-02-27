@@ -1,4 +1,5 @@
-import { Heart, MessageCircle } from 'lucide-react';
+import { Dot, Heart, MessageCircle } from 'lucide-react';
+import { UserProfileDialog } from '@/components/auth/user-profile-dialog';
 
 import { useLikePost, useUnlikePost, type Post } from '@/api/engagement-api';
 import { useGetMe } from '@/api/user-api';
@@ -61,9 +62,18 @@ export function PostCard({
                             <CardTitle className="text-lg">
                                 {post.title}
                             </CardTitle>
-                            <p className="text-sm text-muted-foreground">
-                                {post.author?.userName} •{' '}
-                                {new Date(post.createdAt!).toLocaleDateString()}
+                            <p className="text-sm text-muted-foreground flex items-center">
+                                <UserProfileDialog userId={post.author?.id!}>
+                                    <span className="underline cursor-pointer">
+                                        {post.author?.userName}
+                                    </span>
+                                </UserProfileDialog>
+                                <Dot />
+                                <div>
+                                    {new Date(
+                                        post.createdAt!
+                                    ).toLocaleDateString()}
+                                </div>
                             </p>
                         </div>
                     </div>
@@ -95,9 +105,10 @@ export function PostCard({
                 </div>
             </CardHeader>
             <CardContent className="">
-                <p className="text-sm">{post.content}</p>
+                <pre className="text-sm text-wrap font-sans">
+                    {post.content}
+                </pre>
                 {post.tags && post.tags.length > 0 && (
-                    
                     <div className="flex flex-wrap gap-2 mt-3">
                         {post.tags.map((tag) => (
                             <Badge key={tag.id} variant="secondary">

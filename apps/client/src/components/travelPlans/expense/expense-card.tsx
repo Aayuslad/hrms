@@ -7,7 +7,9 @@ import {
     CardDescription,
     CardTitle,
 } from '@/components/ui/card';
-import { ExternalLink } from 'lucide-react';
+import { useAppStore } from '@/store';
+import { useShallow } from 'zustand/react/shallow';
+import { ViewProofsDialog } from './view-proofs-dialog';
 
 interface ExpenseCardProps {
     expense: TravelPlanExpense;
@@ -20,6 +22,10 @@ export function ExpenseCard({
     onApproveClick,
     onRejectClick,
 }: ExpenseCardProps) {
+    const { openProofsDialog } = useAppStore(
+        useShallow((s) => ({ openProofsDialog: s.openProofsDialog }))
+    );
+
     return (
         <Card className="py-2.5">
             <CardContent className="px-3">
@@ -78,31 +84,31 @@ export function ExpenseCard({
                     )}
                 </div>
 
-                <div className="flex justify-between items-center">
+                <div className="flex">
+                    <div className="flex-1">
+                        {expense.remarks && (
+                            <p className="text-sm mt-2 w-full">
+                                <span className="font-semibold">
+                                    Remarks -{' '}
+                                </span>{' '}
+                                {expense.remarks}
+                            </p>
+                        )}
+                    </div>
+
                     {expense.proofs && expense.proofs.length > 0 && (
-                        <div className="flex gap-x-3 flex-wrap">
-                            {expense.proofs.map((proof, index) => (
-                                <a
-                                    href={proof.docUrl}
-                                    key={proof.id}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1 text-sm underline hover:cursor-pointer mt-2"
-                                >
-                                    <span>View proof {index + 1}</span>
-                                    <ExternalLink className="w-4 h-4" />
-                                </a>
-                            ))}
-                        </div>
+                        <Button
+                            variant="link"
+                            size="sm"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                openProofsDialog(expense.proofs ?? []);
+                            }}
+                        >
+                            View proofs ({expense.proofs.length})
+                        </Button>
                     )}
                 </div>
-
-                {expense.remarks && (
-                    <p className="text-sm mt-2">
-                        <span className="font-semibold">Remarks - </span>{' '}
-                        {expense.remarks}
-                    </p>
-                )}
             </CardContent>
         </Card>
     );

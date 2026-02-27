@@ -44,6 +44,6 @@ public class CurrentUserServiceImpl implements CurrentUserService {
     public boolean isUserAdminOrHR() {
         User user = getCurrentUserEntity();
         return user.getRoles().stream()
-                .noneMatch(x -> x.getName().equals("Admin") || x.getName().equals("HR"));
+                .anyMatch(x -> x.getName().equals("Admin") || x.getName().equals("HR"));
     }
 }

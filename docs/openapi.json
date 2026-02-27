@@ -1424,6 +1424,86 @@
         }
       }
     },
+    "/api/travel-plans/{travelPlanId}/participants": {
+      "post": {
+        "tags": [
+          "travel-plan-participant-controller"
+        ],
+        "operationId": "addParticipants",
+        "parameters": [
+          {
+            "name": "travelPlanId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddParticipantsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "travel-plan-participant-controller"
+        ],
+        "operationId": "removeParticipants",
+        "parameters": [
+          {
+            "name": "travelPlanId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoveParticipantsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses": {
       "post": {
         "tags": [
@@ -2898,18 +2978,6 @@
           "userId"
         ]
       },
-      "GameInterestRequest": {
-        "type": "object",
-        "properties": {
-          "gameId": {
-            "type": "string",
-            "format": "uuid"
-          }
-        },
-        "required": [
-          "gameId"
-        ]
-      },
       "UpdateProfileBySelfRequest": {
         "type": "object",
         "properties": {
@@ -2958,7 +3026,8 @@
           "gameInterests": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GameInterestRequest"
+              "type": "string",
+              "format": "uuid"
             }
           }
         }
@@ -3473,6 +3542,22 @@
           "title"
         ]
       },
+      "AddParticipantsRequest": {
+        "type": "object",
+        "properties": {
+          "participantIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "participantIds"
+        ]
+      },
       "CreateExpenseRequest": {
         "type": "object",
         "properties": {
@@ -3976,6 +4061,10 @@
           "email": {
             "type": "string"
           },
+          "totalClaimedAmount": {
+            "type": "number",
+            "format": "float"
+          },
           "profile": {
             "$ref": "#/components/schemas/UserProfileResponseSummary"
           }
@@ -4303,6 +4392,9 @@
           },
           "updatedBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
+          },
+          "meParticipant": {
+            "type": "boolean"
           }
         }
       },
@@ -4401,6 +4493,10 @@
           "userName": {
             "type": "string"
           },
+          "totalClaimedAmount": {
+            "type": "number",
+            "format": "float"
+          },
           "documents": {
             "type": "array",
             "items": {
@@ -4482,7 +4578,7 @@
           "participants": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GlobalUserResponseSummary"
+              "$ref": "#/components/schemas/ParticipantResponse"
             }
           },
           "createdBy": {
@@ -5378,6 +5474,22 @@
             "type": "boolean"
           }
         }
+      },
+      "RemoveParticipantsRequest": {
+        "type": "object",
+        "properties": {
+          "participantIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "participantIds"
+        ]
       }
     }
   }

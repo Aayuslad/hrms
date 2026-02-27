@@ -67,7 +67,8 @@ public class UserController {
         return ResultMapper.handle(HttpStatus.OK, responseDto);
     }
 
-    //    @PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    // @PostMapping(value = "/profile", consumes =
+    // MediaType.MULTIPART_FORM_DATA_VALUE)
     @PostMapping("/profile")
     public ResponseEntity<Result<Void>> createProfile(
             @Valid @RequestBody CreateUserProfileRequest request) {
@@ -75,7 +76,7 @@ public class UserController {
         return ResultMapper.handle(HttpStatus.CREATED, "Profile created");
     }
 
-    //    @PutMapping(value = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    // @PutMapping(value = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PutMapping("/me")
     public ResponseEntity<Result<Void>> updateBySelf(
             @Valid @RequestBody UpdateUserBySelfRequest request) {
@@ -83,7 +84,7 @@ public class UserController {
         return ResultMapper.handle(HttpStatus.CREATED, "User updated");
     }
 
-    //    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    // @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<Result<Void>> updateByAdmin(
@@ -133,8 +134,14 @@ public class UserController {
 
     @PreAuthorize("hasRole('Employee')")
     @GetMapping("/org-charts")
-    public ResponseEntity<Result<OrgCharts>> getOrgCharts() {
-        OrgCharts responseDto = userService.getOrgCharts();
+    public ResponseEntity<Result<OrgCharts>> getOrgCharts(
+            @RequestParam(value = "userId", required = false) UUID userId) {
+        OrgCharts responseDto;
+        if (userId == null) {
+            responseDto = userService.getOrgCharts();
+        } else {
+            responseDto = userService.getOrgCharts(userId);
+        }
         return ResultMapper.handle(HttpStatus.OK, responseDto);
     }
 }

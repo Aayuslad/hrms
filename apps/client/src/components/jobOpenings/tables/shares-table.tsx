@@ -14,6 +14,7 @@ import {
     createColumnHelper,
     flexRender,
 } from '@tanstack/react-table';
+import { UserProfileDialog } from '@/components/auth/user-profile-dialog';
 
 // Assuming a ShareResponse type, since it's not in the API yet
 
@@ -39,13 +40,15 @@ const columns = [
         cell: (info) => {
             const sharedBy = info.getValue();
             return (
-                <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 shrink-0 text-muted-foreground" />
-                    <span>
-                        {sharedBy?.profile?.firstName}{' '}
-                        {sharedBy?.profile?.lastName}
-                    </span>
-                </div>
+                <UserProfileDialog userId={sharedBy?.id as string}>
+                    <div className="flex items-center gap-2">
+                        <User className="h-4 w-4 shrink-0 text-muted-foreground" />
+                        <span>
+                            {sharedBy?.profile?.firstName}{' '}
+                            {sharedBy?.profile?.lastName}
+                        </span>
+                    </div>
+                </UserProfileDialog>
             );
         },
     }),

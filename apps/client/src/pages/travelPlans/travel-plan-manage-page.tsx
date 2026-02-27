@@ -1,9 +1,22 @@
 import { useGetTravelPlan } from '@/api/travel-api';
 import { useGetMe } from '@/api/user-api';
+import DeleteTravelPlanDialog from '@/components/travelPlans/delete-travel-plan-dialog';
 import { ViewProofsDialog } from '@/components/travelPlans/expense/view-proofs-dialog';
+import { ApproveExpenseDialog } from '@/components/travelPlans/expense/approve-expense-dialog';
+import { RejectExpenseDialog } from '@/components/travelPlans/expense/reject-expense-dialog';
+import { AllExpenses } from '@/components/travelPlans/tabContents/all-expenses';
 import { MyDocuments } from '@/components/travelPlans/tabContents/my-documents';
 import { MyExpenses } from '@/components/travelPlans/tabContents/my-expenses';
+import { Participants } from '@/components/travelPlans/tabContents/participants';
 
+import UpdateTravelPlanDialog from '@/components/travelPlans/update-travel-plan-dialog';
+import { Button } from '@/components/ui/button';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Spinner } from '@/components/ui/spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAccessChecker } from '@/hooks/use-has-access';
@@ -11,7 +24,7 @@ import { Calendar, Dot, MapPin, Wallet } from 'lucide-react';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-export function TravelPlanDetailsPage() {
+export function TravelPlanManagePage() {
     const canAccess = useAccessChecker();
     const [descriptionView, setDescriptionView] = useState<'short' | 'full'>(
         'short'
@@ -26,18 +39,22 @@ export function TravelPlanDetailsPage() {
 
     const tabs = [
         {
-            name: 'My Expenses',
-            value: 'my-expenses',
-            content: <MyExpenses travelPlanId={travelPlanId!} />,
+            name: (
+                <div>
+                    Participants ({travelPlan?.participants?.length || 0})
+                </div>
+            ),
+            value: 'participants',
+            content: <Participants travelPlanId={travelPlanId!} />,
             roles: ['Employee', 'Admin', 'HR'],
-            onlyShowToParticipants: true,
+            onlyShowToParticipants: false,
         },
         {
-            name: 'My Documents',
-            value: 'my-documents',
-            content: <MyDocuments travelPlanId={travelPlanId!} />,
-            roles: ['Employee', 'Admin', 'HR'],
-            onlyShowToParticipants: true,
+            name: 'All Expenses',
+            value: 'all-expenses',
+            content: <AllExpenses travelPlanId={travelPlanId!} />,
+            roles: ['Admin', 'HR'],
+            onlyShowToParticipants: false,
         },
     ];
 
@@ -102,6 +119,25 @@ export function TravelPlanDetailsPage() {
                         </div>
                     </div>
                 </div>
+                <div className="mr-10 mb-4 flex gap-2">
+                    {canAccess(['Admin', 'HR']) && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline">Other Actions</Button>
+                            </DropdownMenuTrigger>
+
+                            <DropdownMenuContent align="end">
+                                <UpdateTravelPlanDialog
+                                    travelPlan={travelPlan}
+                                />
+                                <DropdownMenuSeparator />
+                                <DeleteTravelPlanDialog
+                                    travelPlanId={travelPlan.id}
+                                />
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
+                </div>
             </div>
 
             <div className="w-full flex justify-evenly pt-2 pb-10">
@@ -126,7 +162,7 @@ export function TravelPlanDetailsPage() {
                         </button>
                     </p>
 
-                    <div className="w-[800px]">
+                    <div className="w-[850px]">
                         <Tabs defaultValue={tabs[0].value} className="gap-4">
                             <TabsList className="bg-background rounded-none border-b w-full p-0">
                                 {tabs.map((tab) => {
@@ -186,6 +222,8 @@ export function TravelPlanDetailsPage() {
             </div>
 
             <ViewProofsDialog />
+            <ApproveExpenseDialog />
+            <RejectExpenseDialog />
         </div>
     );
 }

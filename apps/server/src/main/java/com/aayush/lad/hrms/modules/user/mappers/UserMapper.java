@@ -1,6 +1,9 @@
 package com.aayush.lad.hrms.modules.user.mappers;
 
 import com.aayush.lad.hrms.core.services.CurrentUserService;
+import com.aayush.lad.hrms.modules.games.models.Game;
+import com.aayush.lad.hrms.modules.games.repositories.GameRepository;
+import com.aayush.lad.hrms.modules.games.services.GameService;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.NotificationResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.UserDetailResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.write.CreateUserProfileRequest;
@@ -23,6 +26,7 @@ public class UserMapper {
 
     private final ModelMapper modelMapper;
     public final CurrentUserService currentUserService;
+    private final GameRepository gameRepository;
 
     public User create(RegisterUserRequest request) {
         return modelMapper.map(request, User.class);
@@ -39,6 +43,10 @@ public class UserMapper {
     public void update(UpdateUserBySelfRequest request, User existing) {
         modelMapper.map(request, existing);
         existing.setUpdatedBy(currentUserService.getCurrentUserEntity());
+
+        List<Game> gameInterests = gameRepository.findAllById(request.getGameInterests());
+        existing.getInterestedInGames().clear();
+        existing.getInterestedInGames().addAll(gameInterests);
     }
 
     public void update(UpdateUserByAdminRequest request, User existing) {

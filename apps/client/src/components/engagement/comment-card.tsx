@@ -1,4 +1,5 @@
-import { Heart, MoreHorizontal } from 'lucide-react';
+import { Dot, Heart, MoreHorizontal } from 'lucide-react';
+import { UserProfileDialog } from '@/components/auth/user-profile-dialog';
 
 import {
     useLikeComment,
@@ -55,9 +56,17 @@ export function CommentCard({
         <div className="flex gap-3">
             <div className="flex-1">
                 <div className="flex items-center justify-between mb-1">
-                    <p className="text-sm text-muted-foreground ml-1">
-                        {comment.author?.userName} •{' '}
-                        {new Date(comment.createdAt!).toLocaleDateString()}
+                    <p className="text-sm text-muted-foreground ml-1 flex items-center">
+                        <UserProfileDialog userId={comment.author?.id!}>
+                            <span className="underline cursor-pointer">
+                                {comment.author?.userName}
+                            </span>
+                        </UserProfileDialog>
+
+                        <Dot />
+                        <div>
+                            {new Date(comment.createdAt!).toLocaleDateString()}
+                        </div>
                     </p>
                     {(isAuthor || canAccess(['Admin', 'HR'])) && (
                         <DropdownMenu>

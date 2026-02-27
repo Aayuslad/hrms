@@ -54,9 +54,20 @@ public class TravelPlanMapper {
     }
 
     public List<TravelPlanSummaryResponse> toSumaryResponseList(List<TravelPlan> travelPlans) {
-        return travelPlans.stream()
+        List<TravelPlanSummaryResponse> response = travelPlans.stream()
                 .map(x -> modelMapper.map(x, TravelPlanSummaryResponse.class))
                 .toList();
+
+        for (var travelPlanResponse : response) {
+            TravelPlan travelPlan = travelPlans.stream()
+                    .filter(c -> c.getId().equals(travelPlanResponse.getId()))
+                    .findFirst().orElse(null);
+            travelPlanResponse.setMeParticipant(
+                    travelPlan != null && travelPlan.getParticipants().contains(currentUserService.getCurrentUserEntity())
+            );
+        }
+
+        return response;
     }
 
     public List<ParticipantExpenseResponse> toExpenseResponseList(List<TravelPlanExpense> expenses) {
