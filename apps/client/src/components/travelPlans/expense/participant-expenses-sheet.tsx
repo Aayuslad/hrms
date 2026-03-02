@@ -1,4 +1,6 @@
+import type { Participant } from '@/api/travel-api';
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
     Sheet,
     SheetClose,
@@ -9,54 +11,22 @@ import {
     SheetTitle,
     SheetTrigger,
 } from '@/components/ui/sheet';
-import { useGetParticipant } from '@/api/travel-api';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import React from 'react';
 import { ApproveExpenseDialog } from './approve-expense-dialog';
+import { ExpenseCard } from './expense-card';
 import { RejectExpenseDialog } from './reject-expense-dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
-
-type Expense = {
-    id?: string;
-    amount?: number;
-    date?: string;
-    status?: 'DRAFTING' | 'SUBMITTED' | 'APPROVED' | 'REJECTED';
-    remarks?: string;
-    submittedAt?: string;
-    expenseCategory?: string;
-    approvedBy?: {
-        id?: string;
-        userName?: string;
-    };
-    proofs?: {
-        id?: string;
-        docUrl?: string;
-    }[];
-};
 
 interface ParticipantExpensesSheetProps {
     travelPlanId: string;
-    participantId: string;
+    participant: Participant;
     participantName: string;
 }
 
 export function ParticipantExpensesSheet({
     travelPlanId,
-    participantId,
+    participant,
     participantName,
 }: Readonly<ParticipantExpensesSheetProps>) {
-    const { data: participant } = useGetParticipant(
-        travelPlanId,
-        participantId
-    );
-
     const expenses = participant?.expenses || [];
 
     const [approveDialogOpen, setApproveDialogOpen] = React.useState(false);
@@ -68,14 +38,15 @@ export function ParticipantExpensesSheet({
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <button
+                <Button
+                    variant="link"
                     type="button"
-                    className="text-gray-400 font-semibold hover:cursor-pointer"
+                    className="h-auto p-0 text-sm"
                 >
                     Expenses
-                </button>
+                </Button>
             </SheetTrigger>
-            <SheetContent className="w-[35vw]">
+            <SheetContent className="w-[38vw]">
                 <SheetHeader>
                     <SheetTitle>{participantName}'s Expenses</SheetTitle>
                     <SheetDescription>
@@ -88,91 +59,18 @@ export function ParticipantExpensesSheet({
                             expenses
                                 .filter((x) => x.status !== 'DRAFTING')
                                 .map((expense) => (
-                                    <Card key={expense.id} className="py-2">
-                                        <CardContent>
-                                            <div className="flex justify-between items-center">
-                                                <div className="mt-1">
-                                                    <CardTitle>
-                                                        ₹{expense.amount}
-                                                    </CardTitle>
-                                                    <CardDescription>
-                                                        {
-                                                            expense.expenseCategory
-                                                        }
-                                                    </CardDescription>
-                                                </div>
-
-                                                <p className="text-sm text-muted-foreground">
-                                                    Date:{' '}
-                                                    {new Date(
-                                                        expense.date!
-                                                    ).toLocaleDateString()}
-                                                </p>
-
-                                                {expense.status !==
-                                                    'SUBMITTED' && (
-                                                    <div>
-                                                        <div className="flex items-center gap-2">
-                                                            <Badge
-                                                                variant={
-                                                                    expense.status ===
-                                                                    'APPROVED'
-                                                                        ? 'default'
-                                                                        : expense.status ===
-                                                                            'REJECTED'
-                                                                          ? 'destructive'
-                                                                          : 'secondary'
-                                                                }
-                                                            >
-                                                                {expense.status}
-                                                            </Badge>
-                                                        </div>
-                                                    </div>
-                                                )}
-
-                                                {expense.status ===
-                                                    'SUBMITTED' && (
-                                                    <div className="flex gap-2">
-                                                        <Button
-                                                            size="sm"
-                                                            onClick={() => {
-                                                                setSelectedExpenseId(
-                                                                    expense.id!
-                                                                );
-                                                                setApproveDialogOpen(
-                                                                    true
-                                                                );
-                                                            }}
-                                                        >
-                                                            Approve
-                                                        </Button>
-                                                        <Button
-                                                            size="sm"
-                                                            variant="destructive"
-                                                            onClick={() => {
-                                                                setSelectedExpenseId(
-                                                                    expense.id!
-                                                                );
-                                                                setRejectDialogOpen(
-                                                                    true
-                                                                );
-                                                            }}
-                                                        >
-                                                            Reject
-                                                        </Button>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div>
-                                                {expense.remarks && (
-                                                    <p className="text-sm mt-2">
-                                                        Remarks:{' '}
-                                                        {expense.remarks}
-                                                    </p>
-                                                )}
-                                            </div>
-                                        </CardContent>
-                                    </Card>
+                                    <ExpenseCard
+                                        key={expense.id}
+                                        expense={expense}
+                                        onApproveClick={(expenseId) => {
+                                            setSelectedExpenseId(expenseId);
+                                            setApproveDialogOpen(true);
+                                        }}
+                                        onRejectClick={(expenseId) => {
+                                            setSelectedExpenseId(expenseId);
+                                            setRejectDialogOpen(true);
+                                        }}
+                                    />
                                 ))
                         ) : (
                             <p className="text-center text-muted-foreground">
@@ -182,6 +80,10 @@ export function ParticipantExpensesSheet({
                     </div>
                 </ScrollArea>
                 <SheetFooter>
+                    <div className="text-sm px-2 pr-4 border-b py-2 font-semibold flex justify-between">
+                        <span>Total claimed expenses</span>
+                        <span>₹{participant.totalClaimedAmount}</span>
+                    </div>
                     <SheetClose asChild>
                         <Button variant="outline">Close</Button>
                     </SheetClose>
@@ -190,7 +92,7 @@ export function ParticipantExpensesSheet({
             {selectedExpenseId && (
                 <ApproveExpenseDialog
                     travelPlanId={travelPlanId}
-                    participantId={participantId}
+                    participantId={participant.id as string}
                     expenseId={selectedExpenseId}
                     open={approveDialogOpen}
                     onOpenChange={setApproveDialogOpen}
@@ -199,7 +101,7 @@ export function ParticipantExpensesSheet({
             {selectedExpenseId && (
                 <RejectExpenseDialog
                     travelPlanId={travelPlanId}
-                    participantId={participantId}
+                    participantId={participant.id as string}
                     expenseId={selectedExpenseId}
                     open={rejectDialogOpen}
                     onOpenChange={setRejectDialogOpen}

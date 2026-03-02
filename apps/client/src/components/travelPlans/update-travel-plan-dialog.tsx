@@ -11,24 +11,21 @@ import {
 import { Form } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Pencil } from 'lucide-react';
 
 import {
     useUpdateTravelPlan,
     type TravelPlan,
     type UpdateTravelPlanRequest,
 } from '@/api/travel-api';
-import { useGetUserList, type UserSummary } from '@/api/user-api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
-import { Checkbox } from '../ui/checkbox';
 import DateTimeSelector from '../ui/date-time-selector';
 import { Label } from '../ui/label';
 import { NumberInputWithEndButtons } from '../ui/number-input-with-end-buttons';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Textarea } from '../ui/textarea';
 
 const updateTravelPlanFormSchema = z.object({
@@ -48,11 +45,7 @@ type Props = {
 
 const UpdateTravelPlanDialog = ({ travelPlan }: Props) => {
     const updateTravelPlanMutation = useUpdateTravelPlan();
-    const { data: users = [] } = useGetUserList();
     const [open, setOpen] = useState(false);
-    const [selected, setSelected] = useState<string[]>(
-        travelPlan.participants?.map((x) => x.id) ?? []
-    );
 
     const form = useForm({
         resolver: zodResolver(updateTravelPlanFormSchema),
@@ -68,22 +61,10 @@ const UpdateTravelPlanDialog = ({ travelPlan }: Props) => {
         },
     } as const);
 
-    useEffect(() => {
-        if (open) {
-            setSelected(travelPlan.participants?.map((x) => x.id) ?? []);
-        }
-    }, [open, travelPlan]);
-
     console.log('Form default values:', form.getValues('participants'));
 
     const onSubmit = async (data: UpdateTravelPlanRequest) => {
-        const payload: UpdateTravelPlanRequest = {
-            ...data,
-            participants: selected,
-        };
-
-        console.log('Submitting form with data:', payload);
-        await updateTravelPlanMutation.mutate(payload, {
+        await updateTravelPlanMutation.mutate(data, {
             onSuccess: () => {
                 form.reset();
                 setOpen(false);
@@ -96,25 +77,22 @@ const UpdateTravelPlanDialog = ({ travelPlan }: Props) => {
         messages.reverse().forEach((msg) => toast.error(msg));
     };
 
-    const toggleUser = (id: string) => {
-        setSelected((prev) => {
-            if (prev.includes(id)) return prev.filter((p) => p !== id);
-            return [...prev, id];
-        });
-    };
-
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="ghost" className="w-full">
-                    Update
+                <Button
+                    variant="ghost"
+                    className="flex items-center w-full gap-2"
+                >
+                    <Pencil className="h-4 w-4" />
+                    Update Travel Plan
                 </Button>
             </DialogTrigger>
 
             <DialogContent className="flex max-h-[min(700px,85vh)] flex-col gap-0 p-0 sm:max-w-lg">
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
-                        <DialogHeader className="px-6 pt-6">
+                        <DialogHeader className="px-6 py-6 border-b">
                             <DialogTitle>
                                 Update Travel Plan - {travelPlan.title}
                             </DialogTitle>
@@ -129,16 +107,6 @@ const UpdateTravelPlanDialog = ({ travelPlan }: Props) => {
                                         type="text"
                                         placeholder="Business trip 2026"
                                         {...form.register('title')}
-                                    />
-                                </div>
-
-                                <div className="grid gap-3">
-                                    <Label htmlFor="title">Destination*</Label>
-                                    <Input
-                                        id="destination"
-                                        type="text"
-                                        placeholder="Bali"
-                                        {...form.register('destination')}
                                     />
                                 </div>
 
@@ -196,87 +164,6 @@ const UpdateTravelPlanDialog = ({ travelPlan }: Props) => {
                                         // maxValue={}
                                         step={100}
                                     />
-                                </div>
-
-                                <div className="grid gap-3">
-                                    <Label>Participants</Label>
-
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <Button variant="outline">
-                                                Select Participants
-                                            </Button>
-                                        </PopoverTrigger>
-
-                                        <PopoverContent>
-                                            <div className="max-h-60 w-64 overflow-auto">
-                                                <div className="space-y-2">
-                                                    {users.map(
-                                                        (u: UserSummary) => {
-                                                            return (
-                                                                <div
-                                                                    key={u.id}
-                                                                    className="flex items-center justify-between gap-3"
-                                                                >
-                                                                    <div className="flex items-center gap-3">
-                                                                        <Checkbox
-                                                                            checked={selected.includes(
-                                                                                u.id as string
-                                                                            )}
-                                                                            onCheckedChange={() =>
-                                                                                toggleUser(
-                                                                                    u.id as string
-                                                                                )
-                                                                            }
-                                                                            // disabled={
-                                                                            //     selected.includes(
-                                                                            //         u.id as string
-                                                                            //     )
-                                                                            // }
-                                                                            className="me-2"
-                                                                        />
-                                                                        <div className="flex flex-col">
-                                                                            <span className="text-sm font-medium">
-                                                                                {
-                                                                                    u.userName
-                                                                                }
-                                                                            </span>
-                                                                            <span className="text-xs text-muted-foreground">
-                                                                                {
-                                                                                    u.firstName
-                                                                                }{' '}
-                                                                                {
-                                                                                    u.lastName
-                                                                                }
-                                                                            </span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            );
-                                                        }
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </PopoverContent>
-                                    </Popover>
-
-                                    <div className="flex flex-wrap gap-2">
-                                        {selected.map((id) => {
-                                            const u = users.find(
-                                                (x) =>
-                                                    (x.id ?? x.userName) === id
-                                            );
-                                            return (
-                                                <div
-                                                    key={id}
-                                                    className="rounded-md border px-2 py-1 text-sm"
-                                                >
-                                                    {u?.userName} —{' '}
-                                                    {u?.firstName} {u?.lastName}
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
                                 </div>
                             </div>
                         </ScrollArea>

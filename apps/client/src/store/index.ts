@@ -7,11 +7,18 @@ import {
     type UiStoreSliceType,
 } from './ui-store';
 
-type AppStoreType = UiStoreSliceType & AuthStoreSliceType;
+import { createTravelSlice, type TravelStoreSliceType } from './travel-store';
+import { createConfigSlice, type ConfigStoreSliceType } from './config-store';
+
+// add travel slice type here
+
+type AppStoreType = UiStoreSliceType & AuthStoreSliceType & TravelStoreSliceType & ConfigStoreSliceType;
 
 export const useAppStore = create<AppStoreType>((...args) => ({
     ...createUiSlice(...args),
     ...createAuthSlice(...args),
+    ...createTravelSlice(...args),
+    ...createConfigSlice(...args),
 }));
 
 // updating configs from localstorage

@@ -26,6 +26,9 @@ public class TravelPlanSummaryResponse {
 
     private LocalDateTime endAt;
 
+    private boolean isMeParticipant;
+
     private GlobalUserResponseSummary createdBy;
+
     private GlobalUserResponseSummary updatedBy;
 }

@@ -8,6 +8,8 @@ import com.aayush.lad.hrms.modules.user.dtos.designation.write.UpdateDesignation
 import com.aayush.lad.hrms.modules.user.mappers.DesignationMapper;
 import com.aayush.lad.hrms.modules.user.models.Designation;
 import com.aayush.lad.hrms.modules.user.repositories.DesignationRepository;
+import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class DesignationService {
 
     private final DesignationRepository designationRepository;
+    private final UserRepository userRepository;
     private final DesignationMapper designationMapper;
 
     public void create(CreateDesignationRequest request) {
@@ -36,7 +39,8 @@ public class DesignationService {
 
     public void update(UpdateDesignationRequest request) {
         Designation designation = designationRepository.findById(request.getId()).orElse(null);
-        if (designation == null) throw new NotFoundException("Designation not found");
+        if (designation == null)
+            throw new NotFoundException("Designation not found");
 
         if (!designation.getName().equals(request.getName()) &&
                 designationRepository.existsByName(request.getName())) {
@@ -48,7 +52,13 @@ public class DesignationService {
     }
 
     public void delete(UUID id) {
-        if (!designationRepository.existsById(id)) throw new NotFoundException("Designation not found");
+        if (!designationRepository.existsById(id))
+            throw new NotFoundException("Designation not found");
+
+        if (userRepository.existsByProfile_Designation_Id(id)) {
+            throw new ConflictException("Cannot delete designation as it is assigned to one or more users");
+        }
+
         // TODO: soft delete
         designationRepository.deleteById(id);
     }

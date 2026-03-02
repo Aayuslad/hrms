@@ -3,8 +3,9 @@ import { Spinner } from '@/components/ui/spinner';
 import { useState } from 'react';
 import { PostCard } from './post-card';
 import { CommentsSheet } from './comments-sheet';
-import { UpdatePostDialog } from './update-post-dialog';
-import { DeletePostDialog } from './delete-post-dialog';
+import { UpdatePostDialog } from './dialogs/update-post-dialog';
+import { DeletePostDialog } from './dialogs/delete-post-dialog';
+import { NoContent } from '../no-content';
 
 export function PostsList() {
     const { data: posts = [], isLoading, isError } = useGetPosts();
@@ -29,11 +30,19 @@ export function PostsList() {
     };
 
     if (isLoading) {
-        return <Spinner />;
+        return (
+            <div className="w-full h-[80vh] flex items-center justify-center">
+                <Spinner className="size-8" />
+            </div>
+        );
     }
 
     if (isError) {
-        return <div>Error loading posts</div>;
+        return (
+            <div className="w-full h-[80vh] flex items-center justify-center">
+                Error fetching data...!
+            </div>
+        );
     }
 
     return (
@@ -48,8 +57,10 @@ export function PostsList() {
                 />
             ))}
 
+            {!posts && <NoContent />}
+
             <CommentsSheet
-                post={selectedPost}
+                postId={selectedPost?.id as string}
                 open={commentsOpen}
                 onOpenChange={setCommentsOpen}
             />

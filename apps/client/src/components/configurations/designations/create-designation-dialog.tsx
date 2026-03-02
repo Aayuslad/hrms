@@ -17,10 +17,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAccessChecker } from '@/hooks/use-has-access';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+// no local react state required for store-controlled dialog
+import { useAppStore } from '@/store';
+import { useShallow } from 'zustand/react/shallow';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
+import { Loader2 } from 'lucide-react';
 
 const createDesignationFormSchema = z.object({
     name: z
@@ -34,9 +37,28 @@ type Props = {
 };
 
 export function CreateDesignationDialog({ visibleTo }: Props) {
-    const [open, setOpen] = useState(false);
+    // store-controlled dialog; local state not required
     const canAccess = useAccessChecker();
     const createDesignationMutation = useCreateDesignation();
+
+    const {
+        configDialogOpen,
+        configDialogTarget,
+        openConfigDialog,
+        closeConfigDialog,
+    } = useAppStore(
+        useShallow((s) => ({
+            configDialogOpen: s.configDialogOpen,
+            configDialogTarget: s.configDialogTarget,
+            openConfigDialog: s.openConfigDialog,
+            closeConfigDialog: s.closeConfigDialog,
+        }))
+    );
+
+    const controlledOpen =
+        configDialogOpen &&
+        configDialogTarget?.entity === 'designations' &&
+        configDialogTarget?.mode === 'create';
 
     const form = useForm<CreateDesignationRequest>({
         resolver: zodResolver(createDesignationFormSchema),
@@ -49,7 +71,7 @@ export function CreateDesignationDialog({ visibleTo }: Props) {
         createDesignationMutation.mutate(data, {
             onSuccess: () => {
                 form.reset();
-                setOpen(false);
+                if (configDialogOpen) closeConfigDialog();
             },
         });
     };
@@ -62,13 +84,10 @@ export function CreateDesignationDialog({ visibleTo }: Props) {
     if (!canAccess(visibleTo)) return null;
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button variant="secondary" className="border">
-                    + Create Designation
-                </Button>
-            </DialogTrigger>
-
+        <Dialog
+            open={controlledOpen}
+            onOpenChange={(state) => state === false && closeConfigDialog()}
+        >
             <DialogContent className="sm:max-w-[425px]">
                 <form
                     onSubmit={form.handleSubmit(onSubmit, onInvalid)}
@@ -105,6 +124,9 @@ export function CreateDesignationDialog({ visibleTo }: Props) {
                             type="submit"
                             disabled={createDesignationMutation.isPending}
                         >
+                            {createDesignationMutation.isPending && (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            )}
                             Create
                         </Button>
                     </DialogFooter>

@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -19,6 +18,6 @@ public interface JobOpeningRepository extends JpaRepository<JobOpening, UUID> {
             "referrals",
             "shareAudits"
         })
-        @Query("select jo from JobOpening jo where jo.id = :id")
-        Optional<JobOpening> findByIdWithAll(@Param("id") UUID id);
+        @Query("select jo from JobOpening jo where jo.id = :id order by jo.createdAt desc")
+        Optional<JobOpening> findByIdWithAllOrderByCreatedAtDesc(@Param("id") UUID id);
 }

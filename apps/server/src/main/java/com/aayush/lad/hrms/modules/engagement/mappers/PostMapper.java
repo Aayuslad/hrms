@@ -5,8 +5,8 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import com.aayush.lad.hrms.core.exeptions.NotFoundException;
 import com.aayush.lad.hrms.core.services.CurrentUserService;
+import com.aayush.lad.hrms.modules.engagement.dtos.read.PostImageResponse;
 import com.aayush.lad.hrms.modules.engagement.dtos.read.PostResponse;
 import com.aayush.lad.hrms.modules.engagement.dtos.write.CreateCommentRequest;
 import com.aayush.lad.hrms.modules.engagement.dtos.write.CreatePostRequest;
@@ -46,7 +46,7 @@ public class PostMapper {
         modelMapper.map(request, existing);
 
         existing.setUpdatedBy(currentUserService.getCurrentUserEntity());
-        
+
         // Update tags
         existing.getTags().clear();
         if (request.getTagIds() != null && !request.getTagIds().isEmpty()) {
@@ -57,9 +57,26 @@ public class PostMapper {
 
     public PostResponse toResponse(Post post) {
         PostResponse response = modelMapper.map(post, PostResponse.class);
-        // Set isLiked for current user
+
         var currentUser = currentUserService.getCurrentUserEntity();
         response.setLiked(post.getLikedBy() != null && post.getLikedBy().contains(currentUser));
+
+        for (var commentResponse : response.getComments()) {
+            var comment = post.getComments().stream()
+                    .filter(c -> c.getId().equals(commentResponse.getId()))
+                    .findFirst().orElse(null);
+
+            commentResponse.setLiked(
+                    comment != null && comment.getLikedBy() != null && comment.getLikedBy().contains(currentUser));
+        }
+
+        if (post.getImages() != null && !post.getImages().isEmpty()) {
+            var imageResponses = post.getImages().stream()
+                    .map(img -> new PostImageResponse(img.getId(), img.getDocUrl()))
+                    .toList();
+            response.setImages(imageResponses);
+        }
+
         return response;
     }
 

@@ -15,12 +15,13 @@ import java.util.Set;
 @Entity
 @Table(name = "job_openings")
 @Getter
-@Setter 
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class JobOpening extends AuditableModel {
 
-    @Column(nullable = false)
+    @Lob
+    @Column(nullable = false, columnDefinition = "NVARCHAR(MAX)")
     private String description;
 
     @ManyToOne

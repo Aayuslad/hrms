@@ -1,8 +1,9 @@
 import { useGetGame, type Game } from '@/api/games-api';
-import BookSlotDialog from '@/components/games/book-slot-dialog';
 import Schedule from '@/components/games/chedule';
-import DeleteGameDialog from '@/components/games/delete-game-dialog';
-import UpdateGameDialog from '@/components/games/update-game-dialog';
+import DeleteGameDialog from '@/components/games/gameDialogs/delete-game-dialog';
+import UpdateGameDialog from '@/components/games/gameDialogs/update-game-dialog';
+import BookSlotDialog from '@/components/games/slotDialogs/book-slot-dialog';
+import { NoContent } from '@/components/no-content';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -37,20 +38,16 @@ export function GameDetailsPage() {
     }
 
     if (!isLoading && !isError && !game) {
-        return (
-            <div className="w-full h-[80vh] flex items-center justify-center">
-                404 - Not found...!
-            </div>
-        );
+        return <NoContent />;
     }
 
     return (
         <div className=" h-full">
-            <div className="bg  h-[100px] w-full flex items-center">
-                <div className="px-10 flex-1 flex items-center gap-6">
+            <div className="bg  h-[110px] w-full flex items-center">
+                <div className="px-8 pr-5 flex-1 flex items-center gap-6">
                     <div>
                         <h1 className="text-2xl font-bold">{game?.name}</h1>
-                        <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                        <div className="flex flex-wrap items-center gap- text-sm text-muted-foreground">
                             <span className="flex items-center gap-2">
                                 <span>
                                     <Clock className="h-3 w-3 stroke-2 font-bold" />
@@ -108,7 +105,7 @@ export function GameDetailsPage() {
             </div>
 
             <div className="w-full flex justify-evenly pt-2 pb-10">
-                <div className="w-full flex flex-col items-center px-5">
+                <div className="w-full flex flex-col items-center pl-5 pr-3">
                     {game ? (
                         <Schedule
                             game={game}

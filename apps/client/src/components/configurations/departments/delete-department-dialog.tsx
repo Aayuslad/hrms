@@ -1,5 +1,6 @@
 import { useDeleteDepartment } from '@/api/department-api';
 import { Button } from '@/components/ui/button';
+
 import {
     Dialog,
     DialogClose,
@@ -9,33 +10,49 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useAppStore } from '@/store';
+import { Loader2 } from 'lucide-react';
+import { useShallow } from 'zustand/react/shallow';
 
 export function DeleteDepartmentDialog() {
-    const location = useLocation();
-    const id = location.state as string;
     const deleteDepartmentMutation = useDeleteDepartment();
-    const navigate = useNavigate();
+    const { configDialogOpen, configDialogTarget, closeConfigDialog } =
+        useAppStore(
+            useShallow((s) => ({
+                configDialogOpen: s.configDialogOpen,
+                configDialogTarget: s.configDialogTarget,
+                closeConfigDialog: s.closeConfigDialog,
+            }))
+        );
 
-    const submit = async (id: string | null) => {
+    const id = configDialogTarget?.payload as string | undefined;
+
+    const submit = async (id?: string) => {
         if (!id) {
             return;
         }
         deleteDepartmentMutation.mutate(id, {
             onSuccess: () => {
-                navigate('/configuration/departments');
+                closeConfigDialog();
             },
         });
     };
 
     return (
-        <Dialog open={true}>
+        <Dialog
+            open={
+                configDialogOpen &&
+                configDialogTarget?.entity === 'departments' &&
+                configDialogTarget?.mode === 'delete'
+            }
+            onOpenChange={(state) => state === false && closeConfigDialog()}
+        >
             <DialogContent className="sm:max-w-[425px] space-y-2">
                 <DialogHeader className="space-y-2">
                     <DialogTitle>Confirm Delete Department</DialogTitle>
                     <DialogDescription>
-                        This department will be removed and this action
-                        cannot be undone.
+                        This department will be removed and this action cannot
+                        be undone.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -44,9 +61,7 @@ export function DeleteDepartmentDialog() {
                         <Button
                             variant="secondary"
                             disabled={deleteDepartmentMutation.isPending}
-                            onClick={() =>
-                                navigate('/configuration/departments')
-                            }
+                            onClick={() => closeConfigDialog()}
                         >
                             Cancel
                         </Button>
@@ -58,6 +73,9 @@ export function DeleteDepartmentDialog() {
                         onClick={() => submit(id)}
                         disabled={deleteDepartmentMutation.isPending}
                     >
+                        {deleteDepartmentMutation.isPending && (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
                         Delete
                     </Button>
                 </DialogFooter>

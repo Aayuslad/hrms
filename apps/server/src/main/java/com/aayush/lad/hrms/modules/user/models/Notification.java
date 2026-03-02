@@ -18,7 +18,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Notification extends BaseModel {
 
-    @Column(nullable = false)
+    @Lob
+
+    @Column(nullable = false, columnDefinition = "NVARCHAR(MAX)")
     private String content;
 
     private Boolean isRead = Boolean.FALSE;

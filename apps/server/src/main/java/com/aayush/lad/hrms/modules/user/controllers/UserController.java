@@ -6,13 +6,14 @@ import com.aayush.lad.hrms.core.security.JwtUtil;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.NotificationResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.OrgCharts;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.UserDetailResponse;
-import com.aayush.lad.hrms.modules.user.dtos.user.read.UserSummaryResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.write.*;
 import com.aayush.lad.hrms.modules.user.services.UserService;
+import com.aayush.lad.hrms.shared.dtos.GlobalUserResponseSummary;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -67,7 +68,8 @@ public class UserController {
         return ResultMapper.handle(HttpStatus.OK, responseDto);
     }
 
-    //    @PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    // @PostMapping(value = "/profile", consumes =
+    // MediaType.MULTIPART_FORM_DATA_VALUE)
     @PostMapping("/profile")
     public ResponseEntity<Result<Void>> createProfile(
             @Valid @RequestBody CreateUserProfileRequest request) {
@@ -75,17 +77,16 @@ public class UserController {
         return ResultMapper.handle(HttpStatus.CREATED, "Profile created");
     }
 
-    //    @PutMapping(value = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PutMapping("/me")
+    @PutMapping(value = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Result<Void>> updateBySelf(
-            @Valid @RequestBody UpdateUserBySelfRequest request) {
+            @Valid @ModelAttribute UpdateUserBySelfRequest request) {
         userService.update(request);
         return ResultMapper.handle(HttpStatus.CREATED, "User updated");
     }
 
-    //    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    // @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
     public ResponseEntity<Result<Void>> updateByAdmin(
             @PathVariable("id") UUID id,
             @Valid @RequestBody UpdateUserByAdminRequest request) {
@@ -109,8 +110,8 @@ public class UserController {
 
     @PreAuthorize("hasRole('Employee')")
     @GetMapping("/summary")
-    public ResponseEntity<Result<List<UserSummaryResponse>>> getUsersSummary() {
-        List<UserSummaryResponse> responseDto = userService.getUsersSummary();
+    public ResponseEntity<Result<List<GlobalUserResponseSummary>>> getUsersSummary() {
+        List<GlobalUserResponseSummary> responseDto = userService.getUsersSummary();
         return ResultMapper.handle(HttpStatus.OK, responseDto);
     }
 
@@ -133,8 +134,14 @@ public class UserController {
 
     @PreAuthorize("hasRole('Employee')")
     @GetMapping("/org-charts")
-    public ResponseEntity<Result<OrgCharts>> getOrgCharts() {
-        OrgCharts responseDto = userService.getOrgCharts();
+    public ResponseEntity<Result<OrgCharts>> getOrgCharts(
+            @RequestParam(value = "userId", required = false) UUID userId) {
+        OrgCharts responseDto;
+        if (userId == null) {
+            responseDto = userService.getOrgCharts();
+        } else {
+            responseDto = userService.getOrgCharts(userId);
+        }
         return ResultMapper.handle(HttpStatus.OK, responseDto);
     }
 }

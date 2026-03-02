@@ -2,10 +2,11 @@ import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BriefcaseBusiness, ExternalLink } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import ShareJobOpeningDialog from './share-job-opening-dialog';
-import ReferJobOpeningDialog from './refer-job-opening-dialog';
+import ShareJobOpeningDialog from './dialogs/share-job-opening-dialog';
+import ReferJobOpeningDialog from './dialogs/refer-job-opening-dialog';
 import type { JobOpeningSummary } from '@/api/jobs-api';
 import { useAccessChecker } from '@/hooks/use-has-access';
+import { GearIcon } from '@radix-ui/react-icons';
 
 type Props = {
     jobOpening: JobOpeningSummary;
@@ -16,7 +17,7 @@ const JobOpeningCard = ({ jobOpening }: Props) => {
     const navigate = useNavigate();
 
     return (
-        <Card className="w-[400px] border-primary/40 bg-transparent shadow-none p-6 rounded-2xl">
+        <Card className="w-[400px] h-min shadow-none p-6 rounded-2xl">
             <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1">
                     <CardTitle className="text-xl font-semibold leading-tight">
@@ -29,11 +30,19 @@ const JobOpeningCard = ({ jobOpening }: Props) => {
                         size="sm"
                         onClick={(e) => {
                             e.stopPropagation();
-                            navigate(`${jobOpening.id}`);
+                            navigate(`${jobOpening.id}`, {
+                                state: {
+                                    childBreadCrumbName:
+                                        jobOpening.designation?.name ||
+                                        'Opening',
+                                },
+                            });
                         }}
                         variant={'outline'}
+                        className="gap-2"
                     >
-                        View Details
+                        <GearIcon className="w-4 h-4" />
+                        Manage
                     </Button>
                 )}
             </div>
@@ -43,8 +52,7 @@ const JobOpeningCard = ({ jobOpening }: Props) => {
                     <div className="flex items-center gap-3">
                         <BriefcaseBusiness className="h-4 w-4 shrink-0" />
                         <span>
-                            Required Experience: {jobOpening.requiredExperience}{' '}
-                            years
+                            {jobOpening.requiredExperience} years of experience
                         </span>
                     </div>
 
@@ -62,12 +70,25 @@ const JobOpeningCard = ({ jobOpening }: Props) => {
                         </div>
                     )}
 
-                    <p>{jobOpening.description}</p>
+                    <p>{jobOpening.description?.slice(0, 150)}...</p>
                 </div>
 
-                <div className="flex gap-2 pt-4">
-                    <ShareJobOpeningDialog jobOpeningId={jobOpening.id!} />
-                    <ReferJobOpeningDialog jobOpeningId={jobOpening.id!} />
+                <div className="flex gap-2 ">
+                    {!jobOpening.closed && (
+                        <>
+                            <ShareJobOpeningDialog
+                                jobOpeningId={jobOpening.id!}
+                            />
+                            <ReferJobOpeningDialog
+                                jobOpeningId={jobOpening.id!}
+                            />
+                        </>
+                    )}
+                    {jobOpening.closed && (
+                        <Button variant="outline" className="w-full" disabled>
+                            Closed
+                        </Button>
+                    )}
                 </div>
             </CardContent>
         </Card>

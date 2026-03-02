@@ -1,19 +1,22 @@
 import {
-    type ColumnDef,
-    type ColumnFiltersState,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
-    type SortingState,
     useReactTable,
+    type ColumnDef,
+    type ColumnFiltersState,
+    type SortingState,
     type VisibilityState,
 } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import * as React from 'react';
 
-import { useGetDesignations, type Designation } from '@/api/designation-api';
+import {
+    useGetExpenseCategories,
+    type ExpenseCategory,
+} from '@/api/expense-category-api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
@@ -26,11 +29,8 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { useAccessChecker } from '@/hooks/use-has-access';
-import {
-    useGetExpenseCategories,
-    type ExpenseCategory,
-} from '@/api/expense-category-api';
-import { useNavigate } from 'react-router-dom';
+import { useAppStore } from '@/store';
+import { useShallow } from 'zustand/react/shallow';
 
 export function ExpenseCatrgoriesTable() {
     const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -41,7 +41,12 @@ export function ExpenseCatrgoriesTable() {
     const [rowSelection, setRowSelection] = React.useState({});
     const canAccess = useAccessChecker();
     const { data, isLoading, isError } = useGetExpenseCategories();
-    const navigate = useNavigate();
+    const { openConfigDialog } =
+        useAppStore(
+            useShallow((s) => ({
+                openConfigDialog: s.openConfigDialog,
+            }))
+        );
 
     const columns: ColumnDef<ExpenseCategory>[] = [
         {
@@ -63,7 +68,7 @@ export function ExpenseCatrgoriesTable() {
                 </div>
             ),
         },
-        ...(canAccess(['Admin'])
+        ...(canAccess(['Admin', 'HR'])
             ? ([
                   {
                       accessorKey: 'actions',
@@ -75,9 +80,7 @@ export function ExpenseCatrgoriesTable() {
                                       className="text-gray-400 hover:cursor-pointer"
                                       onClick={(e) => {
                                           e.stopPropagation();
-                                          navigate(`update`, {
-                                              state: row.original,
-                                          });
+                                          openConfigDialog({ entity: 'expenseCategories', mode: 'update', payload: row.original });
                                       }}
                                   >
                                       Edit
@@ -86,9 +89,7 @@ export function ExpenseCatrgoriesTable() {
                                       className="text-destructive hover:cursor-pointer"
                                       onClick={(e) => {
                                           e.stopPropagation();
-                                          navigate(`delete`, {
-                                              state: row.original.id,
-                                          });
+                                          openConfigDialog({ entity: 'expenseCategories', mode: 'delete', payload: row.original.id });
                                       }}
                                   >
                                       Delete

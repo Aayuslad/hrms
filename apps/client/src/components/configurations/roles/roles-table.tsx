@@ -89,8 +89,6 @@ export function RolesTable() {
 
     return (
         <div className="w-[400px]">
-            {/* header */}
-            <div className="flex items-center py-4"></div>
 
             {/* table */}
             <div className="overflow-hidden rounded-md border">

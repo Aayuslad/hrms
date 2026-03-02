@@ -9,27 +9,43 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
+import { useAppStore } from '@/store';
+import { useShallow } from 'zustand/react/shallow';
 
 export function DeleteDocTypeDialog() {
-    const location = useLocation();
-    const id = location.state as string;
     const deleteDocumentTypeMutation = useDeleteDocumentType();
-    const navigate = useNavigate();
+    const { configDialogOpen, configDialogTarget, closeConfigDialog } =
+        useAppStore(
+            useShallow((s) => ({
+                configDialogOpen: s.configDialogOpen,
+                configDialogTarget: s.configDialogTarget,
+                closeConfigDialog: s.closeConfigDialog,
+            }))
+        );
 
-    const submit = async (id: string | null) => {
+    const id = configDialogTarget?.payload as string | undefined;
+
+    const submit = async (id?: string) => {
         if (!id) {
             return;
         }
         deleteDocumentTypeMutation.mutate(id, {
             onSuccess: () => {
-                navigate('/configuration/document-types');
+                closeConfigDialog();
             },
         });
     };
 
     return (
-        <Dialog open={true}>
+        <Dialog
+            open={
+                configDialogOpen &&
+                configDialogTarget?.entity === 'documentTypes' &&
+                configDialogTarget?.mode === 'delete'
+            }
+            onOpenChange={(state) => state === false && closeConfigDialog()}
+        >
             <DialogContent className="sm:max-w-[425px] space-y-2">
                 <DialogHeader className="space-y-2">
                     <DialogTitle>Confirm Delete Document Type</DialogTitle>
@@ -44,9 +60,7 @@ export function DeleteDocTypeDialog() {
                         <Button
                             variant="secondary"
                             disabled={deleteDocumentTypeMutation.isPending}
-                            onClick={() =>
-                                navigate('/configuration/document-types')
-                            }
+                            onClick={() => closeConfigDialog()}
                         >
                             Cancel
                         </Button>
@@ -58,6 +72,9 @@ export function DeleteDocTypeDialog() {
                         onClick={() => submit(id)}
                         disabled={deleteDocumentTypeMutation.isPending}
                     >
+                        {deleteDocumentTypeMutation.isPending && (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
                         Delete
                     </Button>
                 </DialogFooter>

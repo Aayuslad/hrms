@@ -1,5 +1,6 @@
 package com.aayush.lad.hrms.modules.games.dtos.read.internal;
 
+import com.aayush.lad.hrms.shared.dtos.GlobalUserResponseSummary;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,9 +26,9 @@ public class GameSlotResponse {
 
     private LocalDate day;
 
-    private UserSummaryResponse organiser;
+    private GlobalUserResponseSummary organiser;
 
     private boolean isBooked = true;
 
-    private List<UserSummaryResponse> players = new ArrayList<>();
+    private List<GlobalUserResponseSummary> players = new ArrayList<>();
 }

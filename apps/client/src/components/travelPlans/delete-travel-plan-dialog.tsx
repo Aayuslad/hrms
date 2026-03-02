@@ -34,8 +34,12 @@ const DeleteTravelPlanDialog = ({
     return (
         <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogTrigger asChild>
-                <Button variant="ghost" className="w-full">
-                    Delete
+                <Button
+                    variant="ghost"
+                    className="flex items-center w-full gap-2"
+                >
+                    <Trash className="h-4 w-4" />
+                    Delete Travel Plan
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>

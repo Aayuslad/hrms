@@ -13,6 +13,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { GENDER } from '@/types/enums';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -179,13 +180,12 @@ export function CreateUserProfileForm({
 
                             <Button
                                 type="submit"
-                                className={`w-full hover:cursor-pointer ${
-                                    createUserMutation.isPending
-                                        ? 'cursor-not-allowed opacity-70'
-                                        : ''
-                                }`}
+                                className="w-full hover:cursor-pointer"
                                 disabled={createUserMutation.isPending}
                             >
+                                {createUserMutation.isPending && (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                )}
                                 Submit
                             </Button>
                         </div>

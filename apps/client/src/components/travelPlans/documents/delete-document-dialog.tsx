@@ -9,6 +9,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { Loader2 } from 'lucide-react';
 
 interface DeleteDocumentDialogProps {
     documentId: string;
@@ -27,10 +28,7 @@ export function DeleteDocumentDialog({
 }: Readonly<DeleteDocumentDialogProps>) {
     const deleteDocumentMutation = useDeleteDocument();
 
-    const submit = async (id: string) => {
-        if (!id) {
-            return;
-        }
+    const submit = async () => {
         deleteDocumentMutation.mutate(
             {
                 documentId: documentId,
@@ -69,9 +67,12 @@ export function DeleteDocumentDialog({
                         type="submit"
                         variant="default"
                         className="flex-1 bg-red-500 text-white hover:bg-red-600"
-                        onClick={() => submit(id)}
+                        onClick={() => submit()}
                         disabled={deleteDocumentMutation.isPending}
                     >
+                        {deleteDocumentMutation.isPending && (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
                         Delete
                     </Button>
                 </DialogFooter>

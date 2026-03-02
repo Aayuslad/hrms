@@ -26,7 +26,8 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { useAccessChecker } from '@/hooks/use-has-access';
-import { useNavigate } from 'react-router-dom';
+import { useAppStore } from '@/store';
+import { useShallow } from 'zustand/react/shallow';
 
 export function DesignationsTable() {
     const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -37,7 +38,12 @@ export function DesignationsTable() {
     const [rowSelection, setRowSelection] = React.useState({});
     const canAccess = useAccessChecker();
     const { data, isLoading, isError } = useGetDesignations();
-    const navigate = useNavigate();
+    const { openConfigDialog } =
+        useAppStore(
+            useShallow((s) => ({
+                openConfigDialog: s.openConfigDialog,
+            }))
+        );
 
     const columns: ColumnDef<Designation>[] = [
         {
@@ -59,7 +65,7 @@ export function DesignationsTable() {
                 </div>
             ),
         },
-        ...(canAccess(['Admin'])
+        ...(canAccess(['Admin', 'HR'])
             ? ([
                   {
                       accessorKey: 'actions',
@@ -71,9 +77,7 @@ export function DesignationsTable() {
                                       className="text-gray-400 hover:cursor-pointer"
                                       onClick={(e) => {
                                           e.stopPropagation();
-                                          navigate(`update`, {
-                                              state: row.original,
-                                          });
+                                          openConfigDialog({ entity: 'designations', mode: 'update', payload: row.original });
                                       }}
                                   >
                                       Edit
@@ -82,9 +86,7 @@ export function DesignationsTable() {
                                       className="text-destructive hover:cursor-pointer"
                                       onClick={(e) => {
                                           e.stopPropagation();
-                                          navigate(`delete`, {
-                                              state: row.original.id,
-                                          });
+                                          openConfigDialog({ entity: 'designations', mode: 'delete', payload: row.original.id });
                                       }}
                                   >
                                       Delete

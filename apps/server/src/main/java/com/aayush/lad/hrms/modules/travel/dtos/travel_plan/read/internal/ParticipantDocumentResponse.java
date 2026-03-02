@@ -20,7 +20,7 @@ public class ParticipantDocumentResponse {
     
     private String docUrl;
 
-    private String documentType;
+    private DocumentTypeResponse documentType;
 
     private LocalDateTime uploadedAt;
 

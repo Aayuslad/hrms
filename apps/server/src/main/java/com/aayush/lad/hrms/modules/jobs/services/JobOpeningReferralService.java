@@ -53,7 +53,6 @@ public class JobOpeningReferralService {
 
         target.setCvUrl(request.getCvUrl());
         target.setEmail(request.getEmail());
-        target.setNote(request.getNote());
         target.setName(request.getName());
 
         jobOpeningRepository.save(jobOpening);

@@ -8,6 +8,8 @@ import com.aayush.lad.hrms.modules.travel.dtos.expense_category.write.UpdateExpe
 import com.aayush.lad.hrms.modules.travel.mappers.ExpenseCategoryMapper;
 import com.aayush.lad.hrms.modules.travel.models.ExpenseCategory;
 import com.aayush.lad.hrms.modules.travel.repositories.ExpenseCategoryRepository;
+import com.aayush.lad.hrms.modules.travel.repositories.TravelPlanRepository;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class ExpenseCategoryService {
 
     private final ExpenseCategoryRepository expenseCategoryRepository;
+    private final TravelPlanRepository travelPlanRepository;
     private final ExpenseCategoryMapper expenseCategoryMapper;
 
     public void create(CreateExpenseCategoryRequest request) {
@@ -52,6 +55,10 @@ public class ExpenseCategoryService {
     public void delete(UUID id) {
         if (!expenseCategoryRepository.existsById(id))
             throw new NotFoundException("Expense category not found");
+
+        if (travelPlanRepository.existsByExpenseCategoryId(id))
+            throw new ConflictException(
+                    "Cannot delete expense category as it is associated with existing travel plan expenses");
 
         // TODO: soft delete
         expenseCategoryRepository.deleteById(id);

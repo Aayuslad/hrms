@@ -37,7 +37,11 @@ public interface UserRepository extends JpaRepository<User, UUID> {
         @Query("SELECT u FROM User u")
         List<User> findAllWithRoles();
 
-        @EntityGraph(attributePaths = {"profile", "profile.department", "profile.designation", "profile.manager"})
+        @EntityGraph(attributePaths = { "profile", "profile.department", "profile.designation", "profile.manager" })
         @Query("SELECT u FROM User u")
         List<User> findAllWithProfiles();
+
+        boolean existsByProfile_Department_Id(UUID departmentId);
+
+        boolean existsByProfile_Designation_Id(UUID designationId);
 }

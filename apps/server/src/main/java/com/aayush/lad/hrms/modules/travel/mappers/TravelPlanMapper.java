@@ -18,6 +18,7 @@ import com.aayush.lad.hrms.modules.travel.models.TravelPlanDocument;
 import com.aayush.lad.hrms.modules.travel.models.TravelPlanExpense;
 import com.aayush.lad.hrms.modules.user.models.User;
 import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
+import com.aayush.lad.hrms.shared.dtos.GlobalUserResponseSummary;
 
 import lombok.RequiredArgsConstructor;
 
@@ -53,15 +54,26 @@ public class TravelPlanMapper {
     }
 
     public List<TravelPlanSummaryResponse> toSumaryResponseList(List<TravelPlan> travelPlans) {
-        return travelPlans.stream()
+        List<TravelPlanSummaryResponse> response = travelPlans.stream()
                 .map(x -> modelMapper.map(x, TravelPlanSummaryResponse.class))
                 .toList();
+
+        for (var travelPlanResponse : response) {
+            TravelPlan travelPlan = travelPlans.stream()
+                    .filter(c -> c.getId().equals(travelPlanResponse.getId()))
+                    .findFirst().orElse(null);
+            travelPlanResponse.setMeParticipant(
+                    travelPlan != null && travelPlan.getParticipants().contains(currentUserService.getCurrentUserEntity())
+            );
+        }
+
+        return response;
     }
 
     public List<ParticipantExpenseResponse> toExpenseResponseList(List<TravelPlanExpense> expenses) {
         return expenses.stream().map(x -> {
             ParticipantExpenseResponse r = modelMapper.map(x, ParticipantExpenseResponse.class);
-            r.setExpenseCategory(x.getExpenseCategory().getName());
+            r.setParticipant(modelMapper.map(x.getParticipant(), GlobalUserResponseSummary.class));
             return r;
         }).toList();
     }
@@ -71,10 +83,6 @@ public class TravelPlanMapper {
     }
 
     public List<ParticipantDocumentResponse> toDocumentResponseList(List<TravelPlanDocument> documents) {
-        return documents.stream().map(d -> {
-            ParticipantDocumentResponse response = modelMapper.map(d, ParticipantDocumentResponse.class);
-            response.setDocumentType(d.getDocumentType() != null ? d.getDocumentType().getName() : null);
-            return response;
-        }).toList();
+        return documents.stream().map(d -> modelMapper.map(d, ParticipantDocumentResponse.class)).toList();
     }
 }

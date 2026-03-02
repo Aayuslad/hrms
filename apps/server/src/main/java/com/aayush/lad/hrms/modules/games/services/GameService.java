@@ -99,7 +99,7 @@ public class GameService {
         // step 3: map over all the possible slots of each day in whole week (outer loop
         // for week days) (inner loop for each slot in day)
         for (LocalDate date = weekStartDate; !date.isAfter(weekEndDate); date = date.plusDays(1)) {
-            for (LocalTime time = game.getOpenTime(); time.isBefore(game.getCloseTime()); time = time.plusMinutes(30)) {
+            for (LocalTime time = game.getOpenTime(); time.isBefore(game.getCloseTime()); time = time.plusMinutes(game.getSlotDuration())) {
 
                 LocalDate finalDate = date;
                 LocalTime finalTime = time;
@@ -122,7 +122,7 @@ public class GameService {
                     slots.add(GameSlotResponse.builder()
                             .id(UUID.randomUUID())
                             .startTime(time)
-                            .endTime(time.plusMinutes(30))
+                            .endTime(time.plusMinutes(game.getSlotDuration()))
                             .day(date)
                             .isBooked(false)
                             .build());

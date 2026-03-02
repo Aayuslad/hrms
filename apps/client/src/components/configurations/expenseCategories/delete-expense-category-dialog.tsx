@@ -9,27 +9,43 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
+import { useAppStore } from '@/store';
+import { useShallow } from 'zustand/react/shallow';
 
 export function DeleteExpenseCategoryDialog() {
-    const location = useLocation();
-    const id = location.state as string;
     const deleteExpenseCategoryMutation = useDeleteExpenseCategory();
-    const navigate = useNavigate();
+    const { configDialogOpen, configDialogTarget, closeConfigDialog } =
+        useAppStore(
+            useShallow((s) => ({
+                configDialogOpen: s.configDialogOpen,
+                configDialogTarget: s.configDialogTarget,
+                closeConfigDialog: s.closeConfigDialog,
+            }))
+        );
 
-    const submit = async (id: string | null) => {
+    const id = configDialogTarget?.payload as string | undefined;
+
+    const submit = async (id?: string) => {
         if (!id) {
             return;
         }
         deleteExpenseCategoryMutation.mutate(id, {
             onSuccess: () => {
-                navigate('/configuration/expense-categories');
+                closeConfigDialog();
             },
         });
     };
 
     return (
-        <Dialog open={true}>
+        <Dialog
+            open={
+                configDialogOpen &&
+                configDialogTarget?.entity === 'expenseCategories' &&
+                configDialogTarget?.mode === 'delete'
+            }
+            onOpenChange={(state) => state === false && closeConfigDialog()}
+        >
             <DialogContent className="sm:max-w-lg space-y-2">
                 <DialogHeader className="space-y-2">
                     <DialogTitle>Confirm Delete Expense Category</DialogTitle>
@@ -44,9 +60,7 @@ export function DeleteExpenseCategoryDialog() {
                         <Button
                             variant="secondary"
                             disabled={deleteExpenseCategoryMutation.isPending}
-                            onClick={() =>
-                                navigate('/configuration/expense-categories')
-                            }
+                            onClick={() => closeConfigDialog()}
                         >
                             Cancel
                         </Button>
@@ -58,6 +72,9 @@ export function DeleteExpenseCategoryDialog() {
                         onClick={() => submit(id)}
                         disabled={deleteExpenseCategoryMutation.isPending}
                     >
+                        {deleteExpenseCategoryMutation.isPending && (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
                         Delete
                     </Button>
                 </DialogFooter>

@@ -1,4 +1,7 @@
+import type { Participant } from '@/api/travel-api';
+import { UserProfileDialog } from '@/components/auth/user-profile-dialog';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import {
     Table,
@@ -8,6 +11,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { useAccessChecker } from '@/hooks/use-has-access';
 import {
     flexRender,
     getCoreRowModel,
@@ -22,12 +26,10 @@ import {
 } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import React from 'react';
-import type { Participant } from '@/api/travel-api';
-import { useAccessChecker } from '@/hooks/use-has-access';
-import { ParticipantExpensesSheet } from '../expense/participant-expenses-sheet';
+import AddParticipantDialog from '../add-participant-dialog';
 import { ParticipantDocumentsSheet } from '../documents/participants-documents-sheet';
-import { useGetMe } from '@/api/user-api';
-
+import { ParticipantExpensesSheet } from '../expense/participant-expenses-sheet';
+import { RemoveParticipantsDialog } from '../remove-participants-dialog';
 
 interface ParticipantsTableProps {
     participants: Participant[];
@@ -45,9 +47,32 @@ export function ParticipantsTable({
         React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
     const canAccess = useAccessChecker();
-    const { data: me } = useGetMe();
 
     const columns: ColumnDef<Participant>[] = [
+        {
+            id: 'select',
+            header: ({ table }) => (
+                <Checkbox
+                    checked={
+                        table.getIsAllPageRowsSelected() ||
+                        (table.getIsSomePageRowsSelected() && 'indeterminate')
+                    }
+                    onCheckedChange={(value) =>
+                        table.toggleAllPageRowsSelected(!!value)
+                    }
+                    aria-label="Select all"
+                />
+            ),
+            cell: ({ row }) => (
+                <Checkbox
+                    checked={row.getIsSelected()}
+                    onCheckedChange={(value) => row.toggleSelected(!!value)}
+                    aria-label="Select row"
+                />
+            ),
+            enableSorting: false,
+            enableHiding: false,
+        },
         {
             accessorKey: 'user.userName',
             header: ({ column }) => (
@@ -57,30 +82,26 @@ export function ParticipantsTable({
                         column.toggleSorting(column.getIsSorted() === 'asc')
                     }
                 >
-                    User Name
+                    Participant
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             ),
             cell: ({ row }) => (
                 <div className="font-medium pl-4 w-[150px]">
-                    {row.original.userName}
+                    <UserProfileDialog userId={row.original.id!}>
+                        {row.original.userName}
+                    </UserProfileDialog>
                 </div>
             ),
         },
         {
-            id: 'fullName',
-            header: 'Full Name',
-            cell: ({ row }) => {
-                const profile = row.original.profile;
-                const fullName = [
-                    profile?.firstName,
-                    profile?.middleName,
-                    profile?.lastName,
-                ]
-                    .filter(Boolean)
-                    .join(' ');
-                return <div className="font-medium w-[200px]">{fullName}</div>;
-            },
+            accessorKey: 'totalClaimedAmount',
+            header: 'Claimed expense',
+            cell: ({ row }) => (
+                <div className="font-medium w-[120px]">
+                    ₹{row.original.totalClaimedAmount}
+                </div>
+            ),
         },
         ...(canAccess(['Admin', 'HR'])
             ? ([
@@ -92,12 +113,12 @@ export function ParticipantsTable({
                               <div className="flex gap-6">
                                   <ParticipantExpensesSheet
                                       travelPlanId={travelPlanId}
-                                      participantId={row.original.id!}
+                                      participant={row.original}
                                       participantName={row.original.userName!}
                                   />
                                   <ParticipantDocumentsSheet
                                       travelPlanId={travelPlanId}
-                                      participantId={row.original.id!}
+                                      participant={row.original}
                                       participantName={row.original.userName!}
                                   />
                               </div>
@@ -128,9 +149,9 @@ export function ParticipantsTable({
     });
 
     return (
-        <div className="">
+        <div className="w-[700px] mx-auto">
             {/* header */}
-            <div className="flex items-center py-4">
+            <div className="flex items-center py-4 justify-between">
                 <Input
                     placeholder="Filter participants..."
                     value={
@@ -145,6 +166,24 @@ export function ParticipantsTable({
                     }
                     className="max-w-sm"
                 />
+                {canAccess(['Admin', 'HR']) &&
+                    table.getSelectedRowModel().rows.length === 0 && (
+                        <AddParticipantDialog
+                            travelPlanId={travelPlanId}
+                            existingIds={participants.map((p) => p.id!)}
+                        />
+                    )}
+                {table.getSelectedRowModel().rows.length > 0 && (
+                    <RemoveParticipantsDialog
+                        selectedParticipantIds={table
+                            .getSelectedRowModel()
+                            .rows.map((r) => r.original.id!)}
+                        travelPlanId={travelPlanId}
+                        clearSelectedParticipantIds={() =>
+                            table.resetRowSelection()
+                        }
+                    />
+                )}
             </div>
 
             {/* table */}
@@ -202,6 +241,14 @@ export function ParticipantsTable({
 
             {/* footer */}
             <div className="flex items-center justify-end space-x-2 py-4">
+                <div className="mr-auto">
+                    <span className="text-sm text-muted-foreground">
+                        {table.getFilteredSelectedRowModel().rows.length} of{' '}
+                        {table.getFilteredRowModel().rows.length} row(s)
+                        selected.
+                    </span>
+                </div>
+
                 <div className="space-x-2">
                     <Button
                         variant="outline"

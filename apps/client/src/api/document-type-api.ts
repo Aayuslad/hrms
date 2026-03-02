@@ -1,5 +1,6 @@
 import { axiosClient } from '@/lib/axios-client';
 import { queryClient } from '@/lib/query-client';
+import { handleApiError } from '@/lib/utils';
 import type { components } from '@/types/generated/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
@@ -41,14 +42,8 @@ export function useCreateDocumentType() {
             queryClient.invalidateQueries({ queryKey: ['document-types'] });
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to create document type'
-            );
-            console.error('Failed to create DocumentType', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to create document type'),
     });
 }
 
@@ -64,14 +59,8 @@ export function useUpdateDocumentType() {
             queryClient.invalidateQueries({ queryKey: ['document-types'] });
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to update document type'
-            );
-            console.error('Failed to update document type', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to update document type'),
     });
 }
 
@@ -84,13 +73,7 @@ export function useDeleteDocumentType() {
             queryClient.invalidateQueries({ queryKey: ['document-types'] });
             queryClient.invalidateQueries({ queryKey: ['travel-plans'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to delete document type'
-            );
-            console.error('Failed to delete document type', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to delete document type'),
     });
 }

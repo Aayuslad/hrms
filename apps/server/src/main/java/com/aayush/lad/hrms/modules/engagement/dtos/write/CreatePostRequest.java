@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -22,4 +24,6 @@ public class CreatePostRequest {
     private String content;
 
     private Set<UUID> tagIds = new HashSet<>();
+
+    private List<MultipartFile> images;
 }

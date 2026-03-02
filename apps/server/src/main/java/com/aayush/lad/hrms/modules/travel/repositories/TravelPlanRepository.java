@@ -7,12 +7,10 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 
 public interface TravelPlanRepository extends JpaRepository<TravelPlan, UUID> {
 
@@ -23,8 +21,8 @@ public interface TravelPlanRepository extends JpaRepository<TravelPlan, UUID> {
             "expenses",
             "expenses.proofs"
     })
-    @Query("select tp from TravelPlan tp where tp.id = :id")
-    Optional<TravelPlan> findByIdWithAll(@Param("id") UUID id);
+    @Query("select tp from TravelPlan tp where tp.id = :id order by tp.createdAt desc")
+    Optional<TravelPlan> findByIdWithAllOrderByCreatedAtDesc(@Param("id") UUID id);
 
     @EntityGraph(attributePaths = "participants")
     @Query("select tp from TravelPlan tp where tp.id = :id")
@@ -40,4 +38,12 @@ public interface TravelPlanRepository extends JpaRepository<TravelPlan, UUID> {
             + "left join fetch e.expenseCategory ec "
             + "where e.travelPlan.id = :travelPlanId and e.participant.id = :participantId")
     List<TravelPlanExpense> findTravelPlanExpensesByIdAndParticipantId(UUID travelPlanId, UUID participantId);
+
+    @Query("select count(e) > 0 from TravelPlanExpense e "
+            + "where e.expenseCategory.id = :expenseCategoryId")
+    boolean existsByExpenseCategoryId(@Param("expenseCategoryId") UUID expenseCategoryId);
+
+    @Query("select count(d) > 0 from TravelPlanDocument d "
+            + "where d.documentType.id = :documentTypeId")
+    boolean existsByDocumentTypeId(@Param("documentTypeId") UUID documentTypeId);
 }

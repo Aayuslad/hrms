@@ -62,12 +62,27 @@ public class JobOpeningService {
 
     public List<JobOpeningSummaryResponse> getAll() {
         List<JobOpening> jobOpenings = jobOpeningRepository.findAll();
-        return mapper.toResponseList(jobOpenings);
+
+        if (currentUserService.isUserAdminOrHR()) {
+            return mapper.toResponseList(jobOpenings);
+        }
+
+        List<JobOpening> filteredJobOpenings = jobOpenings.stream()
+                .filter(jobOpening -> !jobOpening.isClosed())
+                .toList();
+
+        return mapper.toResponseList(filteredJobOpenings);
     }
 
     public void close(UUID id) {
         JobOpening jobOpening = getJobOpeningEntityById(id);
         jobOpening.setClosed(true);
+        jobOpeningRepository.save(jobOpening);
+    }
+
+    public void reopen(UUID id) {
+        JobOpening jobOpening = getJobOpeningEntityById(id);
+        jobOpening.setClosed(false);
         jobOpeningRepository.save(jobOpening);
     }
 
@@ -95,7 +110,7 @@ public class JobOpeningService {
     }
 
     private JobOpening getJobOpeningEntityById(UUID id) {
-        JobOpening jobOpening = jobOpeningRepository.findByIdWithAll(id).orElse(null);
+        JobOpening jobOpening = jobOpeningRepository.findByIdWithAllOrderByCreatedAtDesc(id).orElse(null);
         if (jobOpening == null)
             throw new NotFoundException("Job opening not found");
         return jobOpening;

@@ -26,6 +26,8 @@ public class TravelPlan extends AuditableModel {
     @Column(nullable = false)
     private String destination;
 
+    @Lob
+    @Column(columnDefinition = "NVARCHAR(MAX)")
     private String description;
 
     private LocalDateTime startAt;
@@ -42,9 +44,9 @@ public class TravelPlan extends AuditableModel {
     )
     private Set<User> participants = new HashSet<>();
 
-    @OneToMany(mappedBy = "travelPlan", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "travelPlan", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TravelPlanDocument> travelPlanDocuments = new HashSet<>();
 
-    @OneToMany(mappedBy = "travelPlan", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "travelPlan", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TravelPlanExpense> expenses = new HashSet<>();
 }

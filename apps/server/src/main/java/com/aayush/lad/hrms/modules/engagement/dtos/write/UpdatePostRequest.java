@@ -23,4 +23,8 @@ public class UpdatePostRequest {
     private String content;
     
     private List<UUID> tagIds;
+
+    private List<org.springframework.web.multipart.MultipartFile> images;
+
+    private List<UUID> deletedImageIds;
 }

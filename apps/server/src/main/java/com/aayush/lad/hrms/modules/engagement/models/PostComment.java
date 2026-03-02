@@ -30,6 +30,8 @@ public class PostComment extends BaseModel {
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
+    @Lob
+    @Column(columnDefinition = "NVARCHAR(MAX)")
     private String content;
 
     @Column(nullable = false)

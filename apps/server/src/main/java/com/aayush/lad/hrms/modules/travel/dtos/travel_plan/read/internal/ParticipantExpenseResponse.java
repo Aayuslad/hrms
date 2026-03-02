@@ -30,9 +30,11 @@ public class ParticipantExpenseResponse {
 
     private LocalDateTime submittedAt;
 
-    private String expenseCategory;
+    private ExpenseCategoryResponse expenseCategory;
 
     private GlobalUserResponseSummary approvedBy;
+
+    private GlobalUserResponseSummary participant;
 
     private List<ExpenseProofResponse> proofs = new ArrayList<>();
 }

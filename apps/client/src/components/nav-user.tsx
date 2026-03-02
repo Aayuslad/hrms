@@ -1,7 +1,7 @@
 import { Bell, ChevronsUpDown, LogOut, Settings, User } from 'lucide-react';
 
 import { useGetMe, useLogoutUser } from '@/api/user-api';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -35,6 +35,10 @@ export function NavUser() {
                             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                         >
                             <Avatar className="h-8 w-8 rounded-lg">
+                                <AvatarImage
+                                    src={user?.profile?.avatarUrl}
+                                    alt="Avatar"
+                                />
                                 <AvatarFallback className="rounded-lg capitalize">
                                     {user?.userName ? user?.userName[0] : 'U'}
                                 </AvatarFallback>
@@ -50,8 +54,9 @@ export function NavUser() {
                             <ChevronsUpDown className="ml-auto size-4" />
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
+
                     <DropdownMenuContent
-                        className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+                        className="w-(--radix-dropdown-menu-trigger-width) bg-sidebar min-w-56 rounded-lg"
                         side={isMobile ? 'bottom' : 'right'}
                         align="end"
                         sideOffset={4}
@@ -59,6 +64,10 @@ export function NavUser() {
                         <DropdownMenuLabel className="p-0 font-normal">
                             <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                                 <Avatar className="h-8 w-8 rounded-lg">
+                                    <AvatarImage
+                                        src={user?.profile?.avatarUrl}
+                                        alt="Avatar"
+                                    />
                                     <AvatarFallback className="rounded-lg capitalize">
                                         {user?.userName
                                             ? user?.userName[0]
@@ -88,10 +97,6 @@ export function NavUser() {
                             >
                                 <Bell />
                                 Notifications
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <Settings />
-                                Settings
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />

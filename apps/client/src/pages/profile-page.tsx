@@ -1,9 +1,18 @@
 import { useGetMe } from '@/api/user-api';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
+import { UpdateProfileDialog } from '@/components/auth/update-profile-dialog';
+import {
+    Award,
+    Building,
+    Calendar,
+    Phone,
+    Transgender,
+    User,
+} from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { OrgChartSection } from '@/components/orgChart/org-chart-section';
 
 export function ProfilePage() {
     const { data: user, isLoading } = useGetMe();
@@ -28,12 +37,12 @@ export function ProfilePage() {
     const roles = user.roles || [];
     const interests = user.interestedInGames || [];
 
-    return (
-        <div className="container mx-auto py-10 px-4 max-w-4xl">
-            <div className="space-y-8">
-                {/* Header Section */}
-                <Card className="shadow-lg rounded-2xl bg-linear-to-br  border-none">
-                    <CardContent className="pt-8 pb-6">
+    const profileContent = (
+        <div className="space-y-5">
+            {/* Header Section */}
+            <div className="">
+                <div className="pt-8 pb-6">
+                    <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-6">
                             <Avatar className="size-24 shadow-md border-4 border-zinc-700">
                                 <AvatarImage
@@ -50,113 +59,119 @@ export function ProfilePage() {
                                     {profile?.firstName} {profile?.middleName}{' '}
                                     {profile?.lastName}
                                 </h1>
-                                <p className=" mt-1">
-                                    {user.email}
-                                </p>
-                                <p className="text-sm ">
-                                    @{user.userName}
-                                </p>
+                                <p className=" mt-1">{user.email}</p>
+                                <p className="text-sm ">@{user.userName}</p>
                             </div>
                         </div>
-                    </CardContent>
-                </Card>
-
-                {/* Personal Information */}
-                <Card className="shadow-md rounded-xl">
-                    <CardHeader className=" rounded-t-xl">
-                        <CardTitle className="">
-                            Personal Information
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4  rounded-b-xl">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <span className="text-xs font-semibold ">
-                                    First Name
-                                </span>
-                                <p className="text-base mt-1">
-                                    {profile?.firstName || 'N/A'}
-                                </p>
-                            </div>
-                            <div>
-                                <span className="text-xs font-semibold ">
-                                    Middle Name
-                                </span>
-                                <p className="text-base  mt-1">
-                                    {profile?.middleName || 'N/A'}
-                                </p>
-                            </div>
-                            <div>
-                                <span className="text-xs font-semibold ">
-                                    Last Name
-                                </span>
-                                <p className="text-base  mt-1">
-                                    {profile?.lastName || 'N/A'}
-                                </p>
-                            </div>
-                            <div>
-                                <span className="text-xs font-semibold ">
-                                    Contact Number
-                                </span>
-                                <p className="text-base  mt-1">
-                                    {profile?.contactNumber || 'N/A'}
-                                </p>
-                            </div>
-                            <div>
-                                <span className="text-xs font-semibold ">
-                                    Date of Birth
-                                </span>
-                                <p className="text-base  mt-1">
-                                    {profile?.dateOfBirth
-                                        ? new Date(
-                                              profile.dateOfBirth
-                                          ).toLocaleDateString()
-                                        : 'N/A'}
-                                </p>
-                            </div>
-                            <div>
-                                <span className="text-xs font-semibold ">
-                                    Gender
-                                </span>
-                                <p className="text-base  mt-1">
-                                    {profile?.gender || 'N/A'}
-                                </p>
-                            </div>
+                        <div className="flex justify-end">
+                            <UpdateProfileDialog user={user} />
                         </div>
-                    </CardContent>
-                </Card>
+                    </div>
+                </div>
+            </div>
 
-                {/* Work Information */}
-                <Card className="shadow-md rounded-xl">
-                    <CardHeader className=" rounded-t-xl">
-                        <CardTitle className="">
-                            Work Information
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4  rounded-b-xl">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Personal Information */}
+            <div className="w-[800px] mx-auto mb-12">
+                <div className="mb-4">
+                    <h2 className="border-b text-xl">Personal Information</h2>
+                </div>
+                <div className="px-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex items-center gap-3">
+                        <div>
+                            <User className="w-7 h-7" />
+                        </div>
+                        <div className="s">
+                            <span className="text-sm font-semibold ">
+                                Full name
+                            </span>
+                            <p>
+                                {profile?.firstName} {profile?.middleName || ''}{' '}
+                                {profile?.lastName || ''}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                        <div>
+                            <Phone className="h-7 w-7" />
+                        </div>
+                        <div>
+                            <span className="text-sm font-semibold ">
+                                Contact Number
+                            </span>
+                            <p>{profile?.contactNumber || 'N/A'}</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <div>
+                            <Calendar className="h-7 w-7" />
+                        </div>
+                        <div>
+                            <span className="text-sm font-semibold ">
+                                Date of Birth
+                            </span>
+                            <p>
+                                {profile?.dateOfBirth
+                                    ? new Date(
+                                          profile.dateOfBirth
+                                      ).toLocaleDateString()
+                                    : 'N/A'}
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <div>
+                            <Transgender className="h-7 w-7" />
+                        </div>
+                        <div>
+                            <span className="text-sm font-semibold ">
+                                Gender
+                            </span>
+                            <p>{profile?.gender || 'N/A'}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Work Information */}
+            <div className="w-[800px] mx-auto mb-12">
+                <div className="mb-4">
+                    <h2 className="border-b text-xl">Work Information</h2>
+                </div>
+                <div>
+                    <div className="px-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="flex items-center gap-3">
                             <div>
-                                <span className="text-xs font-semibold ">
+                                <Building className="h-7 w-7" />
+                            </div>
+                            <div>
+                                <span className="text-sm font-semibold ">
                                     Department
                                 </span>
-                                <p className="text-base  mt-1">
-                                    {profile?.department?.name || 'N/A'}
-                                </p>
+                                <p>{profile?.department?.name || 'N/A'}</p>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <div>
+                                <Award className="h-7 w-7" />
                             </div>
                             <div>
-                                <span className="text-xs font-semibold ">
+                                <span className="text-sm font-semibold ">
                                     Designation
                                 </span>
-                                <p className="text-base  mt-1">
-                                    {profile?.designation?.name || 'N/A'}
-                                </p>
+                                <p>{profile?.designation?.name || 'N/A'}</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <div>
+                                <Calendar className="h-7 w-7" />
                             </div>
                             <div>
-                                <span className="text-xs font-semibold ">
-
+                                <span className="text-sm font-semibold ">
                                     Joining Date
                                 </span>
-                                <p className="text-base  mt-1">
+                                <p>
                                     {profile?.joiningDate
                                         ? new Date(
                                               profile.joiningDate
@@ -167,87 +182,121 @@ export function ProfilePage() {
                         </div>
 
                         {profile?.manager && (
-                            <>
-                                <Separator className="my-4 " />
-                                <div>
-                                    <span className="text-xs font-semibold ">
-                                        Manager
-                                    </span>
-                                    <div className="flex items-center space-x-3 mt-2">
-                                        <Avatar className="size-10 border-2 ">
-                                            <AvatarImage
-                                                src={profile.manager.avatarUrl}
-                                                alt={`${profile.manager.firstName} ${profile.manager.lastName}`}
-                                            />
-                                            <AvatarFallback className="text-sm font-semibold  ">
-                                                {profile.manager.firstName?.[0]}
-                                                {profile.manager.lastName?.[0]}
-                                            </AvatarFallback>
-                                        </Avatar>
-                                        <div>
-                                            <p className="text-base font-medium ">
-                                                {profile.manager.firstName}{' '}
-                                                {profile.manager.lastName}
-                                            </p>
-                                            <p className="text-xs ">
-                                                {profile.manager.email}
-                                            </p>
-                                        </div>
+                            <div>
+                                <span className="text-sm font-semibold ">
+                                    Manager
+                                </span>
+                                <div className="flex items-center space-x-3 mt-2">
+                                    <Avatar className="size-10 border-2 ">
+                                        <AvatarImage
+                                            src={
+                                                profile.manager?.profile
+                                                    ?.avatarUrl
+                                            }
+                                            alt={`${profile.manager?.profile?.firstName} ${profile.manager.profile?.lastName}`}
+                                        />
+                                        <AvatarFallback className="text-sm font-semibold  ">
+                                            {
+                                                profile.manager?.profile
+                                                    ?.firstName?.[0]
+                                            }
+                                            {
+                                                profile.manager?.profile
+                                                    ?.lastName?.[0]
+                                            }
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <div>
+                                        <p className="text-sm font-medium ">
+                                            {
+                                                profile.manager?.profile
+                                                    ?.firstName
+                                            }{' '}
+                                            {profile.manager?.profile?.lastName}
+                                        </p>
+                                        <p className="text-xs ">
+                                            {profile.manager.email}
+                                        </p>
                                     </div>
                                 </div>
-                            </>
+                            </div>
                         )}
-                    </CardContent>
-                </Card>
-
-                {/* Roles */}
-                {roles.length > 0 && (
-                    <Card className="shadow-md rounded-xl">
-                        <CardHeader className=" rounded-t-xl">
-                            <CardTitle className="">
-                                Roles
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className=" rounded-b-xl">
-                            <div className="flex flex-wrap gap-3">
-                                {roles.map((role) => (
-                                    <Badge
-                                        key={role.id}
-                                        variant="secondary"
-                                        className="px-4 py-2 text-base rounded-lg"
-                                    >
-                                        {role.name}
-                                    </Badge>
-                                ))}
-                            </div>
-                        </CardContent>
-                    </Card>
-                )}
-
-                {/* Game Interests */}
-                {interests.length > 0 && (
-                    <Card className="shadow-md rounded-xl">
-                        <CardHeader className=" rounded-t-xl">
-                            <CardTitle className="">
-                                Game Interests
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className=" rounded-b-xl">
-                            <div className="flex flex-wrap gap-3">
-                                {interests.map((interest) => (
-                                    <Badge
-                                        key={interest.id}
-                                        variant="outline"
-                                        className="px-4 py-2 text-base rounded-lg  "
-                                    >
-                                        {interest.name}
-                                    </Badge>
-                                ))}
-                            </div>
-                        </CardContent>
-                    </Card>
-                )}
+                    </div>
+                </div>
             </div>
+
+            {/* Roles */}
+            {roles.length > 0 && (
+                <div className="w-[800px] mx-auto mb-12">
+                    <div className="mb-4">
+                        <h2 className="border-b text-xl">Roles</h2>
+                    </div>
+                    <div className=" rounded-b-xl">
+                        <div className="flex flex-wrap gap-3">
+                            {roles.map((role) => (
+                                <Badge
+                                    key={role.id}
+                                    variant="outline"
+                                    className="text-base"
+                                >
+                                    {role.name}
+                                </Badge>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Game Interests */}
+            {interests.length > 0 && (
+                <div className="w-[800px] mx-auto mb-12">
+                    <div className="mb-4">
+                        <h2 className="border-b text-xl">Game Interests</h2>
+                    </div>
+                    <div className=" rounded-b-xl">
+                        <div className="flex flex-wrap gap-3">
+                            {interests.map((interest) => (
+                                <Badge
+                                    key={interest.id}
+                                    variant="outline"
+                                    className="text-base"
+                                >
+                                    {interest.name}
+                                </Badge>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+
+    return (
+        <div className="container mx-auto py-5 px-4 max-w-4xl">
+            <Tabs defaultValue="profile" className="gap-4 min-h-[80vh]">
+                <TabsList className="bg-background rounded-none border-b w-full p-0">
+                    <TabsTrigger
+                        value="profile"
+                        className="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+                    >
+                        Profile
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="orgchart"
+                        className="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+                    >
+                        Org Chart
+                    </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="profile">{profileContent}</TabsContent>
+                <TabsContent
+                    value="orgchart"
+                    className=" h-full flex items-center justify-center"
+                >
+                    <OrgChartSection userId={user.id} />
+                </TabsContent>
+            </Tabs>
         </div>
     );
 }

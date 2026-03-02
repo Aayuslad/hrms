@@ -14,6 +14,7 @@ export const sidebarNavConfig = {
             name: 'Home',
             url: '/home',
             icon: Home,
+            roles: ['Employee'],
         },
         {
             name: 'Games',
@@ -34,16 +35,16 @@ export const sidebarNavConfig = {
             roles: ['Employee'],
         },
         {
-            name: 'Org Chart',
-            url: '/org-chart',
-            icon: Users,
-            roles: ['Employee'],
-        },
-        {
             name: 'Achievements & Social',
             url: '/engagement',
             icon: MessageSquare,
             roles: ['Employee'],
+        },
+        {
+            name: 'Employees',
+            url: '/employees',
+            icon: Users,
+            roles: ['Admin', 'HR'],
         },
     ],
     collapsibleGroup: [
@@ -54,14 +55,10 @@ export const sidebarNavConfig = {
             isActive: false,
             roles: ['Admin', 'HR'],
             items: [
-                {
-                    title: 'Roles',
-                    url: 'configuration/roles',
-                },
-                {
-                    title: 'Employees',
-                    url: 'configuration/employees',
-                },
+                // {
+                //     title: 'Roles',
+                //     url: 'configuration/roles',
+                // },
                 {
                     title: 'Designations',
                     url: 'configuration/designations',

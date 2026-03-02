@@ -1,5 +1,6 @@
 import { axiosClient } from '@/lib/axios-client';
 import { queryClient } from '@/lib/query-client';
+import { handleApiError } from '@/lib/utils';
 import { useAppStore } from '@/store';
 import type { components } from '@/types/generated/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -9,10 +10,11 @@ import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 
 export type User = components['schemas']['UserDetailResponse'];
-export type UserSummary = components['schemas']['UserSummaryResponse'];
+export type UserSummary = components['schemas']['GlobalUserResponseSummary'];
 export type OrgChartType = OrgChartNodeType[];
 export type OrgChartNodeType =
     components['schemas']['EmployeeOrgChartNodeResponse'];
+export type Notification = components['schemas']['NotificationResponse'];
 
 export type LoginUserRequest = components['schemas']['LoginUserRequest'];
 export type RegisterUserRequest = components['schemas']['RegisterUserRequest'];
@@ -22,7 +24,8 @@ export type UpdateUserByAdminRequest =
     components['schemas']['UpdateUserByAdminRequest'];
 export type UpdateUserRolesRequest =
     components['schemas']['UpdateUserRolesRequest'];
-export type Notification = components['schemas']['NotificationResponse'];
+export type UpdateUserBySelfRequest =
+    components['schemas']['UpdateUserBySelfRequest'];
 
 export function useGetUserById(id?: string) {
     return useQuery({
@@ -109,34 +112,30 @@ export function useMarkNotificationsAsRead() {
             });
         },
         onSuccess: () => {
-            toast.success('Notifications marked as read!');
             queryClient.invalidateQueries({ queryKey: ['notifications'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to mark notifications as read'
-            );
-            console.error('mark as read failed', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to mark notifications as read'),
     });
 }
 
-const orgChartQuery = {
-    queryKey: ['org-charts'] as const,
+const orgChartQuery = (userId?: string) => ({
+    queryKey: ['org-charts', userId] as const,
     queryFn: async (): Promise<OrgChartType> => {
-        const { data } = await axiosClient.get('users/org-charts');
+        const { data } = await axiosClient.get(
+            `users/org-charts?userId=${userId}`
+        );
         return data.data.orgCharts || [];
     },
-};
+    enabled: !!userId,
+});
 
-export function useGetOrgCharts() {
-    return useQuery<OrgChartType, AxiosError>(orgChartQuery);
+export function useGetOrgCharts(userId?: string) {
+    return useQuery<OrgChartType, AxiosError>(orgChartQuery(userId));
 }
 
-export const orgChartsLoader = async () => {
-    return await queryClient.ensureQueryData(orgChartQuery);
+export const orgChartsLoader = async (userId: string) => {
+    return await queryClient.ensureQueryData(orgChartQuery(userId));
 };
 
 export function useLoginUser() {
@@ -148,16 +147,11 @@ export function useLoginUser() {
             await axiosClient.post('/users/login', payload);
         },
         onSuccess: () => {
-            toast.success('Logged in!');
             queryClient.invalidateQueries({ queryKey: ['me'] });
             navigate('/home');
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message || error.message || 'Login failed'
-            );
-            console.error('login failed', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Login failed'),
     });
 }
 
@@ -170,18 +164,11 @@ export function useRegisterUser() {
             await axiosClient.post('/users/register', payload);
         },
         onSuccess: () => {
-            toast.success('Registered!');
             queryClient.invalidateQueries({ queryKey: ['me'] });
             navigate('/create-user-profile');
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Register failed'
-            );
-            console.error('register failed', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Register failed'),
     });
 }
 
@@ -196,18 +183,11 @@ export function useCreateUserProfile() {
             await axiosClient.post('/users/profile', payload);
         },
         onSuccess: () => {
-            toast.success('Profile created!');
             queryClient.invalidateQueries({ queryKey: ['me'] });
             navigate('/home');
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Profile creation failed'
-            );
-            console.error('Profile creation failed', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Profile creation failed'),
     });
 }
 
@@ -223,14 +203,8 @@ export function useLogoutUser() {
             queryClient.clear();
             navigate('/login');
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Logout failed'
-            );
-            console.error('logout failed', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Logout failed'),
     });
 }
 
@@ -246,16 +220,31 @@ export function useUpdateUserByAdmin() {
         },
         onSuccess: () => {
             toast.success('User updated!');
+            queryClient.invalidateQueries({ queryKey: ['users-details'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to update user'
-            );
-            console.error('update user failed', error);
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to update user'),
+    });
+}
+
+export function useUpdateUserBySelf() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (payload: FormData): Promise<void> => {
+            await axiosClient.put('/users/me', payload, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
         },
+        onSuccess: () => {
+            toast.success('Profile updated!');
+            queryClient.invalidateQueries({ queryKey: ['me'] });
+        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to update profile'),
     });
 }
 
@@ -275,15 +264,10 @@ export function useEditUserRoles() {
         onSuccess: () => {
             toast.success('User roles updated!');
             queryClient.invalidateQueries({ queryKey: ['users-details'] });
+            queryClient.invalidateQueries({ queryKey: ['users'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to update user roles'
-            );
-            console.error('update roles failed', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to update user roles'),
     });
 }
 

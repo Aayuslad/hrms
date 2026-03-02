@@ -1,8 +1,9 @@
 import type { TravelPlanSummary } from '@/api/travel-api';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, MapPin } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import { Calendar, MapPin, Settings, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '../ui/button';
+import { useAccessChecker } from '@/hooks/use-has-access';
 
 type Props = {
     travelPlan: TravelPlanSummary;
@@ -10,31 +11,21 @@ type Props = {
 
 const TravelPlanCard = ({ travelPlan }: Props) => {
     const navigate = useNavigate();
+    const canAccess = useAccessChecker();
 
     return (
-        <Card className="w-[420px] border-primary/40 bg-transparent shadow-none p-6 rounded-2xl">
+        <Card className="w-[420px] shadow-none p-6 rounded-2xl">
             {/* HEADER */}
-            <div className="flex items-start justify-between gap-4">
+            <div className="">
                 <div className="space-y-1">
                     <CardTitle className="text-2xl font-semibold leading-tight">
                         {travelPlan.title}
                     </CardTitle>
                 </div>
-
-                <Button
-                    size="sm"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`${travelPlan.id}`);
-                    }}
-                    variant={'outline'}
-                >
-                    Explore More
-                </Button>
             </div>
 
             {/* CONTENT */}
-            <CardContent className="px-0 pt-4 space-y-4">
+            <CardContent className="px-0  space-y-4">
                 <div className="space-y-3 text-sm text-muted-foreground">
                     {/* Destination */}
                     <div className="flex items-center gap-3">
@@ -62,8 +53,48 @@ const TravelPlanCard = ({ travelPlan }: Props) => {
 
                 {/* Description */}
                 <p className="text-sm text-foreground/90 leading-relaxed">
-                    {travelPlan.description}
+                    {travelPlan.description?.slice(0, 100)}...
                 </p>
+
+                <div className="flex gap-2">
+                    {travelPlan.meParticipant && (
+                        <Button
+                            size="sm"
+                            className="flex-[50%]"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(`${travelPlan.id}`, {
+                                    state: {
+                                        childBreadCrumbName: travelPlan.title,
+                                    },
+                                });
+                            }}
+                            variant={'outline'}
+                        >
+                            <User />
+                            My details
+                        </Button>
+                    )}
+
+                    {canAccess(['Admin', 'HR']) && (
+                        <Button
+                            size="sm"
+                            className="flex-[50%]"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(`${travelPlan.id}/manage`, {
+                                    state: {
+                                        childBreadCrumbName: travelPlan.title,
+                                    },
+                                });
+                            }}
+                            variant={'outline'}
+                        >
+                            <Settings />
+                            Manage
+                        </Button>
+                    )}
+                </div>
             </CardContent>
         </Card>
     );

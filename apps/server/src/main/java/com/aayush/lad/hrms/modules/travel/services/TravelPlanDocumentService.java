@@ -29,7 +29,7 @@ public class TravelPlanDocumentService {
 
     private TravelPlan requirePlan(UUID id, boolean withAll) {
         return withAll
-                ? travelPlanRepository.findByIdWithAll(id).orElseThrow(() -> new NotFoundException("Travel plan not found"))
+                ? travelPlanRepository.findByIdWithAllOrderByCreatedAtDesc(id).orElseThrow(() -> new NotFoundException("Travel plan not found"))
                 : travelPlanRepository.findById(id).orElseThrow(() -> new NotFoundException("Travel plan not found"));
     }
 
@@ -73,11 +73,6 @@ public class TravelPlanDocumentService {
 
         DocumentType dt = documentTypeRepository.findById(request.getDocumentTypeId())
                 .orElseThrow(() -> new NotFoundException("Document type not found"));
-
-        if (request.getDoc() != null) {
-            fileUploadService.deleteFileByURL(target.getDocUrl());
-            target.setDocUrl(fileUploadService.uploadFile(request.getDoc()));
-        }
 
         target.setOwner(owner);
         target.setDocumentType(dt);

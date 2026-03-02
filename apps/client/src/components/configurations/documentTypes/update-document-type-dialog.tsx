@@ -1,7 +1,6 @@
 import {
     useUpdateDocumentType,
-    type DocumentType,
-    type UpdateDocumentTypeRequest,
+    type UpdateDocumentTypeRequest
 } from '@/api/document-type-api';
 import { Button } from '@/components/ui/button';
 import {
@@ -10,15 +9,18 @@ import {
     DialogDescription,
     DialogFooter,
     DialogHeader,
-    DialogTitle
+    DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useAppStore } from '@/store';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import z from 'zod';
+import { useShallow } from 'zustand/react/shallow';
 
 const updateDocumentTypeFormSchema = z.object({
     id: z.string().nonempty('Document ID is required'),
@@ -29,24 +31,34 @@ const updateDocumentTypeFormSchema = z.object({
 }) satisfies z.ZodType<UpdateDocumentTypeRequest>;
 
 export function UpdateDocTypeDialog() {
-    const location = useLocation();
-    const documentType = location.state as DocumentType;
     const updateDocumentTypeMutation = useUpdateDocumentType();
-    const navigate = useNavigate();
+    const { configDialogOpen, configDialogTarget, closeConfigDialog } =
+        useAppStore(
+            useShallow((s) => ({
+                configDialogOpen: s.configDialogOpen,
+                configDialogTarget: s.configDialogTarget,
+                closeConfigDialog: s.closeConfigDialog,
+            }))
+        );
 
     const form = useForm<UpdateDocumentTypeRequest>({
         resolver: zodResolver(updateDocumentTypeFormSchema),
-        defaultValues: {
-            id: documentType.id,
-            name: documentType.name,
-        },
     });
+
+    useEffect(() => {
+        if (configDialogTarget?.payload) {
+            form.reset({
+                id: configDialogTarget.payload.id,
+                name: configDialogTarget.payload.name,
+            });
+        }
+    }, [configDialogTarget?.payload]);
 
     const onSubmit = async (data: UpdateDocumentTypeRequest) => {
         updateDocumentTypeMutation.mutate(data, {
             onSuccess: () => {
                 form.reset();
-                navigate('/configuration/document-types');
+                closeConfigDialog();
             },
         });
     };
@@ -57,7 +69,14 @@ export function UpdateDocTypeDialog() {
     };
 
     return (
-        <Dialog open={true}>
+        <Dialog
+            open={
+                configDialogOpen &&
+                configDialogTarget?.entity === 'documentTypes' &&
+                configDialogTarget?.mode === 'update'
+            }
+            onOpenChange={(state) => state === false && closeConfigDialog()}
+        >
             <DialogContent className="sm:max-w-[425px]">
                 <form
                     onSubmit={form.handleSubmit(onSubmit, onInvalid)}
@@ -83,9 +102,7 @@ export function UpdateDocTypeDialog() {
                                 variant="outline"
                                 type="button"
                                 disabled={updateDocumentTypeMutation.isPending}
-                                onClick={() =>
-                                    navigate('/configuration/document-types')
-                                }
+                                onClick={() => closeConfigDialog()}
                             >
                                 Cancel
                             </Button>
@@ -94,6 +111,9 @@ export function UpdateDocTypeDialog() {
                             type="submit"
                             disabled={updateDocumentTypeMutation.isPending}
                         >
+                            {updateDocumentTypeMutation.isPending && (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            )}
                             Save
                         </Button>
                     </DialogFooter>

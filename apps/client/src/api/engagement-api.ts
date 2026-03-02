@@ -1,5 +1,6 @@
 import { axiosClient } from '@/lib/axios-client';
 import { queryClient } from '@/lib/query-client';
+import { handleApiError } from '@/lib/utils';
 import type { components } from '@/types/generated/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
@@ -31,7 +32,7 @@ export const postsLoader = async () => {
     return await queryClient.ensureQueryData(postsQuery);
 };
 
-export function useGetPost(id: string) {
+export function useGetPost(id?: string) {
     return useQuery<Post, AxiosError>({
         queryKey: ['posts', id],
         queryFn: async (): Promise<Post> => {
@@ -46,41 +47,33 @@ export function useGetPost(id: string) {
 
 export function useCreatePost() {
     return useMutation({
-        mutationFn: async (payload: CreatePostRequest): Promise<void> => {
-            await axiosClient.post('/engagement/posts', payload);
+        mutationFn: async (params: { payload: FormData | CreatePostRequest }): Promise<void> => {
+            await axiosClient.post('/engagement/posts', params.payload, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
         },
         onSuccess: () => {
             toast.success('Post created');
             queryClient.invalidateQueries({ queryKey: ['posts'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to create post'
-            );
-            console.error('Failed to create post', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to create post'),
     });
 }
 
 export function useUpdatePost() {
     return useMutation({
-        mutationFn: async (payload: UpdatePostRequest): Promise<void> => {
-            await axiosClient.put(`/engagement/posts/${payload.id}`, payload);
+        mutationFn: async (params: { id: string; payload: FormData | UpdatePostRequest }): Promise<void> => {
+            await axiosClient.put(`/engagement/posts/${params.id}`, params.payload, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
         },
         onSuccess: () => {
             toast.success('Post updated');
             queryClient.invalidateQueries({ queryKey: ['posts'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to update post'
-            );
-            console.error('Failed to update post', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to update post'),
     });
 }
 
@@ -93,14 +86,8 @@ export function useDeletePost() {
             toast.success('Post deleted');
             queryClient.invalidateQueries({ queryKey: ['posts'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to delete post'
-            );
-            console.error('Failed to delete post', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to delete post'),
     });
 }
 
@@ -112,14 +99,8 @@ export function useLikePost() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['posts'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to like post'
-            );
-            console.error('Failed to like post', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to like post'),
     });
 }
 
@@ -131,14 +112,8 @@ export function useUnlikePost() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['posts'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to unlike post'
-            );
-            console.error('Failed to unlike post', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to unlike post'),
     });
 }
 
@@ -163,14 +138,8 @@ export function useCreateComment() {
                 queryKey: ['post', variables.postId],
             });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to create comment'
-            );
-            console.error('Failed to create comment', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to create comment'),
     });
 }
 
@@ -197,14 +166,8 @@ export function useUpdateComment() {
                 queryKey: ['post', variables.postId],
             });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to update comment'
-            );
-            console.error('Failed to update comment', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to update comment'),
     });
 }
 
@@ -228,14 +191,8 @@ export function useDeleteComment() {
                 queryKey: ['post', variables.postId],
             });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to delete comment'
-            );
-            console.error('Failed to delete comment', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to delete comment'),
     });
 }
 
@@ -256,15 +213,10 @@ export function useLikeComment() {
             queryClient.invalidateQueries({
                 queryKey: ['post', variables.postId],
             });
+            queryClient.invalidateQueries({ queryKey: ['posts'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to like comment'
-            );
-            console.error('Failed to like comment', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to like comment'),
     });
 }
 
@@ -285,14 +237,9 @@ export function useUnlikeComment() {
             queryClient.invalidateQueries({
                 queryKey: ['post', variables.postId],
             });
+            queryClient.invalidateQueries({ queryKey: ['posts'] });
         },
-        onError: (error: AxiosError<{ message: string }>) => {
-            toast.error(
-                error.response?.data?.message ||
-                    error.message ||
-                    'Failed to unlike comment'
-            );
-            console.error('Failed to unlike comment', error);
-        },
+        onError: (error: AxiosError<{ message: string }>) =>
+            handleApiError(error, 'Failed to unlike comment'),
     });
 }

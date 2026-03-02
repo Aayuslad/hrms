@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+/* @import url('https://fonts.googleapis.com/css2?family=Gabriela&display=swap'); */
+
 @plugin "tailwindcss-animate";
 @import 'tw-animate-css';
 
@@ -36,7 +38,7 @@
   --chart-3: oklch(0.66 0.17 324.24);
   --chart-4: oklch(0.81 0.15 127.91);
   --chart-5: oklch(0.68 0.17 258.25);
-  --sidebar: oklch(0.99 0 0);
+  --sidebar: oklch(0.98 0.01 335.69);
   --sidebar-foreground: oklch(0.15 0 0);
   --sidebar-primary: oklch(0.56 0.11 228.27);
   --sidebar-primary-foreground: oklch(0.98 0 0);
@@ -44,11 +46,10 @@
   --sidebar-accent-foreground: oklch(0.25 0 0);
   --sidebar-border: oklch(0.90 0 0);
   --sidebar-ring: oklch(0.56 0.11 228.27);
-
-  --font-sans: Lato, sans-serif;
-  --font-serif: Merriweather, Geist, Geist Fallback, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono: Roboto Mono, Geist Mono, Geist Mono Fallback, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-
+   
+  --font-sans: Poppins, sans-serif;
+  --font-serif: "Geist", "Geist Fallback", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --radius: 0.65rem;
 
   --shadow-2xs: 0px 1px 3px 0px oklch(0 0 0 / 0.01);
@@ -63,6 +64,7 @@
   --shadow-opacity: 0.01;
   --shadow-offset-x: 0px;
 
+  --tracking-normal: 0.01em;
 }
 
 .dark {

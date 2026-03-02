@@ -24,7 +24,9 @@ public class PostCommentResponse {
 
     private long likeCount;
 
+    private boolean isLiked;
+
     private LocalDateTime createdAt;
-    
+
     private List<GlobalUserResponseSummary> likedBy;
 }

@@ -59,8 +59,8 @@ export function NotificationsPage() {
 
     return (
         <div className="space-y-4 p-6">
-            <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold">Notifications</h2>
+            <div className="flex items-center justify-end">
+                {/* <h2 className="text-2xl font-bold">Notifications</h2> */}
                 {unreadNotificationIds.length > 0 && (
                     <Button
                         onClick={handleMarkAllAsRead}
@@ -69,12 +69,12 @@ export function NotificationsPage() {
                     >
                         {markAsReadMutation.isPending
                             ? 'Marking...'
-                            : `Mark All as Read (${unreadNotificationIds.length})`}
+                            : `Mark all as read (${unreadNotificationIds.length})`}
                     </Button>
                 )}
             </div>
 
-            <div className="space-y-3 w-[600px] mx-auto">
+            <div className="space-y-3 w-[750px] pr-16 mt-10 mx-auto">
                 {sortedNotifications.map((notification) => (
                     <Card
                         key={notification.id}
@@ -113,11 +113,19 @@ export function NotificationsPage() {
                                         {notification.content}
                                     </p>
                                 </div>
-                                {!notification.isRead && (
-                                    <span className="shrink-0 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
-                                        New
-                                    </span>
-                                )}
+                                <div className="flex flex-col-reverse items-end gap-2">
+                                    {!notification.isRead && (
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => markAsReadMutation.mutate([notification.id!])}
+                                            disabled={markAsReadMutation.isPending}
+                                        >
+                                            Mark as read
+                                        </Button>
+                                    )}
+                                  
+                                </div>
                             </div>
                         </CardContent>
                     </Card>

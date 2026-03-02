@@ -26,7 +26,8 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { useAccessChecker } from '@/hooks/use-has-access';
-import { useNavigate } from 'react-router-dom';
+import { useAppStore } from '@/store';
+import { useShallow } from 'zustand/react/shallow';
 
 export function TagsTable() {
     const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -36,7 +37,12 @@ export function TagsTable() {
         React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
     const canAccess = useAccessChecker();
-    const navigate = useNavigate();
+    const { openConfigDialog } =
+        useAppStore(
+            useShallow((s) => ({
+                openConfigDialog: s.openConfigDialog,
+            }))
+        );
     const { data, isLoading, isError } = useGetTags();
 
     const columns: ColumnDef<Tag>[] = [
@@ -59,7 +65,7 @@ export function TagsTable() {
                 </div>
             ),
         },
-        ...(canAccess(['Admin'])
+        ...(canAccess(['Admin', 'HR'])
             ? ([
                   {
                       accessorKey: 'actions',
@@ -71,9 +77,7 @@ export function TagsTable() {
                                       className="text-gray-400 hover:cursor-pointer"
                                       onClick={(e) => {
                                           e.stopPropagation();
-                                          navigate(`update`, {
-                                              state: row.original,
-                                          });
+                                          openConfigDialog({ entity: 'tags', mode: 'update', payload: row.original });
                                       }}
                                   >
                                       Edit
@@ -82,9 +86,7 @@ export function TagsTable() {
                                       className="text-destructive hover:cursor-pointer"
                                       onClick={(e) => {
                                           e.stopPropagation();
-                                          navigate(`delete`, {
-                                              state: row.original.id,
-                                          });
+                                          openConfigDialog({ entity: 'tags', mode: 'delete', payload: row.original.id });
                                       }}
                                   >
                                       Delete
@@ -149,9 +151,9 @@ export function TagsTable() {
             </div>
 
             {/* table */}
-            <div className="rounded-md border">
+            <div className="rounded-md overflow-hidden border">
                 <Table>
-                    <TableHeader>
+                    <TableHeader className="bg-border">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {

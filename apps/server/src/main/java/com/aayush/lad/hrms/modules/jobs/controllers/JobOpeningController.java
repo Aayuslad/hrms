@@ -60,7 +60,7 @@ public class JobOpeningController {
     @PreAuthorize("hasAnyRole('Admin', 'HR')")
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Result<Void>> update(@PathVariable("id") UUID id,
-                                               @Valid @ModelAttribute UpdateJobOpeningRequest request) {
+            @Valid @ModelAttribute UpdateJobOpeningRequest request) {
         request.setId(id);
         jobOpeningService.update(request);
         return ResultMapper.handle(HttpStatus.OK);
@@ -69,7 +69,7 @@ public class JobOpeningController {
     @PreAuthorize("hasRole('Employee')")
     @PostMapping("/{id}/share")
     public ResponseEntity<Result<Void>> share(@PathVariable("id") UUID id,
-                                              @Valid @RequestBody ShareJobOpeningRequest request) {
+            @Valid @RequestBody ShareJobOpeningRequest request) {
         request.setJobOpeningId(id);
         jobOpeningService.share(request);
         return ResultMapper.handle(HttpStatus.OK);
@@ -79,6 +79,13 @@ public class JobOpeningController {
     @PatchMapping("/{id}/close")
     public ResponseEntity<Result<Void>> close(@PathVariable("id") UUID id) {
         jobOpeningService.close(id);
+        return ResultMapper.handle(HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
+    @PatchMapping("/{id}/reopen")
+    public ResponseEntity<Result<Void>> reopen(@PathVariable("id") UUID id) {
+        jobOpeningService.reopen(id);
         return ResultMapper.handle(HttpStatus.OK);
     }
 }

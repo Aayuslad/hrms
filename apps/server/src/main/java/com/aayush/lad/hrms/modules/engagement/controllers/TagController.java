@@ -46,7 +46,7 @@ public class TagController {
         return ResultMapper.handle(HttpStatus.OK, response);
     }
 
-    @PreAuthorize("hasAnyRole('Admin', 'HR')")
+    @PreAuthorize("hasRole('Employee')")
     @PostMapping
     public ResponseEntity<Result<Void>> create(@Valid @RequestBody CreateTagRequest request) {
         tagService.create(request);
@@ -56,7 +56,7 @@ public class TagController {
     @PreAuthorize("hasAnyRole('Admin', 'HR')")
     @PutMapping("/{id}")
     public ResponseEntity<Result<Void>> update(@PathVariable("id") UUID id,
-            @Valid @RequestBody UpdateTagRequest request) {
+                                               @Valid @RequestBody UpdateTagRequest request) {
         request.setId(id);
         tagService.update(request);
         return ResultMapper.handle(HttpStatus.OK);

@@ -17,5 +17,9 @@ public class GlobalUserResponseSummary {
 
     private String userName;
 
+    private String email;
+
+    private float totalClaimedAmount;
+
     private UserProfileResponseSummary profile;
 }

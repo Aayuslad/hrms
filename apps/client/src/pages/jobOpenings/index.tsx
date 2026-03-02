@@ -1,6 +1,7 @@
 import { useGetJobOpenings } from '@/api/jobs-api';
-import CreateJobOpeningDialog from '@/components/jobOpenings/create-job-opening-dialog';
+import CreateJobOpeningDialog from '@/components/jobOpenings/dialogs/create-job-opening-dialog';
 import JobOpeningCard from '@/components/jobOpenings/job-opening-card';
+import { NoContent } from '@/components/no-content';
 import { Spinner } from '@/components/ui/spinner';
 
 export function Index() {
@@ -22,12 +23,8 @@ export function Index() {
         );
     }
 
-    if (!isLoading && !isError && !jobOpenings) {
-        return (
-            <div className="w-full h-[80vh] flex items-center justify-center">
-                404 - Not found...!
-            </div>
-        );
+    if (!isLoading && !isError && !jobOpenings?.length) {
+        return <NoContent />;
     }
 
     return (
@@ -47,15 +44,13 @@ export function Index() {
 
             <div className="w-full flex justify-evenly pt-5">
                 <div className="w-full flex flex-col items-center">
-                    <div className="w-fit">
-                        <div className="mx-auto max-w-7xl px-5 py-12 grid gap-8 md:grid-cols-2">
-                            {jobOpenings?.map((jobOpening) => (
-                                <JobOpeningCard
-                                    key={jobOpening.id}
-                                    jobOpening={jobOpening}
-                                />
-                            ))}
-                        </div>
+                    <div className="mx-auto max-w-7xl px-5 py-12 grid gap-8 md:grid-cols-2">
+                        {jobOpenings?.map((jobOpening) => (
+                            <JobOpeningCard
+                                key={jobOpening.id}
+                                jobOpening={jobOpening}
+                            />
+                        ))}
                     </div>
                 </div>
             </div>

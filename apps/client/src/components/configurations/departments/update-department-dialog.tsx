@@ -10,15 +10,18 @@ import {
     DialogDescription,
     DialogFooter,
     DialogHeader,
-    DialogTitle
+    DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useAppStore } from '@/store';
+import { useShallow } from 'zustand/react/shallow';
 import { toast } from 'sonner';
 import z from 'zod';
+import { Loader2 } from 'lucide-react';
+import { useEffect } from 'react';
 
 const updateDepartmentFormSchema = z.object({
     id: z.string().nonempty('Department ID is required'),
@@ -29,36 +32,56 @@ const updateDepartmentFormSchema = z.object({
 }) satisfies z.ZodType<UpdateDepartmentRequest>;
 
 export function UpdateDepartmentDialog() {
-    const location = useLocation();
-    const department = location.state as Department;
     const updateDepartmentMutation = useUpdateDepartment();
-    const navigate = useNavigate();
+    const { configDialogOpen, configDialogTarget, closeConfigDialog } =
+        useAppStore(
+            useShallow((s) => ({
+                configDialogOpen: s.configDialogOpen,
+                configDialogTarget: s.configDialogTarget,
+                closeConfigDialog: s.closeConfigDialog,
+            }))
+        );
 
     const form = useForm<UpdateDepartmentRequest>({
         resolver: zodResolver(updateDepartmentFormSchema),
-        defaultValues: {
-            id: department.id,
-            name: department.name,
-        },
     });
+
+    useEffect(() => {
+        if (configDialogTarget?.payload) {
+            form.reset({
+                id: configDialogTarget.payload.id,
+                name: configDialogTarget.payload.name,
+            });
+        }
+    }, [configDialogTarget?.payload]);
 
     const onSubmit = async (data: UpdateDepartmentRequest) => {
         updateDepartmentMutation.mutate(data, {
             onSuccess: () => {
                 form.reset();
-                navigate('/configuration/departments');
+                closeConfigDialog();
             },
         });
     };
 
     const onInvalid = (errors: typeof form.formState.errors) => {
         const messages = Object.values(errors).map((err) => err.message);
-        messages.slice().reverse().forEach((msg) => toast.error(msg));
+        messages
+            .slice()
+            .reverse()
+            .forEach((msg) => toast.error(msg));
     };
 
     return (
-        <Dialog open={true}>
-            <DialogContent className="sm:max-w-lg">
+        <Dialog
+            open={
+                configDialogOpen &&
+                configDialogTarget?.entity === 'departments' &&
+                configDialogTarget?.mode === 'update'
+            }
+            onOpenChange={(state) => state === false && closeConfigDialog()}
+        >
+            <DialogContent className="sm:max-w-[425px]">
                 <form
                     onSubmit={form.handleSubmit(onSubmit, onInvalid)}
                     className="grid gap-7"
@@ -83,9 +106,7 @@ export function UpdateDepartmentDialog() {
                                 variant="outline"
                                 type="button"
                                 disabled={updateDepartmentMutation.isPending}
-                                onClick={() =>
-                                    navigate('/configuration/departments')
-                                }
+                                onClick={() => closeConfigDialog()}
                             >
                                 Cancel
                             </Button>
@@ -94,6 +115,9 @@ export function UpdateDepartmentDialog() {
                             type="submit"
                             disabled={updateDepartmentMutation.isPending}
                         >
+                            {updateDepartmentMutation.isPending && (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            )}
                             Save
                         </Button>
                     </DialogFooter>

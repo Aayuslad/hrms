@@ -9,33 +9,49 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
+import { useAppStore } from '@/store';
+import { useShallow } from 'zustand/react/shallow';
 
 export function DeleteTagDialog() {
-    const location = useLocation();
-    const id = location.state as string;
     const deleteTagMutation = useDeleteTag();
-    const navigate = useNavigate();
+    const { configDialogOpen, configDialogTarget, closeConfigDialog } =
+        useAppStore(
+            useShallow((s) => ({
+                configDialogOpen: s.configDialogOpen,
+                configDialogTarget: s.configDialogTarget,
+                closeConfigDialog: s.closeConfigDialog,
+            }))
+        );
 
-    const submit = async (id: string | null) => {
+    const id = configDialogTarget?.payload as string | undefined;
+
+    const submit = async (id?: string) => {
         if (!id) {
             return;
         }
         deleteTagMutation.mutate(id, {
             onSuccess: () => {
-                navigate('/configuration/tags');
+                closeConfigDialog();
             },
         });
     };
 
     return (
-        <Dialog open={true}>
+        <Dialog
+            open={
+                configDialogOpen &&
+                configDialogTarget?.entity === 'tags' &&
+                configDialogTarget?.mode === 'delete'
+            }
+            onOpenChange={(state) => state === false && closeConfigDialog()}
+        >
             <DialogContent className="sm:max-w-[425px] space-y-2">
                 <DialogHeader className="space-y-2">
                     <DialogTitle>Confirm Delete Tag</DialogTitle>
                     <DialogDescription>
-                        This tag will be removed and this action
-                        cannot be undone.
+                        This tag will be removed and this action cannot be
+                        undone.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -44,9 +60,7 @@ export function DeleteTagDialog() {
                         <Button
                             variant="secondary"
                             disabled={deleteTagMutation.isPending}
-                            onClick={() =>
-                                navigate('/configuration/tags')
-                            }
+                            onClick={() => closeConfigDialog()}
                         >
                             Cancel
                         </Button>
@@ -58,6 +72,9 @@ export function DeleteTagDialog() {
                         onClick={() => submit(id)}
                         disabled={deleteTagMutation.isPending}
                     >
+                        {deleteTagMutation.isPending && (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
                         Delete
                     </Button>
                 </DialogFooter>

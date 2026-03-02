@@ -38,7 +38,7 @@ public class TravelPlanExpense extends BaseModel {
     @Column(nullable = false)
     @CreationTimestamp
     private LocalDateTime submittedAt;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "travel_plan_id", nullable = false)
     private TravelPlan travelPlan;
@@ -55,6 +55,6 @@ public class TravelPlanExpense extends BaseModel {
     @JoinColumn(name = "participant_id", nullable = false)
     private User participant;
 
-    @OneToMany(mappedBy = "expense", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "expense", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TravelPlanExpenseProof> proofs = new HashSet<>();
 }

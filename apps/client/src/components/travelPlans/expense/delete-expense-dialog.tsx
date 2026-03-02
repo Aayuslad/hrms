@@ -9,6 +9,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { Loader2 } from 'lucide-react';
 
 interface DeleteExpenseDialogProps {
     expenseId: string;
@@ -27,10 +28,8 @@ export function DeleteExpenseDialog({
 }: Readonly<DeleteExpenseDialogProps>) {
     const deleteExpenseMutation = useDeleteExpense();
 
-    const submit = async (id: string) => {
-        if (!id) {
-            return;
-        }
+    const submit = async () => {
+        // props already include the ids we need
         deleteExpenseMutation.mutate(
             {
                 expenseId: expenseId,
@@ -69,9 +68,12 @@ export function DeleteExpenseDialog({
                         type="submit"
                         variant="default"
                         className="flex-1 bg-red-500 text-white hover:bg-red-600"
-                        onClick={() => submit(id)}
+                        onClick={() => submit()}
                         disabled={deleteExpenseMutation.isPending}
                     >
+                        {deleteExpenseMutation.isPending && (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
                         Delete
                     </Button>
                 </DialogFooter>
