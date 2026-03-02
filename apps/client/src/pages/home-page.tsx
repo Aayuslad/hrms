@@ -1,5 +1,5 @@
 import { useGetMe } from '@/api/user-api';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,6 +25,7 @@ export function HomePage() {
 
     const now = new Date();
     const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
+     //@ts-ignore
     const date = now.toLocaleDateString('en-US', dateOptions);
     const hour = now.getHours();
 

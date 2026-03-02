@@ -1,12 +1,11 @@
 import { CreateDocumentTypeDialog } from '@/components/configurations/documentTypes/create-document-type-dialog';
-import { DocumentTypesTable } from '@/components/configurations/documentTypes/document-types-table';
-import { Button } from '@/components/ui/button';
-import { Outlet } from 'react-router';
-import { useAppStore } from '@/store';
-import { useShallow } from 'zustand/react/shallow';
-import { UpdateEmployeeDialog } from '@/components/configurations/employees/update-employee-dialog';
 import { DeleteDocTypeDialog } from '@/components/configurations/documentTypes/delete-document-type-dialog';
+import { DocumentTypesTable } from '@/components/configurations/documentTypes/document-types-table';
 import { UpdateDocTypeDialog } from '@/components/configurations/documentTypes/update-document-type-dialog';
+import { Button } from '@/components/ui/button';
+import { useAppStore } from '@/store';
+import { Outlet } from 'react-router';
+import { useShallow } from 'zustand/react/shallow';
 
 export function DocumentTypePage() {
     const { openConfigDialog } = useAppStore(

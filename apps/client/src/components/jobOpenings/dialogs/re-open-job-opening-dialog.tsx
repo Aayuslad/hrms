@@ -9,7 +9,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Loader2, RefreshCw, X } from 'lucide-react';
+import { Loader2, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
 
 type Props = {

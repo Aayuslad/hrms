@@ -31,7 +31,7 @@ public class PostComment extends BaseModel {
     private User author;
 
     @Lob
-    @Column(columnDefinition = "NVARCHAR(MAX)")
+    @Column
     private String content;
 
     @Column(nullable = false)

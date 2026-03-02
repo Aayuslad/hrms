@@ -58,6 +58,7 @@ const WaitForSlotDialog = ({
 
     const playersFieldArray = useFieldArray({
         control: form.control,
+        //@ts-ignore
         name: 'playerIds',
     });
 

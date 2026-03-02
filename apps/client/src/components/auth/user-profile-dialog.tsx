@@ -1,4 +1,5 @@
-import { useGetUserById, type User } from '@/api/user-api';
+import { useGetUserById } from '@/api/user-api';
+import { OrgChartSection } from '@/components/orgChart/org-chart-section';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -11,9 +12,6 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Spinner } from '@/components/ui/spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { OrgChartSection } from '@/components/orgChart/org-chart-section';
-import { useState } from 'react';
-import { UserPill } from '../user-pill';
 import {
     Award,
     Building,
@@ -22,6 +20,7 @@ import {
     Transgender,
     UserRoundCog,
 } from 'lucide-react';
+import { useState } from 'react';
 
 type Props = {
     userId: string;

@@ -40,12 +40,11 @@ export function CreateDocumentTypeDialog({ visibleTo }: Props) {
     const canAccess = useAccessChecker();
     const createDocumentTypeMutation = useCreateDocumentType();
 
-    const { configDialogOpen, configDialogTarget, openConfigDialog, closeConfigDialog } =
+    const { configDialogOpen, configDialogTarget, closeConfigDialog } =
         useAppStore(
             useShallow((s) => ({
                 configDialogOpen: s.configDialogOpen,
                 configDialogTarget: s.configDialogTarget,
-                openConfigDialog: s.openConfigDialog,
                 closeConfigDialog: s.closeConfigDialog,
             }))
         );

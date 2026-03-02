@@ -1,4 +1,4 @@
-import { useGetMe, useGetUserList, type UserSummary } from '@/api/user-api';
+import { useGetUserList, type UserSummary } from '@/api/user-api';
 import { Button } from '@/components/ui/button';
 import {
     Command,
@@ -16,9 +16,9 @@ import {
 import { cn } from '@/lib/utils';
 import { Check, X } from 'lucide-react';
 import * as React from 'react';
-import { Spinner } from '../ui/spinner';
-import { Label } from '../ui/label';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Label } from '../ui/label';
+import { Spinner } from '../ui/spinner';
 
 type Props = {
     fields: string[];

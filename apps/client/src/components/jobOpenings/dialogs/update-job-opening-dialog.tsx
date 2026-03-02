@@ -1,3 +1,8 @@
+import {
+    useUpdateJobOpening,
+    type JobOpening,
+    type UpdateJobOpeningRequest,
+} from '@/api/jobs-api';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -10,21 +15,15 @@ import {
 } from '@/components/ui/dialog';
 import { Form } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { NumberInputWithEndButtons } from '@/components/ui/number-input-with-end-buttons';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Textarea } from '@/components/ui/textarea';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Pencil } from 'lucide-react';
 import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Textarea } from '@/components/ui/textarea';
-import {
-    useUpdateJobOpening,
-    type JobOpening,
-    type UpdateJobOpeningRequest,
-} from '@/api/jobs-api';
-import { Label } from '@/components/ui/label';
-import { DesignationSelector } from '../internal/designations-selector';
-import { NumberInputWithEndButtons } from '@/components/ui/number-input-with-end-buttons';
 import { DefaultHrSelector } from '../internal/default-hr-selector';
 import { HRsSelector } from '../internal/hrs-selector';
 import { ReviewersSelector } from '../internal/reviewers-selector';
@@ -64,11 +63,13 @@ const UpdateJobOpeningDialog = ({ jobOpening }: Props) => {
 
     const hrsFieldArray = useFieldArray({
         control: form.control,
+        //@ts-ignore
         name: 'hrs',
     });
 
     const reviewersFieldArray = useFieldArray({
         control: form.control,
+        //@ts-ignore
         name: 'reviewers',
     });
 

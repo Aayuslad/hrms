@@ -3,9 +3,7 @@ import { Send } from 'lucide-react';
 import {
     useCreateComment,
     useGetPost,
-    useLikeComment,
-    useUnlikeComment,
-    type Post,
+    type Post
 } from '@/api/engagement-api';
 import { useGetMe } from '@/api/user-api';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -37,10 +35,8 @@ export function CommentsSheet({
 }: Readonly<CommentsSheetProps>) {
     const { data: currentUser } = useGetMe();
     const createCommentMutation = useCreateComment();
-    const likeCommentMutation = useLikeComment();
-    const unlikeCommentMutation = useUnlikeComment();
     const [newComment, setNewComment] = useState('');
-    const { data: post, isLoading, isError } = useGetPost(postId);
+    const { data: post } = useGetPost(postId);
     const [selectedComment, setSelectedComment] = useState<Comment | null>(
         null
     );

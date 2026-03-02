@@ -11,7 +11,6 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,11 +18,11 @@ import { useAccessChecker } from '@/hooks/use-has-access';
 import { zodResolver } from '@hookform/resolvers/zod';
 // no local react state required for store-controlled dialog
 import { useAppStore } from '@/store';
-import { useShallow } from 'zustand/react/shallow';
+import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
-import { Loader2 } from 'lucide-react';
+import { useShallow } from 'zustand/react/shallow';
 
 const createExpenseCatrgoryFormSchema = z.object({
     name: z
@@ -41,18 +40,19 @@ export function CreateExpenseCatrgoryDialog({ visibleTo }: Props) {
     const canAccess = useAccessChecker();
     const createExpenseCategoryMutation = useCreateExpenseCategory();
 
-    const { configDialogOpen, configDialogTarget, openConfigDialog, closeConfigDialog } =
+    const { configDialogOpen, configDialogTarget, closeConfigDialog } =
         useAppStore(
             useShallow((s) => ({
                 configDialogOpen: s.configDialogOpen,
                 configDialogTarget: s.configDialogTarget,
-                openConfigDialog: s.openConfigDialog,
                 closeConfigDialog: s.closeConfigDialog,
             }))
         );
 
     const controlledOpen =
-        configDialogOpen && configDialogTarget?.entity === 'expenseCategories' && configDialogTarget?.mode === 'create';
+        configDialogOpen &&
+        configDialogTarget?.entity === 'expenseCategories' &&
+        configDialogTarget?.mode === 'create';
 
     const form = useForm<CreateExpenseCategoryRequest>({
         resolver: zodResolver(createExpenseCatrgoryFormSchema),
@@ -78,7 +78,10 @@ export function CreateExpenseCatrgoryDialog({ visibleTo }: Props) {
     if (!canAccess(visibleTo)) return null;
 
     return (
-        <Dialog open={controlledOpen} onOpenChange={(state) => state === false && closeConfigDialog()}>
+        <Dialog
+            open={controlledOpen}
+            onOpenChange={(state) => state === false && closeConfigDialog()}
+        >
             <DialogContent className="sm:max-w-[425px]">
                 <form
                     onSubmit={form.handleSubmit(onSubmit, onInvalid)}

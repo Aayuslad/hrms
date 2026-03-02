@@ -16,7 +16,7 @@ export function DocumentCard({ document }: DocumentCardProps) {
         <Card className="py-3 mb-3">
             <CardContent className="flex justify-between items-center">
                 <div>
-                    <CardTitle>{document.documentType}</CardTitle>
+                    <CardTitle>{document.documentType?.name}</CardTitle>
                     <CardDescription>
                         <span className="text-xs">
                             belongs to - {document.owner?.userName}

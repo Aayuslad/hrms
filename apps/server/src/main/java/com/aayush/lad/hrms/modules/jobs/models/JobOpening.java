@@ -20,9 +20,9 @@ import java.util.Set;
 @AllArgsConstructor
 public class JobOpening extends AuditableModel {
 
-    @Lob
-    @Column(nullable = false, columnDefinition = "NVARCHAR(MAX)")
-    private String description;
+        @Lob
+        @Column(nullable = false)
+        private String description;
 
     @ManyToOne
     @JoinColumn(name = "designation_id", nullable = false)

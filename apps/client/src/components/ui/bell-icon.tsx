@@ -1,4 +1,3 @@
-import * as React from 'react';
 
 export function BellIcon({ filled = false, className = '', ...props }: { filled?: boolean; className?: string }) {
     return filled ? (

@@ -27,7 +27,7 @@ public class TravelPlan extends AuditableModel {
     private String destination;
 
     @Lob
-    @Column(columnDefinition = "NVARCHAR(MAX)")
+    @Column
     private String description;
 
     private LocalDateTime startAt;
