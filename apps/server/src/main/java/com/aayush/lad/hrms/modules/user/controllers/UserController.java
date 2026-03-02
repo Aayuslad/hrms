@@ -122,7 +122,7 @@ public class UserController {
         return ResultMapper.handle(HttpStatus.OK, responseDto);
     }
 
-//    @PreAuthorize("hasAnyRole('Admin', 'HR')")
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
     @PutMapping("/{id}/roles")
     public ResponseEntity<Result<Void>> updateRoles(
             @PathVariable("id") UUID id,
