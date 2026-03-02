@@ -17,6 +17,7 @@ import {
 import { Form } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
     Select,
     SelectContent,
@@ -24,14 +25,21 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Loader2, Pencil } from 'lucide-react';
+import { GENDER } from '@/types/enums';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Camera, Loader2, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { GENDER } from '@/types/enums';
-import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
+import { FileUpload, FileUploadTrigger } from '../ui/file-upload';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 const updateProfileFormSchema = z.object({
     profile: z.object({
@@ -43,6 +51,7 @@ const updateProfileFormSchema = z.object({
         dateOfBirth: z.string().optional(),
         joiningDate: z.string().optional(),
     }),
+    avatar: z.string().optional(),
     gameInterests: z.array(z.string()).optional(),
 }) satisfies z.ZodType<UpdateUserBySelfRequest>;
 
@@ -54,6 +63,16 @@ export function UpdateProfileDialog({ user }: Props) {
     const updateUserMutation = useUpdateUserBySelf();
     const { data: games = [] } = useGetGames();
     const [open, setOpen] = useState(false);
+    const [files, setFiles] = useState<File[]>([]);
+
+    const avatarPreview =
+        files.length > 0
+            ? URL.createObjectURL(files[0])
+            : user.profile?.avatarUrl || '';
+
+    const handleRemove = () => {
+        setFiles([]);
+    };
 
     const form = useForm<UpdateUserBySelfRequest>({
         resolver: zodResolver(updateProfileFormSchema),
@@ -75,23 +94,33 @@ export function UpdateProfileDialog({ user }: Props) {
                           .split('T')[0]
                     : '',
             },
+            avatar: user.profile?.avatarUrl || '',
             gameInterests: user.interestedInGames?.map((g) => g.id) || [],
         },
     });
 
     const onSubmit = async (data: UpdateUserBySelfRequest) => {
-        if (data.profile?.dateOfBirth) {
-            data.profile.dateOfBirth = new Date(
-                data.profile.dateOfBirth
-            ).toISOString();
-        }
-        if (data.profile?.joiningDate) {
-            data.profile.joiningDate = new Date(
-                data.profile.joiningDate
-            ).toISOString();
+        const formData = new FormData();
+        formData.append('profile.firstName', data.profile?.firstName || '');
+        formData.append('profile.middleName', data.profile?.middleName || '');
+        formData.append('profile.lastName', data.profile?.lastName || '');
+        formData.append(
+            'profile.contactNumber',
+            data.profile?.contactNumber || ''
+        );
+        formData.append('profile.gender', data.profile?.gender || '');
+        formData.append('profile.dateOfBirth', data.profile?.dateOfBirth || '');
+        formData.append('profile.joiningDate', data.profile?.joiningDate || '');
+
+        data.gameInterests?.forEach((gameId) => {
+            formData.append('gameInterests[]', gameId);
+        });
+
+        if (files.length > 0) {
+            formData.append('avatar', files[0]);
         }
 
-        await updateUserMutation.mutate(data, {
+        await updateUserMutation.mutate(formData, {
             onSuccess: () => {
                 setOpen(false);
             },
@@ -104,9 +133,6 @@ export function UpdateProfileDialog({ user }: Props) {
     };
 
     const selectedGameIds = form.watch('gameInterests') || [];
-    const selectedGames = games.filter((game) =>
-        selectedGameIds.includes(game.id as string)
-    );
 
     const handleGameToggle = (gameId: string) => {
         const current = form.getValues('gameInterests') || [];
@@ -138,6 +164,60 @@ export function UpdateProfileDialog({ user }: Props) {
 
                         <ScrollArea className="px-6 py-4 h-[500px]">
                             <div className="space-y-5">
+                                <div className="flex flex-col items-center gap-4">
+                                    <FileUpload
+                                        value={files}
+                                        onValueChange={setFiles}
+                                        accept="image/*"
+                                        maxFiles={1}
+                                        maxSize={2 * 1024 * 1024}
+                                    >
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <button className="group relative cursor-pointer rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+                                                    <Avatar className="size-24">
+                                                        <AvatarImage
+                                                            src={avatarPreview}
+                                                            alt="Avatar"
+                                                        />
+                                                        <AvatarFallback>
+                                                            {user
+                                                                .userName?.[0] ||
+                                                                'U'}
+                                                        </AvatarFallback>
+                                                    </Avatar>
+                                                    <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
+                                                        <Camera className="size-6 text-white" />
+                                                    </div>
+                                                </button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align="center">
+                                                <FileUploadTrigger asChild>
+                                                    <DropdownMenuItem>
+                                                        <Camera className="mr-2 size-4" />
+                                                        Upload photo
+                                                    </DropdownMenuItem>
+                                                </FileUploadTrigger>
+                                                {files.length > 0 && (
+                                                    <DropdownMenuItem
+                                                        className="text-destructive focus:text-destructive"
+                                                        onClick={handleRemove}
+                                                    >
+                                                        <Trash2 className="mr-2 size-4" />
+                                                        Remove photo
+                                                    </DropdownMenuItem>
+                                                )}
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </FileUpload>
+                                    <div className="text-center">
+                                        <p className="font-medium">John Doe</p>
+                                        <p className="text-sm text-muted-foreground">
+                                            Click avatar to change
+                                        </p>
+                                    </div>
+                                </div>
+
                                 <div className="grid gap-3">
                                     <Label htmlFor="firstName">
                                         First Name*

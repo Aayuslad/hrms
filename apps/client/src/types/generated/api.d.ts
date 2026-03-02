@@ -165,6 +165,9 @@ export interface paths {
   "/api/travel-plans/{travelPlanId}/participant/{participantId}/expenses/{expenseId}/approve": {
     patch: operations["approveExpense"];
   };
+  "/api/job-openings/{id}/reopen": {
+    patch: operations["reopen"];
+  };
   "/api/job-openings/{id}/close": {
     patch: operations["close"];
   };
@@ -262,6 +265,8 @@ export interface components {
     };
     UpdateUserBySelfRequest: {
       profile?: components["schemas"]["UpdateProfileBySelfRequest"];
+      /** Format: binary */
+      avatar?: string;
       gameInterests?: string[];
     };
     MarkNotificationsReadRequest: {
@@ -279,12 +284,11 @@ export interface components {
       /** Format: uuid */
       expenseCategoryId: string;
       proofs?: string[];
+      deletedProofIds?: string[];
     };
     UpdateDocumentRequest: {
       /** Format: uuid */
       id: string;
-      /** Format: binary */
-      doc: string;
       /** Format: uuid */
       travelPlanId: string;
       /** Format: uuid */
@@ -366,6 +370,8 @@ export interface components {
       title: string;
       content?: string;
       tagIds?: string[];
+      images?: File[];
+      deletedImageIds?: string[];
     };
     UpdateDocumentTypeRequest: {
       /** Format: uuid */
@@ -519,6 +525,7 @@ export interface components {
       title: string;
       content?: string;
       tagIds?: string[];
+      images?: File[];
     };
     CreateCommentRequest: {
       content: string;
@@ -686,6 +693,16 @@ export interface components {
       updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
       meParticipant?: boolean;
     };
+    DocumentTypeResponse: {
+      /** Format: uuid */
+      id?: string;
+      name?: string;
+    };
+    ExpenseCategoryResponse: {
+      /** Format: uuid */
+      id?: string;
+      name?: string;
+    };
     ExpenseProofResponse: {
       /** Format: uuid */
       id?: string;
@@ -696,7 +713,7 @@ export interface components {
       id?: string;
       owner?: components["schemas"]["GlobalUserResponseSummary"];
       docUrl?: string;
-      documentType?: string;
+      documentType?: components["schemas"]["DocumentTypeResponse"];
       /** Format: date-time */
       uploadedAt?: string;
       uploadedBy?: components["schemas"]["GlobalUserResponseSummary"];
@@ -713,7 +730,7 @@ export interface components {
       remarks?: string;
       /** Format: date-time */
       submittedAt?: string;
-      expenseCategory?: string;
+      expenseCategory?: components["schemas"]["ExpenseCategoryResponse"];
       approvedBy?: components["schemas"]["GlobalUserResponseSummary"];
       participant?: components["schemas"]["GlobalUserResponseSummary"];
       proofs?: components["schemas"]["ExpenseProofResponse"][];
@@ -934,17 +951,6 @@ export interface components {
       message?: string;
       success?: boolean;
     };
-    ExpenseCategoryResponse: {
-      /** Format: uuid */
-      id?: string;
-      name?: string;
-      createdBy?: components["schemas"]["GlobalUserResponseSummary"];
-      updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-    };
     ResultListExpenseCategoryResponse: {
       /** Format: int32 */
       statusCode?: number;
@@ -999,6 +1005,12 @@ export interface components {
       commentCount?: number;
       tags?: components["schemas"]["TagResponse"][];
       comments?: components["schemas"]["PostCommentResponse"][];
+      /** images attached to the post */
+      images?: {
+        /** Format: uuid */
+        id?: string;
+        docUrl?: string;
+      }[];
       /** Format: date-time */
       createdAt?: string;
       /** Format: date-time */
@@ -1020,17 +1032,6 @@ export interface components {
       data?: components["schemas"]["PostResponse"];
       message?: string;
       success?: boolean;
-    };
-    DocumentTypeResponse: {
-      /** Format: uuid */
-      id?: string;
-      name?: string;
-      createdBy?: components["schemas"]["GlobalUserResponseSummary"];
-      updatedBy?: components["schemas"]["GlobalUserResponseSummary"];
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
     };
     ResultListDocumentTypeResponse: {
       /** Format: int32 */
@@ -1158,9 +1159,9 @@ export interface operations {
     };
   };
   updateBySelf: {
-    requestBody: {
+    requestBody?: {
       content: {
-        "application/json": components["schemas"]["UpdateUserBySelfRequest"];
+        "multipart/form-data": components["schemas"]["UpdateUserBySelfRequest"];
       };
     };
     responses: {
@@ -2273,6 +2274,21 @@ export interface operations {
       };
     };
   };
+  reopen: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["ResultVoid"];
+        };
+      };
+    };
+  };
   close: {
     parameters: {
       path: {
@@ -2377,6 +2393,11 @@ export interface operations {
     };
   };
   getOrgCharts: {
+    parameters: {
+      query?: {
+        userId?: string;
+      };
+    };
     responses: {
       /** @description OK */
       200: {

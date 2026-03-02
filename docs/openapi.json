@@ -148,13 +148,12 @@
         "operationId": "updateBySelf",
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/UpdateUserBySelfRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -2467,6 +2466,37 @@
         }
       }
     },
+    "/api/job-openings/{id}/reopen": {
+      "patch": {
+        "tags": [
+          "job-opening-controller"
+        ],
+        "operationId": "reopen",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/job-openings/{id}/close": {
       "patch": {
         "tags": [
@@ -2706,6 +2736,17 @@
           "user-controller"
         ],
         "operationId": "getOrgCharts",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -3023,6 +3064,10 @@
           "profile": {
             "$ref": "#/components/schemas/UpdateProfileBySelfRequest"
           },
+          "avatar": {
+            "type": "string",
+            "format": "binary"
+          },
           "gameInterests": {
             "type": "array",
             "items": {
@@ -3078,6 +3123,13 @@
               "type": "string",
               "format": "binary"
             }
+          },
+          "deletedProofIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         },
         "required": [
@@ -3094,10 +3146,6 @@
             "type": "string",
             "format": "uuid"
           },
-          "doc": {
-            "type": "string",
-            "format": "binary"
-          },
           "travelPlanId": {
             "type": "string",
             "format": "uuid"
@@ -3112,7 +3160,6 @@
           }
         },
         "required": [
-          "doc",
           "documentTypeId",
           "id",
           "ownerId",
@@ -4398,6 +4445,30 @@
           }
         }
       },
+      "DocumentTypeResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "ExpenseCategoryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
       "ExpenseProofResponse": {
         "type": "object",
         "properties": {
@@ -4424,7 +4495,7 @@
             "type": "string"
           },
           "documentType": {
-            "type": "string"
+            "$ref": "#/components/schemas/DocumentTypeResponse"
           },
           "uploadedAt": {
             "type": "string",
@@ -4467,7 +4538,7 @@
             "format": "date-time"
           },
           "expenseCategory": {
-            "type": "string"
+            "$ref": "#/components/schemas/ExpenseCategoryResponse"
           },
           "approvedBy": {
             "$ref": "#/components/schemas/GlobalUserResponseSummary"
@@ -5102,32 +5173,6 @@
           }
         }
       },
-      "ExpenseCategoryResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "createdBy": {
-            "$ref": "#/components/schemas/GlobalUserResponseSummary"
-          },
-          "updatedBy": {
-            "$ref": "#/components/schemas/GlobalUserResponseSummary"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
       "ResultListExpenseCategoryResponse": {
         "type": "object",
         "properties": {
@@ -5331,32 +5376,6 @@
           },
           "success": {
             "type": "boolean"
-          }
-        }
-      },
-      "DocumentTypeResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "createdBy": {
-            "$ref": "#/components/schemas/GlobalUserResponseSummary"
-          },
-          "updatedBy": {
-            "$ref": "#/components/schemas/GlobalUserResponseSummary"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
           }
         }
       },

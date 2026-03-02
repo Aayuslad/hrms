@@ -1,16 +1,17 @@
 package com.aayush.lad.hrms.modules.engagement.dtos.read;
 
-import com.aayush.lad.hrms.modules.engagement.dtos.read.internal.PostCommentResponse;
-import com.aayush.lad.hrms.shared.dtos.GlobalUserResponseSummary;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import com.aayush.lad.hrms.modules.engagement.dtos.read.internal.PostCommentResponse;
+import com.aayush.lad.hrms.shared.dtos.GlobalUserResponseSummary;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -33,6 +34,8 @@ public class PostResponse {
     private List<TagResponse> tags = new ArrayList<>();
 
     private List<PostCommentResponse> comments = new ArrayList<>();
+
+    private List<PostImageResponse> images = new ArrayList<>();
 
     private boolean isLiked;
 

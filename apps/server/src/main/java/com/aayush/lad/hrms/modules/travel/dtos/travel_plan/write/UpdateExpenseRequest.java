@@ -33,4 +33,6 @@ public class UpdateExpenseRequest {
     private UUID expenseCategoryId;
 
     private List<MultipartFile> proofs;
+
+    private List<UUID> deletedProofIds;
 }

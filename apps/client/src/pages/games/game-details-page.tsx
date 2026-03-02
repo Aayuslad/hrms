@@ -3,6 +3,7 @@ import Schedule from '@/components/games/chedule';
 import DeleteGameDialog from '@/components/games/gameDialogs/delete-game-dialog';
 import UpdateGameDialog from '@/components/games/gameDialogs/update-game-dialog';
 import BookSlotDialog from '@/components/games/slotDialogs/book-slot-dialog';
+import { NoContent } from '@/components/no-content';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -37,11 +38,7 @@ export function GameDetailsPage() {
     }
 
     if (!isLoading && !isError && !game) {
-        return (
-            <div className="w-full h-[80vh] flex items-center justify-center">
-                404 - Not found...!
-            </div>
-        );
+        return <NoContent />;
     }
 
     return (

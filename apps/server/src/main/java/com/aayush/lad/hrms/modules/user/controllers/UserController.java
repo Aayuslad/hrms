@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -76,17 +77,16 @@ public class UserController {
         return ResultMapper.handle(HttpStatus.CREATED, "Profile created");
     }
 
-    // @PutMapping(value = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PutMapping("/me")
+    @PutMapping(value = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Result<Void>> updateBySelf(
-            @Valid @RequestBody UpdateUserBySelfRequest request) {
+            @Valid @ModelAttribute UpdateUserBySelfRequest request) {
         userService.update(request);
         return ResultMapper.handle(HttpStatus.CREATED, "User updated");
     }
 
     // @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasAnyRole('Admin', 'HR')")
     public ResponseEntity<Result<Void>> updateByAdmin(
             @PathVariable("id") UUID id,
             @Valid @RequestBody UpdateUserByAdminRequest request) {

@@ -1,4 +1,4 @@
-import { Heart, Send } from 'lucide-react';
+import { Send } from 'lucide-react';
 
 import {
     useCreateComment,
@@ -10,7 +10,6 @@ import {
 import { useGetMe } from '@/api/user-api';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
     Sheet,
     SheetContent,
@@ -18,10 +17,10 @@ import {
     SheetTitle,
 } from '@/components/ui/sheet';
 import { useState } from 'react';
-import { CommentCard } from './comment-card';
-import { UpdateCommentDialog } from './dialogs/update-comment-dialog';
-import { DeleteCommentDialog } from './dialogs/delete-comment-dialog';
 import { Textarea } from '../ui/textarea';
+import { CommentCard } from './comment-card';
+import { DeleteCommentDialog } from './dialogs/delete-comment-dialog';
+import { UpdateCommentDialog } from './dialogs/update-comment-dialog';
 
 type Comment = NonNullable<Post['comments']>[number];
 
@@ -60,16 +59,6 @@ export function CommentsSheet({
         );
     };
 
-    const handleLikeComment = (commentId: string) => {
-        if (!post?.id) return;
-        likeCommentMutation.mutate({ postId: post.id, commentId });
-    };
-
-    const handleUnlikeComment = (commentId: string) => {
-        if (!post?.id) return;
-        unlikeCommentMutation.mutate({ postId: post.id, commentId });
-    };
-
     const handleEditComment = (comment: Comment) => {
         setSelectedComment(comment);
         setUpdateOpen(true);
@@ -82,7 +71,7 @@ export function CommentsSheet({
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
-            <SheetContent side="right" className="w-[400px] sm:max-w-lg">
+            <SheetContent side="right" className="w-[450px] sm:max-w-lg">
                 <SheetHeader>
                     <SheetTitle>Comments</SheetTitle>
                 </SheetHeader>

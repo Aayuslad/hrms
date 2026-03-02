@@ -125,6 +125,20 @@ const router = createBrowserRouter([
                 // errorElement: <ErrorPage />,
             },
             {
+                path: 'employees',
+                element: <EmployeePage />,
+                children: [
+                    {
+                        path: 'update-profile',
+                        element: <UpdateEmployeeDialog />,
+                    },
+                    {
+                        path: 'update-roles',
+                        element: <UpdateEmployeeRolesDialog />,
+                    },
+                ],
+            },
+            {
                 path: '',
                 children: [
                     // {
@@ -133,20 +147,6 @@ const router = createBrowserRouter([
                     //     loader: rolesLoader,
                     //     errorElement: <ErrorPage />,
                     // },
-                    {
-                        path: 'configuration/employees',
-                        element: <EmployeePage />,
-                        children: [
-                            {
-                                path: 'update-profile',
-                                element: <UpdateEmployeeDialog />,
-                            },
-                            {
-                                path: 'update-roles',
-                                element: <UpdateEmployeeRolesDialog />,
-                            },
-                        ],
-                    },
                     {
                         path: 'configuration/designations',
                         element: <DesignationPage />,

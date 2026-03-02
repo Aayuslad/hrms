@@ -9,20 +9,19 @@ import { Checkbox } from '@/components/ui/checkbox';
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { useAppStore } from '@/store';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { Loader2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import z from 'zod';
-import { Loader2 } from 'lucide-react';
+import { useShallow } from 'zustand/react/shallow';
 
 const updateEmployeeRolesFormSchema = z.object({
     userId: z.string(),
@@ -30,34 +29,50 @@ const updateEmployeeRolesFormSchema = z.object({
 }) satisfies z.ZodType<UpdateUserRolesRequest>;
 
 export function UpdateEmployeeRolesDialog() {
-    const location = useLocation();
-    const user = location.state.user as User;
     const updateRolesMutation = useEditUserRoles();
-    const navigate = useNavigate();
+    const { configDialogOpen, configDialogTarget, closeConfigDialog } =
+        useAppStore(
+            useShallow((s) => ({
+                configDialogOpen: s.configDialogOpen,
+                configDialogTarget: s.configDialogTarget,
+                closeConfigDialog: s.closeConfigDialog,
+            }))
+        );
+
+    const user = configDialogTarget?.payload as User | undefined;
 
     const { data: roles } = useGetRoles();
     const [selectedRoles, setSelectedRoles] = useState<string[]>(
-        user.roles?.map((r) => r.id!).filter(Boolean) || []
+        user?.roles?.map((r) => r.id!).filter(Boolean) || []
     );
+
+    useEffect(() => {
+        setSelectedRoles(user?.roles?.map((r) => r.id!).filter(Boolean) || []);
+    }, [user]);
 
     const form = useForm<UpdateUserRolesRequest>({
         resolver: zodResolver(updateEmployeeRolesFormSchema),
         defaultValues: {
-            userId: user.id!,
+            userId: user?.id ?? '',
             roles: selectedRoles,
         },
     });
 
+    useEffect(() => {
+        form.setValue('userId', user?.id ?? '');
+        form.setValue('roles', selectedRoles);
+    }, [user, selectedRoles, form]);
+
     const onSubmit = async () => {
         const data: UpdateUserRolesRequest = {
-            userId: user.id!,
+            userId: user?.id!,
             roles: selectedRoles,
         };
         updateRolesMutation.mutate(
-            { userId: user.id!, payload: data },
+            { userId: data.userId, payload: data },
             {
                 onSuccess: () => {
-                    navigate('/configuration/employees');
+                    closeConfigDialog();
                 },
             }
         );
@@ -72,7 +87,14 @@ export function UpdateEmployeeRolesDialog() {
     };
 
     return (
-        <Dialog open={true}>
+        <Dialog
+            open={
+                configDialogOpen &&
+                configDialogTarget?.entity === 'employees' &&
+                configDialogTarget?.mode === 'update-roles'
+            }
+            onOpenChange={(state) => state === false && closeConfigDialog()}
+        >
             <DialogContent className="flex max-h-[min(600px,80vh)] flex-col gap-0 p-0 sm:w-[300px]">
                 <form
                     onSubmit={form.handleSubmit(onSubmit, onInvalid)}
@@ -129,7 +151,7 @@ export function UpdateEmployeeRolesDialog() {
                             variant="outline"
                             type="button"
                             disabled={updateRolesMutation.isPending}
-                            onClick={() => navigate('/configuration/employees')}
+                            onClick={() => closeConfigDialog()}
                         >
                             Cancel
                         </Button>

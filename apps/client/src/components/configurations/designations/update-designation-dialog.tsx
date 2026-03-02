@@ -16,10 +16,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useAppStore } from '@/store';
+import { useShallow } from 'zustand/react/shallow';
 import { toast } from 'sonner';
 import z from 'zod';
 import { Loader2 } from 'lucide-react';
+import { useEffect } from 'react';
 
 const updateDesignationFormSchema = z.object({
     id: z.string().nonempty('Designation ID is required'),
@@ -30,24 +32,34 @@ const updateDesignationFormSchema = z.object({
 }) satisfies z.ZodType<UpdateDesignationRequest>;
 
 export function UpdateDesignationDialog() {
-    const location = useLocation();
-    const designation = location.state as Designation;
+    const { configDialogOpen, configDialogTarget, closeConfigDialog } =
+        useAppStore(
+            useShallow((s) => ({
+                configDialogOpen: s.configDialogOpen,
+                configDialogTarget: s.configDialogTarget,
+                closeConfigDialog: s.closeConfigDialog,
+            }))
+        );
+
     const updateDesignationMutation = useUpdateDesignation();
-    const navigate = useNavigate();
 
     const form = useForm<UpdateDesignationRequest>({
         resolver: zodResolver(updateDesignationFormSchema),
-        defaultValues: {
-            id: designation.id,
-            name: designation.name,
-        },
     });
+
+    useEffect(() => {
+        if (configDialogTarget?.payload) {
+            form.reset({
+                id: configDialogTarget.payload.id,
+                name: configDialogTarget.payload.name,
+            });
+        }
+    }, [configDialogTarget?.payload]);
 
     const onSubmit = async (data: UpdateDesignationRequest) => {
         updateDesignationMutation.mutate(data, {
             onSuccess: () => {
-                form.reset();
-                navigate('/configuration/designations');
+                closeConfigDialog();
             },
         });
     };
@@ -61,7 +73,14 @@ export function UpdateDesignationDialog() {
     };
 
     return (
-        <Dialog open={true}>
+        <Dialog
+            open={
+                configDialogOpen &&
+                configDialogTarget?.entity === 'designations' &&
+                configDialogTarget?.mode === 'update'
+            }
+            onOpenChange={(state) => state === false && closeConfigDialog()}
+        >
             <DialogContent className="sm:max-w-[425px]">
                 <form
                     onSubmit={form.handleSubmit(onSubmit, onInvalid)}
@@ -87,9 +106,7 @@ export function UpdateDesignationDialog() {
                                 variant="outline"
                                 type="button"
                                 disabled={updateDesignationMutation.isPending}
-                                onClick={() =>
-                                    navigate('/configuration/designations')
-                                }
+                                onClick={() => closeConfigDialog()}
                             >
                                 Cancel
                             </Button>

@@ -1,3 +1,4 @@
+import type { TravelPlanExpense } from '@/api/travel-api';
 import { UserProfileDialog } from '@/components/auth/user-profile-dialog';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,7 +17,6 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { useAppStore } from '@/store';
-import { useParams } from 'react-router-dom';
 import {
     flexRender,
     getCoreRowModel,
@@ -29,40 +29,13 @@ import {
     type SortingState,
     type VisibilityState,
 } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal, ReceiptText, User } from 'lucide-react';
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 
-type Expense = {
-    id?: string | undefined;
-    amount?: number | undefined;
-    date?: string | undefined;
-    status?: 'DRAFTING' | 'SUBMITTED' | 'APPROVED' | 'REJECTED' | undefined;
-    remarks?: string | undefined;
-    submittedAt?: string | undefined;
-    expenseCategory?: string | undefined;
-    participant?:
-        | {
-              id?: string | undefined;
-              userName?: string | undefined;
-          }
-        | undefined;
-    approvedBy?:
-        | {
-              id?: string | undefined;
-              userName?: string | undefined;
-          }
-        | undefined;
-    proofs?:
-        | {
-              id?: string | undefined;
-              docUrl?: string | undefined;
-          }[]
-        | undefined;
-};
-
 interface AllExpensesTableProps {
-    expenses: Expense[];
+    expenses: TravelPlanExpense[];
     total?: number;
 }
 
@@ -87,7 +60,7 @@ export function AllExpensesTable({
 
     const { travelPlanId } = useParams<{ travelPlanId?: string }>();
 
-    const columns: ColumnDef<Expense>[] = [
+    const columns: ColumnDef<TravelPlanExpense>[] = [
         {
             accessorKey: 'participant.userName',
             header: () => <div className="ml-3 min-w-[100px]">Participant</div>,
@@ -140,7 +113,7 @@ export function AllExpensesTable({
             accessorKey: 'category',
             header: 'Category',
             cell: ({ row }) => (
-                <div className="">{row.original.expenseCategory}</div>
+                <div className="">{row.original.expenseCategory?.name}</div>
             ),
         },
         {

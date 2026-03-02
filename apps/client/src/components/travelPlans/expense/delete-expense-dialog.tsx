@@ -28,10 +28,8 @@ export function DeleteExpenseDialog({
 }: Readonly<DeleteExpenseDialogProps>) {
     const deleteExpenseMutation = useDeleteExpense();
 
-    const submit = async (id: string) => {
-        if (!id) {
-            return;
-        }
+    const submit = async () => {
+        // props already include the ids we need
         deleteExpenseMutation.mutate(
             {
                 expenseId: expenseId,
@@ -70,7 +68,7 @@ export function DeleteExpenseDialog({
                         type="submit"
                         variant="default"
                         className="flex-1 bg-red-500 text-white hover:bg-red-600"
-                        onClick={() => submit(id)}
+                        onClick={() => submit()}
                         disabled={deleteExpenseMutation.isPending}
                     >
                         {deleteExpenseMutation.isPending && (

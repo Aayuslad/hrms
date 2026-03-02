@@ -13,6 +13,7 @@ import com.aayush.lad.hrms.modules.engagement.dtos.write.CreateTagRequest;
 import com.aayush.lad.hrms.modules.engagement.dtos.write.UpdateTagRequest;
 import com.aayush.lad.hrms.modules.engagement.mappers.TagMapper;
 import com.aayush.lad.hrms.modules.engagement.models.Tag;
+import com.aayush.lad.hrms.modules.engagement.repositories.PostRepository;
 import com.aayush.lad.hrms.modules.engagement.repositories.TagRepository;
 
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ import lombok.AllArgsConstructor;
 public class TagService {
 
     private final TagRepository tagRepository;
+    private final PostRepository postRepository;
     private final TagMapper mapper;
 
     public List<TagResponse> getAll() {
@@ -59,6 +61,7 @@ public class TagService {
     @Transactional
     public void delete(UUID tagId) {
         Tag tag = getTagEntityById(tagId);
+        postRepository.deleteTagFromJoinTable(tagId);
         tagRepository.delete(tag);
     }
 

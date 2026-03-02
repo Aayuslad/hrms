@@ -23,6 +23,10 @@ export function Index() {
         );
     }
 
+    if (!isLoading && !isError && !jobOpenings?.length) {
+        return <NoContent />;
+    }
+
     return (
         <div className=" h-full">
             <div className="bg-muted  h-[100px] w-full flex items-center">
@@ -48,8 +52,6 @@ export function Index() {
                             />
                         ))}
                     </div>
-
-                    {!jobOpenings && <NoContent />}
                 </div>
             </div>
         </div>

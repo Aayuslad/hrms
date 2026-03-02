@@ -81,8 +81,8 @@ const CreateTravelPlanDialog = ({ visibleTo }: Props) => {
             <DialogContent className="flex max-h-[min(700px,85vh)] flex-col gap-0 p-0 sm:max-w-lg">
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
-                        <DialogHeader className="px-6 pt-6">
-                            <DialogTitle>Create Game</DialogTitle>
+                        <DialogHeader className="px-6 py-5 border-b">
+                            <DialogTitle>Create travel plan</DialogTitle>
                         </DialogHeader>
 
                         <ScrollArea className="px-6 py-4">

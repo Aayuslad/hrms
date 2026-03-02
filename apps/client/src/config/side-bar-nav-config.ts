@@ -14,6 +14,7 @@ export const sidebarNavConfig = {
             name: 'Home',
             url: '/home',
             icon: Home,
+            roles: ['Employee'],
         },
         {
             name: 'Games',
@@ -39,6 +40,12 @@ export const sidebarNavConfig = {
             icon: MessageSquare,
             roles: ['Employee'],
         },
+        {
+            name: 'Employees',
+            url: '/employees',
+            icon: Users,
+            roles: ['Admin', 'HR'],
+        },
     ],
     collapsibleGroup: [
         {
@@ -52,10 +59,6 @@ export const sidebarNavConfig = {
                 //     title: 'Roles',
                 //     url: 'configuration/roles',
                 // },
-                {
-                    title: 'Employees',
-                    url: 'configuration/employees',
-                },
                 {
                     title: 'Designations',
                     url: 'configuration/designations',

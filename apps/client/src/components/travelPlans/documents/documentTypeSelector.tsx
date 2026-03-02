@@ -25,10 +25,14 @@ import {
 import { cn } from '@/lib/utils';
 
 type Props = {
+    selectedDocumentTypeId?: string;
     setSelectedDocumentTypeId: (id: string) => void;
 };
 
-export function DocumentTypeSelector({ setSelectedDocumentTypeId }: Props) {
+export function DocumentTypeSelector({
+    selectedDocumentTypeId,
+    setSelectedDocumentTypeId,
+}: Props) {
     const [open, setOpen] = React.useState(false);
     const [selectedDocumentType, setSelectedDocumentType] =
         React.useState<DocumentType>();
@@ -40,6 +44,15 @@ export function DocumentTypeSelector({ setSelectedDocumentTypeId }: Props) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedDocumentType]);
+
+    React.useEffect(() => {
+        if (selectedDocumentTypeId && documentTypes) {
+            const selected = documentTypes.find(
+                (dt) => dt.id === selectedDocumentTypeId
+            );
+            setSelectedDocumentType(selected);
+        }
+    }, [selectedDocumentTypeId, documentTypes]);
 
     return (
         <Popover open={open} onOpenChange={setOpen}>

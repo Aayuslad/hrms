@@ -47,8 +47,10 @@ export function useGetPost(id?: string) {
 
 export function useCreatePost() {
     return useMutation({
-        mutationFn: async (payload: CreatePostRequest): Promise<void> => {
-            await axiosClient.post('/engagement/posts', payload);
+        mutationFn: async (params: { payload: FormData | CreatePostRequest }): Promise<void> => {
+            await axiosClient.post('/engagement/posts', params.payload, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
         },
         onSuccess: () => {
             toast.success('Post created');
@@ -61,8 +63,10 @@ export function useCreatePost() {
 
 export function useUpdatePost() {
     return useMutation({
-        mutationFn: async (payload: UpdatePostRequest): Promise<void> => {
-            await axiosClient.put(`/engagement/posts/${payload.id}`, payload);
+        mutationFn: async (params: { id: string; payload: FormData | UpdatePostRequest }): Promise<void> => {
+            await axiosClient.put(`/engagement/posts/${params.id}`, params.payload, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
         },
         onSuccess: () => {
             toast.success('Post updated');

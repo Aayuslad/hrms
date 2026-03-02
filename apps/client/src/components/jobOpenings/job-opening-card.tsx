@@ -52,8 +52,7 @@ const JobOpeningCard = ({ jobOpening }: Props) => {
                     <div className="flex items-center gap-3">
                         <BriefcaseBusiness className="h-4 w-4 shrink-0" />
                         <span>
-                            Required Experience: {jobOpening.requiredExperience}{' '}
-                            years
+                            {jobOpening.requiredExperience} years of experience
                         </span>
                     </div>
 

@@ -8,6 +8,8 @@ import com.aayush.lad.hrms.modules.travel.dtos.document_type.write.UpdateDocumen
 import com.aayush.lad.hrms.modules.travel.mappers.DocumentTypeMapper;
 import com.aayush.lad.hrms.modules.travel.models.DocumentType;
 import com.aayush.lad.hrms.modules.travel.repositories.DocumentTypeRepository;
+import com.aayush.lad.hrms.modules.travel.repositories.TravelPlanRepository;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class DocumentTypeService {
 
     private final DocumentTypeRepository documentTypeRepository;
+    private final TravelPlanRepository travelPlanRepository;
     private final DocumentTypeMapper documentTypeMapper;
 
     public void create(CreateDocumentTypeRequest request) {
@@ -52,6 +55,10 @@ public class DocumentTypeService {
     public void delete(UUID id) {
         if (!documentTypeRepository.existsById(id))
             throw new NotFoundException("Document type not found");
+
+        if (travelPlanRepository.existsByDocumentTypeId(id))
+            throw new ConflictException(
+                    "Cannot delete document type as it is associated with existing travel plan documents");
 
         // TODO: soft delete
         documentTypeRepository.deleteById(id);

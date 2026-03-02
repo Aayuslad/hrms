@@ -110,7 +110,7 @@ public class JobOpeningService {
     }
 
     private JobOpening getJobOpeningEntityById(UUID id) {
-        JobOpening jobOpening = jobOpeningRepository.findByIdWithAll(id).orElse(null);
+        JobOpening jobOpening = jobOpeningRepository.findByIdWithAllOrderByCreatedAtDesc(id).orElse(null);
         if (jobOpening == null)
             throw new NotFoundException("Job opening not found");
         return jobOpening;

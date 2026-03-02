@@ -5,8 +5,8 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import com.aayush.lad.hrms.core.exeptions.NotFoundException;
 import com.aayush.lad.hrms.core.services.CurrentUserService;
+import com.aayush.lad.hrms.modules.engagement.dtos.read.PostImageResponse;
 import com.aayush.lad.hrms.modules.engagement.dtos.read.PostResponse;
 import com.aayush.lad.hrms.modules.engagement.dtos.write.CreateCommentRequest;
 import com.aayush.lad.hrms.modules.engagement.dtos.write.CreatePostRequest;
@@ -68,6 +68,13 @@ public class PostMapper {
 
             commentResponse.setLiked(
                     comment != null && comment.getLikedBy() != null && comment.getLikedBy().contains(currentUser));
+        }
+
+        if (post.getImages() != null && !post.getImages().isEmpty()) {
+            var imageResponses = post.getImages().stream()
+                    .map(img -> new PostImageResponse(img.getId(), img.getDocUrl()))
+                    .toList();
+            response.setImages(imageResponses);
         }
 
         return response;

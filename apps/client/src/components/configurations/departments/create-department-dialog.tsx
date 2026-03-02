@@ -11,17 +11,18 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAccessChecker } from '@/hooks/use-has-access';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+// no local react state required for store-controlled dialog
+import { useAppStore } from '@/store';
+import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
-import { Loader2 } from 'lucide-react';
+import { useShallow } from 'zustand/react/shallow';
 
 const createDepartmentFormSchema = z.object({
     name: z
@@ -35,9 +36,23 @@ type Props = {
 };
 
 export function CreateDepartmentDialog({ visibleTo }: Props) {
-    const [open, setOpen] = useState(false);
+    // store-controlled dialog; local state not required
     const canAccess = useAccessChecker();
     const createDepartmentMutation = useCreateDepartment();
+
+    const { configDialogOpen, configDialogTarget, closeConfigDialog } =
+        useAppStore(
+            useShallow((s) => ({
+                configDialogOpen: s.configDialogOpen,
+                configDialogTarget: s.configDialogTarget,
+                closeConfigDialog: s.closeConfigDialog,
+            }))
+        );
+
+    const controlledOpen =
+        configDialogOpen &&
+        configDialogTarget?.entity === 'departments' &&
+        configDialogTarget?.mode === 'create';
 
     const form = useForm<CreateDepartmentRequest>({
         resolver: zodResolver(createDepartmentFormSchema),
@@ -50,7 +65,7 @@ export function CreateDepartmentDialog({ visibleTo }: Props) {
         createDepartmentMutation.mutate(data, {
             onSuccess: () => {
                 form.reset();
-                setOpen(false);
+                if (configDialogOpen) closeConfigDialog();
             },
         });
     };
@@ -63,13 +78,10 @@ export function CreateDepartmentDialog({ visibleTo }: Props) {
     if (!canAccess(visibleTo)) return null;
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button variant="secondary" className="border">
-                    + Create Department
-                </Button>
-            </DialogTrigger>
-
+        <Dialog
+            open={controlledOpen}
+            onOpenChange={(state) => state === false && closeConfigDialog()}
+        >
             <DialogContent className="sm:max-w-[425px]">
                 <form
                     onSubmit={form.handleSubmit(onSubmit, onInvalid)}

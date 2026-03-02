@@ -73,7 +73,6 @@ public class TravelPlanMapper {
     public List<ParticipantExpenseResponse> toExpenseResponseList(List<TravelPlanExpense> expenses) {
         return expenses.stream().map(x -> {
             ParticipantExpenseResponse r = modelMapper.map(x, ParticipantExpenseResponse.class);
-            r.setExpenseCategory(x.getExpenseCategory().getName());
             r.setParticipant(modelMapper.map(x.getParticipant(), GlobalUserResponseSummary.class));
             return r;
         }).toList();
@@ -84,10 +83,6 @@ public class TravelPlanMapper {
     }
 
     public List<ParticipantDocumentResponse> toDocumentResponseList(List<TravelPlanDocument> documents) {
-        return documents.stream().map(d -> {
-            ParticipantDocumentResponse response = modelMapper.map(d, ParticipantDocumentResponse.class);
-            response.setDocumentType(d.getDocumentType() != null ? d.getDocumentType().getName() : null);
-            return response;
-        }).toList();
+        return documents.stream().map(d -> modelMapper.map(d, ParticipantDocumentResponse.class)).toList();
     }
 }

@@ -139,7 +139,7 @@ public class TravelPlanService {
     }
 
     public TravelPlanExpensesResponse getExpenses(UUID travelPlanId) {
-        TravelPlan travelPlan = travelPlanRepository.findByIdWithAll(travelPlanId)
+        TravelPlan travelPlan = travelPlanRepository.findByIdWithAllOrderByCreatedAtDesc(travelPlanId)
                 .orElseThrow(() -> new NotFoundException("Travel plan not found"));
 
         List<TravelPlanExpense> expenses = travelPlan.getExpenses().stream()

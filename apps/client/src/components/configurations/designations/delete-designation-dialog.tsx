@@ -9,34 +9,49 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
+import { useAppStore } from '@/store';
+import { useShallow } from 'zustand/react/shallow';
 
 export function DeleteDesignationDialog() {
-    const location = useLocation();
-    const id = location.state as string;
     const deleteDesignationMutation = useDeleteDesignation();
-    const navigate = useNavigate();
+    const { configDialogOpen, configDialogTarget, closeConfigDialog } =
+        useAppStore(
+            useShallow((s) => ({
+                configDialogOpen: s.configDialogOpen,
+                configDialogTarget: s.configDialogTarget,
+                closeConfigDialog: s.closeConfigDialog,
+            }))
+        );
 
-    const submit = async (id: string | null) => {
+    const id = configDialogTarget?.payload as string | undefined;
+
+    const submit = async (id?: string) => {
         if (!id) {
             return;
         }
         deleteDesignationMutation.mutate(id, {
             onSuccess: () => {
-                navigate('/configuration/designations');
+                closeConfigDialog();
             },
         });
     };
 
     return (
-        <Dialog open={true}>
+        <Dialog
+            open={
+                configDialogOpen &&
+                configDialogTarget?.entity === 'designations' &&
+                configDialogTarget?.mode === 'delete'
+            }
+            onOpenChange={(state) => state === false && closeConfigDialog()}
+        >
             <DialogContent className="sm:max-w-lg space-y-2">
                 <DialogHeader className="space-y-2">
                     <DialogTitle>Confirm Delete Designation</DialogTitle>
                     <DialogDescription>
-                        This designation will be removed and this action
-                        cannot be undone.
+                        This designation will be removed and this action cannot
+                        be undone.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -45,9 +60,7 @@ export function DeleteDesignationDialog() {
                         <Button
                             variant="secondary"
                             disabled={deleteDesignationMutation.isPending}
-                            onClick={() =>
-                                navigate('/configuration/designations')
-                            }
+                            onClick={() => closeConfigDialog()}
                         >
                             Cancel
                         </Button>

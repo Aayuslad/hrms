@@ -1,8 +1,6 @@
-import { Dot, Heart, MessageCircle } from 'lucide-react';
-import { UserProfileDialog } from '@/components/auth/user-profile-dialog';
-
 import { useLikePost, useUnlikePost, type Post } from '@/api/engagement-api';
 import { useGetMe } from '@/api/user-api';
+import { UserProfileDialog } from '@/components/auth/user-profile-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -18,9 +16,17 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal } from 'lucide-react';
-import { useState } from 'react';
 import { useAccessChecker } from '@/hooks/use-has-access';
+import { Dot, Heart, MessageCircle, MoreHorizontal } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+    type CarouselApi,
+} from '@/components/ui/carousel';
 
 type PostCardProps = {
     readonly post: Post;
@@ -53,29 +59,34 @@ export function PostCard({
         }
     };
 
+    const [api, setApi] = useState<CarouselApi>();
+    const [imgIndex, setImgIndex] = useState(0);
+
+    useEffect(() => {
+        if (!api) return;
+        setImgIndex(api.selectedScrollSnap());
+        api.on('select', () => {
+            setImgIndex(api.selectedScrollSnap());
+        });
+    }, [api]);
+
     return (
-        <Card className="w-[600px] pb-3 px-0 gap-3 bg-transparent shadow-xl/30 rounded-lg">
-            <CardHeader className="">
+        <Card className="w-125 pb-3 px-0 gap-2 bg-transparent shadow-xl/30 rounded-lg">
+            <CardHeader className="px-5">
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div>
-                            <CardTitle className="text-lg">
-                                {post.title}
-                            </CardTitle>
-                            <p className="text-sm text-muted-foreground flex items-center">
-                                <UserProfileDialog userId={post.author?.id!}>
-                                    <span className="underline cursor-pointer">
-                                        {post.author?.userName}
-                                    </span>
-                                </UserProfileDialog>
-                                <Dot />
-                                <div>
-                                    {new Date(
-                                        post.createdAt!
-                                    ).toLocaleDateString()}
-                                </div>
-                            </p>
-                        </div>
+                    <div className="space-y-2">
+                        <CardTitle className="text-lg">{post.title}</CardTitle>
+                        <p className="text-sm text-muted-foreground flex items-center">
+                            <UserProfileDialog userId={post.author?.id!}>
+                                <span className="underline cursor-pointer">
+                                    {post.author?.userName}
+                                </span>
+                            </UserProfileDialog>
+                            <Dot />
+                            <div>
+                                {new Date(post.createdAt!).toLocaleDateString()}
+                            </div>
+                        </p>
                     </div>
 
                     {(isAuthor || canAccess(['Admin', 'HR'])) && (
@@ -104,21 +115,55 @@ export function PostCard({
                     )}
                 </div>
             </CardHeader>
-            <CardContent className="">
+
+            {post.images && post.images.length > 0 && (
+                <div className="w-full ">
+                    <div className="relative w-full h-[350px] overflow-hidden bg-muted">
+                        <Carousel setApi={setApi} className="w-full h-full">
+                            <CarouselContent className="h-full">
+                                {post.images.map((img, index) => (
+                                    <CarouselItem
+                                        key={img.id || index}
+                                        className="h-[350px] flex items-center justify-center"
+                                    >
+                                        <div className="w-full h-full flex items-center justify-center">
+                                            <img
+                                                src={img.docUrl}
+                                                alt={`post-img-${index + 1}`}
+                                                className="max-h-[350px] max-w-full object-contain"
+                                            />
+                                        </div>
+                                    </CarouselItem>
+                                ))}
+                            </CarouselContent>
+
+                            <CarouselPrevious className="left-3 h-6 w-6" />
+                            <CarouselNext className="right-3 h-6 w-6" />
+                        </Carousel>
+                    </div>
+
+                    <div className="mt-3 text-center text-xs">
+                        {imgIndex + 1} of {post.images.length}
+                    </div>
+                </div>
+            )}
+
+            <CardContent className="px-5">
                 <pre className="text-sm text-wrap font-sans">
                     {post.content}
                 </pre>
                 {post.tags && post.tags.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-3">
                         {post.tags.map((tag) => (
-                            <Badge key={tag.id} variant="secondary">
+                            <Badge key={tag.id} variant="outline">
                                 {tag.name}
                             </Badge>
                         ))}
                     </div>
                 )}
             </CardContent>
-            <CardFooter className="flex  items-center justify-between">
+
+            <CardFooter className="flex px-4 items-center justify-between">
                 <div className="flex items-center gap-4">
                     <Button
                         variant="ghost"

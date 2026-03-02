@@ -7,49 +7,26 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Form } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Loader2 } from 'lucide-react';
 
-import {
-    useUpdateDocument,
-} from '@/api/travel-api';
+import { useUpdateDocument, type TravelPlanDocument } from '@/api/travel-api';
+import { useGetMe } from '@/api/user-api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
 import { DocumentTypeSelector } from './documentTypeSelector';
-import { Label } from '@/components/ui/label';
-import { useGetMe } from '@/api/user-api';
 
 const updateDocumentFormSchema = z.object({
     id: z.string(),
     documentTypeId: z.string().min(1, 'Type is required'),
-    doc: z
-        .instanceof(FileList)
-        .refine((files) => files.length > 0, 'File is required'),
 });
-
-type Document = {
-    id?: string;
-    owner?: {
-        id?: string;
-        userName?: string;
-    };
-    docUrl?: string;
-    documentType?: string;
-    uploadedAt?: string;
-    uploadedBy?: {
-        id?: string;
-        userName?: string;
-    };
-};
 
 interface UpdateDocumentDialogProps {
     travelPlanId: string;
     participantId: string;
-    document: Document;
+    document: TravelPlanDocument | null;
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }
@@ -67,21 +44,10 @@ const UpdateDocumentDialog = ({
     const form = useForm({
         resolver: zodResolver(updateDocumentFormSchema),
         defaultValues: {
-            id: document.id || '',
-            documentTypeId: '',
-            doc: undefined,
+            id: document?.id || '',
+            documentTypeId: document?.documentType?.id || '',
         },
     } as const);
-
-    useEffect(() => {
-        if (document) {
-            form.reset({
-                id: document.id || '',
-                documentTypeId: '',
-                doc: undefined,
-            });
-        }
-    }, [document, form]);
 
     const onSubmit = async (data: z.infer<typeof updateDocumentFormSchema>) => {
         const formData = new FormData();
@@ -89,7 +55,6 @@ const UpdateDocumentDialog = ({
         formData.append('documentTypeId', data.documentTypeId);
         formData.append('travelPlanId', travelPlanId);
         formData.append('ownerId', me?.id as string);
-        if (data.doc?.[0]) formData.append('doc', data.doc[0]);
 
         updateDocumentMutation.mutate(
             {
@@ -129,6 +94,9 @@ const UpdateDocumentDialog = ({
                                         Document type
                                     </label>
                                     <DocumentTypeSelector
+                                        selectedDocumentTypeId={form.watch(
+                                            'documentTypeId'
+                                        )}
                                         setSelectedDocumentTypeId={(
                                             selectedId
                                         ) =>
@@ -137,17 +105,6 @@ const UpdateDocumentDialog = ({
                                                 selectedId
                                             )
                                         }
-                                    />
-                                </div>
-
-                                <div className="grid gap-3">
-                                    <Label htmlFor="doc">Your document*</Label>
-                                    <Input
-                                        id="doc"
-                                        type="file"
-                                        className=''
-                                        accept="image/*,.pdf,.doc,.docx"
-                                        {...form.register('doc')}
                                     />
                                 </div>
                             </div>

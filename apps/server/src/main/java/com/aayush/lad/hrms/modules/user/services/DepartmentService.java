@@ -8,6 +8,8 @@ import com.aayush.lad.hrms.modules.user.dtos.department.write.UpdateDepartmentRe
 import com.aayush.lad.hrms.modules.user.mappers.DepartmentMapper;
 import com.aayush.lad.hrms.modules.user.models.Department;
 import com.aayush.lad.hrms.modules.user.repositories.DepartmentRepository;
+import com.aayush.lad.hrms.modules.user.repositories.UserRepository;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class DepartmentService {
 
     private final DepartmentRepository departmentRepository;
+    private final UserRepository userRepository;
     private final DepartmentMapper departmentMapper;
 
     public void create(CreateDepartmentRequest request) {
@@ -36,7 +39,8 @@ public class DepartmentService {
 
     public void update(UpdateDepartmentRequest request) {
         Department department = departmentRepository.findById(request.getId()).orElse(null);
-        if (department == null) throw new NotFoundException("Department not found");
+        if (department == null)
+            throw new NotFoundException("Department not found");
 
         if (!department.getName().equals(request.getName()) &&
                 departmentRepository.existsByName(request.getName())) {
@@ -48,7 +52,13 @@ public class DepartmentService {
     }
 
     public void delete(UUID id) {
-        if (!departmentRepository.existsById(id)) throw new NotFoundException("Department not found");
+        if (!departmentRepository.existsById(id))
+            throw new NotFoundException("Department not found");
+
+        if (userRepository.existsByProfile_Department_Id(id)) {
+            throw new ConflictException("Can not delete, department is assigned to one or more users.");
+        }
+
         // TODO: soft delete
         departmentRepository.deleteById(id);
     }

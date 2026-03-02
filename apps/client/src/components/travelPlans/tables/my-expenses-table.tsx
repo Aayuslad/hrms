@@ -6,7 +6,6 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import {
     Table,
     TableBody,
@@ -28,7 +27,7 @@ import {
     type SortingState,
     type VisibilityState,
 } from '@tanstack/react-table';
-import { ArrowUpDown, IndianRupee, MoreHorizontal } from 'lucide-react';
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import React from 'react';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
@@ -40,7 +39,7 @@ interface MyExpensesTableProps {
     expenses: TravelPlanExpense[];
     travelPlanId: string;
     participantId?: string;
-    total?: number;
+    total?: number; 
 }
 
 export function MyExpensesTable({
@@ -110,7 +109,7 @@ export function MyExpensesTable({
             header: 'Category',
             cell: ({ row }) => (
                 <div className="font-medium w-[120px]">
-                    {row.original.expenseCategory}
+                    {row.original.expenseCategory?.name}
                 </div>
             ),
         },
@@ -141,6 +140,7 @@ export function MyExpensesTable({
                             e.stopPropagation();
                             openProofsDialog(proofs);
                         }}
+                        className="h-auto"
                     >
                         View ({proofs.length})
                     </Button>
@@ -155,48 +155,64 @@ export function MyExpensesTable({
                 return (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                <span className="sr-only">Open menu</span>
-                                <MoreHorizontal className="h-4 w-4" />
-                            </Button>
+                            {row.original.status !== 'APPROVED' &&
+                                row.original.status !== 'REJECTED' && (
+                                    <Button
+                                        variant="ghost"
+                                        className="h-auto w-8 p-0"
+                                    >
+                                        <span className="sr-only">
+                                            Open menu
+                                        </span>
+                                        <MoreHorizontal className="h-4 w-4" />
+                                    </Button>
+                                )}
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                                onClick={() => {
-                                    setSelectedExpense(row.original);
-                                    setUpdateDialogOpen(true);
-                                }}
-                            >
-                                Update
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                                onClick={() => {
-                                    setSelectedExpense(row.original);
-                                    setDeleteDialogOpen(true);
-                                }}
-                            >
-                                Delete
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                                onClick={() => {
-                                    submitExpenseMutation.mutate(
-                                        {
-                                            expenseId: row.original.id!,
-                                            travelPlanId,
-                                            participantId: participantId!,
-                                        },
-                                        {
-                                            onSuccess: () => {
-                                                toast.success(
-                                                    'Expense submitted successfully'
-                                                );
+                            {(row.original.status === 'DRAFTING' ||
+                                row.original.status === 'SUBMITTED') && (
+                                <DropdownMenuItem
+                                    onClick={() => {
+                                        setSelectedExpense(row.original);
+                                        setUpdateDialogOpen(true);
+                                    }}
+                                >
+                                    Update
+                                </DropdownMenuItem>
+                            )}
+                            {(row.original.status === 'DRAFTING' ||
+                                row.original.status === 'SUBMITTED') && (
+                                <DropdownMenuItem
+                                    onClick={() => {
+                                        setSelectedExpense(row.original);
+                                        setDeleteDialogOpen(true);
+                                    }}
+                                >
+                                    Delete
+                                </DropdownMenuItem>
+                            )}
+                            {row.original.status === 'DRAFTING' && (
+                                <DropdownMenuItem
+                                    onClick={() => {
+                                        submitExpenseMutation.mutate(
+                                            {
+                                                expenseId: row.original.id!,
+                                                travelPlanId,
+                                                participantId: participantId!,
                                             },
-                                        }
-                                    );
-                                }}
-                            >
-                                Submit
-                            </DropdownMenuItem>
+                                            {
+                                                onSuccess: () => {
+                                                    toast.success(
+                                                        'Expense submitted successfully'
+                                                    );
+                                                },
+                                            }
+                                        );
+                                    }}
+                                >
+                                    Submit
+                                </DropdownMenuItem>
+                            )}
                         </DropdownMenuContent>
                     </DropdownMenu>
                 );

@@ -5,9 +5,11 @@ import {
     CarouselItem,
     CarouselNext,
     CarouselPrevious,
+    type CarouselApi,
 } from '@/components/ui/carousel';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useAppStore } from '@/store';
+import { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 export function ViewProofsDialog() {
@@ -18,6 +20,18 @@ export function ViewProofsDialog() {
             closeProofsDialog: s.closeProofsDialog,
         }))
     );
+    const [api, setApi] = useState<CarouselApi>();
+    const [proofIndex, setProofIndex] = useState(0);
+
+    useEffect(() => {
+        if (!api) return;
+
+        setProofIndex(api.selectedScrollSnap());
+
+        api.on('select', () => {
+            setProofIndex(api.selectedScrollSnap());
+        });
+    }, [api]);
 
     const proofs = proofsToShow ?? [];
 
@@ -25,7 +39,10 @@ export function ViewProofsDialog() {
         <Dialog open={proofsDialogOpen} onOpenChange={closeProofsDialog}>
             <DialogContent className="max-w-3xl w-full h-fit p-0 bg-transparent border-none [&>button]:hidden">
                 {proofs.length ? (
-                    <Carousel className="w-full h-full p-0 flex items-center justify-center">
+                    <Carousel
+                        setApi={setApi}
+                        className="w-full h-full p-0 flex items-center justify-center"
+                    >
                         <CarouselContent className="h-full flex items-center justify-start">
                             {proofs.map((proof, index) => (
                                 <CarouselItem
@@ -52,6 +69,10 @@ export function ViewProofsDialog() {
                         </CarouselContent>
                         <CarouselPrevious />
                         <CarouselNext />
+
+                        <div className=" absolute -bottom-4 text-white  py-2 text-center text-sm">
+                            {proofIndex + 1} of {proofs.length}
+                        </div>
                     </Carousel>
                 ) : (
                     <p className="p-4 text-center text-muted-foreground">

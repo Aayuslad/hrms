@@ -4,6 +4,7 @@ import com.aayush.lad.hrms.core.exeptions.ConflictException;
 import com.aayush.lad.hrms.core.exeptions.NotFoundException;
 import com.aayush.lad.hrms.core.exeptions.UnauthorisedException;
 import com.aayush.lad.hrms.core.services.CurrentUserService;
+import com.aayush.lad.hrms.core.services.FileUploadService;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.NotificationResponse;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.OrgCharts;
 import com.aayush.lad.hrms.modules.user.dtos.user.read.UserDetailResponse;
@@ -29,7 +30,9 @@ import java.util.*;
 @Service
 @AllArgsConstructor
 public class UserService {
+
     private final NotificationService notificationService;
+    private final FileUploadService fileUploadService;
 
     public void markNotificationsAsRead(List<UUID> notificationIds) {
         notificationService.markNotificationsAsRead(notificationIds);
@@ -99,10 +102,10 @@ public class UserService {
         User user = currentUserService.getCurrentUserEntity();
 
         userMapper.update(request, user);
-//        if (request.getAvatar() != null) {
-//            fileUploadService.deleteFileByURL(user.getProfile().getAvatarUrl());
-//            updatedUser.getProfile().setAvatarUrl(fileUploadService.uploadFile(request.getAvatar()));
-//        }
+        if (request.getAvatar() != null) {
+            fileUploadService.deleteFileByURL(user.getProfile().getAvatarUrl());
+            user.getProfile().setAvatarUrl(fileUploadService.uploadFile(request.getAvatar()));
+        }
 
         userRepository.save(user);
     }
@@ -160,34 +163,17 @@ public class UserService {
 
         if (request.getRoles() != null && !request.getRoles().isEmpty()) {
             List<Role> roles = roleRepository.findAllById(request.getRoles());
+            user.getRoles().clear();
             user.getRoles().addAll(roles);
         }
 
         userRepository.save(user);
     }
 
-    /**
-     * Returns the complete organisation chart (current behaviour).
-     */
     public OrgCharts getOrgCharts() {
         return getOrgCharts((UUID) null);
     }
 
-    /**
-     * Returns an organisation chart rooted around the provided user id.
-     *
-     * <p>Behaviour:
-     * <ul>
-     *     <li>If {@code userId} is null the full tree is returned (same as the
-     *     old method).</li>
-     *     <li>Otherwise the payload contains a single root node which is the
-     *     top‑most manager in the selected employee's chain (or the selected
-     *     employee itself if there is no manager).  The chain is represented as a
-     *     vertical path: each manager only has a single child pointing towards the
-     *     selected employee.  The selected employee node also includes one level of
-     *     direct reports, but no deeper hierarchy.</li>
-     * </ul>
-     */
     public OrgCharts getOrgCharts(UUID userId) {
         List<User> allUsers = userRepository.findAllWithProfiles();
 
@@ -275,8 +261,8 @@ public class UserService {
      * element of {@code chain} is the immediate manager of {@code selected}.
      */
     private EmployeeOrgChartNodeResponse buildChainNode(List<User> chain,
-                                                       User selected,
-                                                       Map<UUID, List<User>> subordinates) {
+                                                        User selected,
+                                                        Map<UUID, List<User>> subordinates) {
         // start with selected node including direct reports
         EmployeeOrgChartNodeResponse child = buildNodeLimited(selected, subordinates, 1);
         // walk the chain back to the top

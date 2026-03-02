@@ -1,5 +1,6 @@
 import { useGetTravelPlan } from '@/api/travel-api';
 import { useGetMe } from '@/api/user-api';
+import { NoContent } from '@/components/no-content';
 import { ViewProofsDialog } from '@/components/travelPlans/expense/view-proofs-dialog';
 import { MyDocuments } from '@/components/travelPlans/tabContents/my-documents';
 import { MyExpenses } from '@/components/travelPlans/tabContents/my-expenses';
@@ -41,10 +42,6 @@ export function TravelPlanDetailsPage() {
         },
     ];
 
-    if (!travelPlan) {
-        return <p>travel plan not found.</p>;
-    }
-
     if (isLoading) {
         return (
             <div className="w-full h-[80vh] flex items-center justify-center">
@@ -61,6 +58,10 @@ export function TravelPlanDetailsPage() {
         );
     }
 
+    if (!isLoading && !isError && !travelPlan) {
+        return <NoContent />;
+    }
+
     return (
         <div className=" h-full">
             <div className="bg  h-[130px] w-full flex items-center">
@@ -73,7 +74,7 @@ export function TravelPlanDetailsPage() {
                         <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm text-muted-foreground">
                             <div className="flex items-center gap-2">
                                 <MapPin className="h-4 w-4 shrink-0" />
-                                <span>{travelPlan.destination}</span>
+                                <span>{travelPlan?.destination}</span>
                             </div>
 
                             <Dot />
@@ -82,11 +83,11 @@ export function TravelPlanDetailsPage() {
                                 <Calendar className="h-4 w-4 shrink-0" />
                                 <span>
                                     {new Date(
-                                        travelPlan.startAt as string
+                                        travelPlan?.startAt as string
                                     ).toLocaleString()}
                                     {' – '}
                                     {new Date(
-                                        travelPlan.endAt as string
+                                        travelPlan?.endAt as string
                                     ).toLocaleString()}
                                 </span>
                             </div>
@@ -96,7 +97,7 @@ export function TravelPlanDetailsPage() {
                             <div className="flex items-center gap-2">
                                 <Wallet className="h-4 w-4 shrink-0" />
                                 <span>
-                                    ₹{travelPlan.maxExpenseAmountPerDay} / day
+                                    ₹{travelPlan?.maxExpenseAmountPerDay} / day
                                 </span>
                             </div>
                         </div>
@@ -108,8 +109,8 @@ export function TravelPlanDetailsPage() {
                 <div className="w-full mr-12 flex flex-col items-center px-8 space-y-10">
                     <p className="text-sm px-2 w-full text-foreground/90 leading-relaxed">
                         {descriptionView === 'short'
-                            ? travelPlan.description?.slice(0, 100) + '...'
-                            : travelPlan.description}
+                            ? travelPlan?.description?.slice(0, 100) + '...'
+                            : travelPlan?.description}
                         <button
                             className="ml-2 text-sm text-blue-500 hover:underline cursor-pointer"
                             onClick={() =>

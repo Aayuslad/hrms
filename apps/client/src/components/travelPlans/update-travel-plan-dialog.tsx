@@ -18,17 +18,15 @@ import {
     type TravelPlan,
     type UpdateTravelPlanRequest,
 } from '@/api/travel-api';
-import { useGetUserList } from '@/api/user-api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
 import DateTimeSelector from '../ui/date-time-selector';
 import { Label } from '../ui/label';
 import { NumberInputWithEndButtons } from '../ui/number-input-with-end-buttons';
 import { Textarea } from '../ui/textarea';
-import { ParticipantSelector } from './participant-selector';
 
 const updateTravelPlanFormSchema = z.object({
     id: z.string().min(1),
@@ -63,11 +61,6 @@ const UpdateTravelPlanDialog = ({ travelPlan }: Props) => {
         },
     } as const);
 
-    const participantsFieldArray = useFieldArray({
-        control: form.control,
-        name: 'participants',
-    });
-
     console.log('Form default values:', form.getValues('participants'));
 
     const onSubmit = async (data: UpdateTravelPlanRequest) => {
@@ -99,7 +92,7 @@ const UpdateTravelPlanDialog = ({ travelPlan }: Props) => {
             <DialogContent className="flex max-h-[min(700px,85vh)] flex-col gap-0 p-0 sm:max-w-lg">
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
-                        <DialogHeader className="px-6 pt-6">
+                        <DialogHeader className="px-6 py-6 border-b">
                             <DialogTitle>
                                 Update Travel Plan - {travelPlan.title}
                             </DialogTitle>

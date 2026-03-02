@@ -130,7 +130,7 @@ export default function Schedule({
 
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="bg-muted h-[60px] font-semibold rounded-tl-lg text-sm text-center sticky top-0 z-20 border-muted/50">
+                            <TableHead className="bg-muted h-[60px] font-semibold rounded-tl-lg text-sm text-center sticky top-0  border-muted/50">
                                 Week {weekNumber}
                             </TableHead>
                             {days.map((d, idx) => (
@@ -233,10 +233,24 @@ export default function Schedule({
                                                             {slot.booked ? (
                                                                 <div className="flex flex-col items-center justify-center rounded-xl  text-xs   ">
                                                                     <span className="font-mono underline cursor-pointer">
-                                                                        <UserProfileDialog userId={slot.organiser?.id!}>
-                                                                            {slot.organiser?.userName}
+                                                                        <UserProfileDialog
+                                                                            userId={
+                                                                                slot
+                                                                                    .organiser
+                                                                                    ?.id!
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                slot
+                                                                                    .organiser
+                                                                                    ?.userName
+                                                                            }
+                                                                            {slot
+                                                                                .organiser
+                                                                                ?.id ===
+                                                                                me?.id &&
+                                                                                '(you)'}
                                                                         </UserProfileDialog>
-                                                                        {slot.organiser?.id === me?.id && '(you)'}
                                                                     </span>
 
                                                                     <span className="text-muted-foreground">

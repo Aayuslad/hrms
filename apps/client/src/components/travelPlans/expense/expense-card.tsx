@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/card';
 import { useAppStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
-import { ViewProofsDialog } from './view-proofs-dialog';
 
 interface ExpenseCardProps {
     expense: TravelPlanExpense;
@@ -34,7 +33,7 @@ export function ExpenseCard({
                         <CardTitle>₹{expense.amount}</CardTitle>
                         <CardDescription>
                             <span className="text-xs">
-                                {expense.expenseCategory}
+                                {expense.expenseCategory?.name}
                             </span>
                         </CardDescription>
                     </div>

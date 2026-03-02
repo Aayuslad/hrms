@@ -170,7 +170,6 @@ export function useGetParticipant(
     });
 }
 
-// ---- new hooks for managing participants --------------------------------------------------
 export function useAddParticipants() {
     const queryClient = useQueryClient();
     return useMutation({

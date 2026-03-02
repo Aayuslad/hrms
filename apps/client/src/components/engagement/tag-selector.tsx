@@ -14,7 +14,7 @@ import {
     PopoverTrigger,
 } from '@/components/ui/popover';
 import { Badge } from '@/components/ui/badge';
-import { Check, Plus, Tags } from 'lucide-react';
+import { Check, ChevronsUpDown, Plus, Tags } from 'lucide-react';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -64,12 +64,17 @@ export function TagSelector({
                         role="combobox"
                         aria-expanded={open}
                     >
-                        <span className="flex items-center gap-2">
-                            <Tags className="h-4 w-4" />
-                            {selectedTags.length > 0
-                                ? `${selectedTags.length} tag${selectedTags.length > 1 ? 's' : ''} selected`
-                                : 'Select Tags'}
-                        </span>
+                        <div className="w-full flex items-center justify-between gap-2">
+                            <span className="flex items-center gap-1">
+                                <Tags className="h-4 w-4" />
+
+                                {selectedTags.length > 0
+                                    ? `${selectedTags.length} tag${selectedTags.length > 1 ? 's' : ''} selected`
+                                    : 'Select Tags'}
+                            </span>
+
+                            <ChevronsUpDown className="opacity-50" />
+                        </div>
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-80 p-0">
@@ -136,12 +141,11 @@ export function TagSelector({
 
             {selectedTags.length > 0 && (
                 <div className="space-y-2">
-                    <p className="text-sm font-medium">Selected Tags:</p>
                     <div className="flex flex-wrap gap-2">
                         {selectedTags.map((tag) => (
                             <Badge
                                 key={tag.id}
-                                variant="secondary"
+                                variant="outline"
                                 className="cursor-pointer hover:bg-destructive/20"
                                 onClick={() => handleTagToggle(tag.id!)}
                             >

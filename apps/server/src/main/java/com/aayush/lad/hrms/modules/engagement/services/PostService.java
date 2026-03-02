@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.aayush.lad.hrms.core.exeptions.CustomAccessDeniedException;
+import com.aayush.lad.hrms.core.services.FileUploadService;
 import com.aayush.lad.hrms.modules.user.services.NotificationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import com.aayush.lad.hrms.modules.engagement.dtos.write.UpdatePostRequest;
 import com.aayush.lad.hrms.modules.engagement.mappers.PostMapper;
 import com.aayush.lad.hrms.modules.engagement.models.Post;
 import com.aayush.lad.hrms.modules.engagement.models.PostComment;
+import com.aayush.lad.hrms.modules.engagement.models.PostImage;
 import com.aayush.lad.hrms.modules.engagement.repositories.PostCommentRepository;
 import com.aayush.lad.hrms.modules.engagement.repositories.PostRepository;
 import com.aayush.lad.hrms.modules.user.models.User;
@@ -33,6 +35,7 @@ public class PostService {
     private final PostCommentRepository postCommentRepository;
     private final CurrentUserService currentUserService;
     private final NotificationService notificationService;
+    private final FileUploadService fileUploadService;
     private final PostMapper mapper;
 
     public List<PostResponse> getAll() {
@@ -48,6 +51,18 @@ public class PostService {
     @Transactional
     public void create(CreatePostRequest request) {
         Post post = mapper.create(request);
+
+        if (request.getImages() != null && !request.getImages().isEmpty()) {
+            var urls = request.getImages().stream()
+                    .map(fileUploadService::uploadFile)
+                    .toList();
+            var images = urls.stream()
+                    .map(u -> PostImage.builder().docUrl(u).post(post).build())
+                    .toList();
+            post.getImages().clear();
+            post.getImages().addAll(images);
+        }
+
         postRepository.save(post);
     }
 
@@ -57,6 +72,29 @@ public class PostService {
 
         if (!currentUserService.getUsername().equals(post.getAuthor().getUserName())) {
             throw new CustomAccessDeniedException();
+        }
+
+
+        if (request.getDeletedImageIds() != null && !request.getDeletedImageIds().isEmpty()) {
+            for (UUID id : request.getDeletedImageIds()) {
+                PostImage img = post.getImages().stream()
+                        .filter(i -> i.getId().equals(id))
+                        .findFirst().orElse(null);
+                if (img != null) {
+                    fileUploadService.deleteFileByURL(img.getDocUrl());
+                }
+            }
+            post.getImages().removeIf(i -> request.getDeletedImageIds().contains(i.getId()));
+        }
+
+        if (request.getImages() != null && !request.getImages().isEmpty()) {
+            var urls = request.getImages().stream()
+                    .map(fileUploadService::uploadFile)
+                    .toList();
+            var images = urls.stream()
+                    .map(u -> PostImage.builder().docUrl(u).post(post).build())
+                    .toList();
+            post.getImages().addAll(images);
         }
 
         mapper.update(request, post);
@@ -75,6 +113,10 @@ public class PostService {
         if (!currentUser.getId().equals(post.getAuthor().getId())) {
             String message = "Your post with title '" + post.getTitle() + "' was deleted by " + currentUser.getUserName();
             notificationService.createNotification(post.getAuthor().getId(), message);
+        }
+
+        if (post.getImages() != null) {
+            post.getImages().forEach(img -> fileUploadService.deleteFileByURL(img.getDocUrl()));
         }
 
         postRepository.delete(post);

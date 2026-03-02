@@ -29,7 +29,8 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { useAccessChecker } from '@/hooks/use-has-access';
-import { useNavigate } from 'react-router';
+import { useAppStore } from '@/store';
+import { useShallow } from 'zustand/react/shallow';
 
 export function DocumentTypesTable() {
     const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -40,7 +41,12 @@ export function DocumentTypesTable() {
     const [rowSelection, setRowSelection] = React.useState({});
     const canAccess = useAccessChecker();
     const { data, isLoading, isError } = useGetDocumentTypes();
-    const navigate = useNavigate();
+    const { openConfigDialog } =
+        useAppStore(
+            useShallow((s) => ({
+                openConfigDialog: s.openConfigDialog,
+            }))
+        );
 
     const columns: ColumnDef<DocumentType>[] = [
         {
@@ -74,9 +80,7 @@ export function DocumentTypesTable() {
                                       className="text-gray-400 hover:cursor-pointer"
                                       onClick={(e) => {
                                           e.stopPropagation();
-                                          navigate(`update`, {
-                                              state: row.original,
-                                          });
+                                          openConfigDialog({ entity: 'documentTypes', mode: 'update', payload: row.original });
                                       }}
                                   >
                                       Edit
@@ -85,9 +89,7 @@ export function DocumentTypesTable() {
                                       className="text-destructive hover:cursor-pointer"
                                       onClick={(e) => {
                                           e.stopPropagation();
-                                          navigate(`delete`, {
-                                              state: row.original.id,
-                                          });
+                                          openConfigDialog({ entity: 'documentTypes', mode: 'delete', payload: row.original.id });
                                       }}
                                   >
                                       Delete

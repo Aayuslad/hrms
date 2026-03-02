@@ -80,6 +80,10 @@ export function ParticipantExpensesSheet({
                     </div>
                 </ScrollArea>
                 <SheetFooter>
+                    <div className="text-sm px-2 pr-4 border-b py-2 font-semibold flex justify-between">
+                        <span>Total claimed expenses</span>
+                        <span>₹{participant.totalClaimedAmount}</span>
+                    </div>
                     <SheetClose asChild>
                         <Button variant="outline">Close</Button>
                     </SheetClose>

@@ -66,7 +66,10 @@ const CreateExpenseDialog = ({
         },
     });
 
-    const onSubmit = async (data: z.infer<typeof createExpenseFormSchema>, status: string) => {
+    const onSubmit = async (
+        data: z.infer<typeof createExpenseFormSchema>,
+        status: string
+    ) => {
         const formData = new FormData();
 
         formData.append('travelPlanId', data.travelPlanId);
@@ -110,11 +113,11 @@ const CreateExpenseDialog = ({
             <DialogContent className="flex max-h-[min(700px,85vh)] flex-col gap-0 p-0 sm:w-[450px]">
                 <Form {...form}>
                     <form>
-                        <DialogHeader className="px-6 pt-6">
+                        <DialogHeader className="px-6 py-5 border-b">
                             <DialogTitle>Add Expense</DialogTitle>
                         </DialogHeader>
 
-                        <ScrollArea className="px-6 py-4">
+                        <ScrollArea className="px-6 py-4 h-[400px]">
                             <div className="space-y-5">
                                 <NumberInputWithEndButtons
                                     control={form.control}
@@ -122,6 +125,7 @@ const CreateExpenseDialog = ({
                                     minValue={0}
                                     label="Amount*"
                                 />
+
                                 <div className="grid gap-3 flex-1">
                                     <Label htmlFor="date">Date*</Label>
                                     <Input
@@ -196,7 +200,7 @@ const CreateExpenseDialog = ({
                             </div>
                         </ScrollArea>
 
-                        <DialogFooter className="px-6 py-4">
+                        <DialogFooter className="px-6 py-4 border-t">
                             <DialogClose asChild>
                                 <Button type="button" variant="outline">
                                     Cancel
@@ -205,7 +209,11 @@ const CreateExpenseDialog = ({
                             <Button
                                 type="button"
                                 variant="secondary"
-                                onClick={form.handleSubmit((data) => onSubmit(data, EXPENSE_STATUS.DRAFTING), onInvalid)}
+                                onClick={form.handleSubmit(
+                                    (data) =>
+                                        onSubmit(data, EXPENSE_STATUS.DRAFTING),
+                                    onInvalid
+                                )}
                                 disabled={createExpenseMutation.isPending}
                             >
                                 {createExpenseMutation.isPending && (
@@ -215,7 +223,14 @@ const CreateExpenseDialog = ({
                             </Button>
                             <Button
                                 type="button"
-                                onClick={form.handleSubmit((data) => onSubmit(data, EXPENSE_STATUS.SUBMITTED), onInvalid)}
+                                onClick={form.handleSubmit(
+                                    (data) =>
+                                        onSubmit(
+                                            data,
+                                            EXPENSE_STATUS.SUBMITTED
+                                        ),
+                                    onInvalid
+                                )}
                                 disabled={createExpenseMutation.isPending}
                             >
                                 {createExpenseMutation.isPending && (

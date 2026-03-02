@@ -15,8 +15,7 @@ export function UserPill({ user }: { user: UserSummary }) {
                     <Avatar className="border h-6 w-6">
                         <AvatarImage
                             src={user?.profile?.avatarUrl}
-                            alt="@shadcn"
-                            className="grayscale"
+                            alt="Avatar"
                         />
                         <AvatarFallback>
                             {user?.userName?.[0]?.toUpperCase()}

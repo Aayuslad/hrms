@@ -1,6 +1,14 @@
+import { useGetDepartmentes, type Department } from '@/api/department-api';
 import { useGetAllUsersDetails, type User } from '@/api/user-api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import {
     Table,
@@ -11,6 +19,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { useAccessChecker } from '@/hooks/use-has-access';
+import { useAppStore } from '@/store';
 import {
     flexRender,
     getCoreRowModel,
@@ -24,19 +33,41 @@ import {
     type VisibilityState,
 } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 export function EmployeesTable() {
     const [sorting, setSorting] = React.useState<SortingState>([]);
+    const [departmentFilter, setDepartmentFilter] =
+        React.useState<Department>();
     const [columnFilters, setColumnFilters] =
         React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
     const canAccess = useAccessChecker();
-    const navigate = useNavigate();
+    const { openConfigDialog } = useAppStore(
+        useShallow((s) => ({
+            openConfigDialog: s.openConfigDialog,
+        }))
+    );
     const { data, isLoading, isError } = useGetAllUsersDetails();
+    const { data: departments } = useGetDepartmentes();
+    const [updatedDepartments, setUpdatedDepartments] =
+        useState<Department[]>();
+
+    useEffect(() => {
+        if (departments) {
+            setUpdatedDepartments([
+                {
+                    id: '00000000-0000-0000-0000-000000000000',
+                    name: 'All Departments',
+                } as Department,
+                ...departments,
+            ]);
+            setDepartmentFilter(departments[0]);
+        }
+    }, [departments]);
 
     const columns: ColumnDef<User>[] = [
         {
@@ -94,12 +125,11 @@ export function EmployeesTable() {
                                       type="button"
                                       className="text-gray-400 font-semibold hover:cursor-pointer"
                                       onClick={() =>
-                                          navigate(
-                                              '/configuration/employees/update-profile',
-                                              {
-                                                  state: { user: row.original },
-                                              }
-                                          )
+                                          openConfigDialog({
+                                              entity: 'employees',
+                                              mode: 'update-profile',
+                                              payload: row.original,
+                                          })
                                       }
                                   >
                                       Update Profile
@@ -108,12 +138,11 @@ export function EmployeesTable() {
                                       type="button"
                                       className="text-gray-400 font-semibold hover:cursor-pointer"
                                       onClick={() =>
-                                          navigate(
-                                              '/configuration/employees/update-roles',
-                                              {
-                                                  state: { user: row.original },
-                                              }
-                                          )
+                                          openConfigDialog({
+                                              entity: 'employees',
+                                              mode: 'update-roles',
+                                              payload: row.original,
+                                          })
                                       }
                                   >
                                       Update Roles
@@ -159,9 +188,9 @@ export function EmployeesTable() {
         );
 
     return (
-        <div className="">
+        <div className="w-[70vw]">
             {/* header */}
-            <div className="flex items-center py-4">
+            <div className="flex items-center justify-between py-4">
                 <Input
                     placeholder="Filter employees..."
                     value={
@@ -176,6 +205,28 @@ export function EmployeesTable() {
                     }
                     className="max-w-sm"
                 />
+
+                <div className="w-[200px]">
+                    <Select
+                        value={departmentFilter?.id}
+                        onValueChange={(value) =>
+                            setDepartmentFilter(
+                                updatedDepartments?.find((d) => d.id === value)
+                            )
+                        }
+                    >
+                        <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select department" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {updatedDepartments?.map((dept) => (
+                                <SelectItem key={dept.id!} value={dept.id!}>
+                                    {dept.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
             </div>
 
             {/* table */}
@@ -199,24 +250,42 @@ export function EmployeesTable() {
                         ))}
                     </TableHeader>
                     <TableBody>
-                        {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={
-                                        row.getIsSelected() && 'selected'
-                                    }
-                                >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            ))
+                        {table.getRowModel().rows?.filter((row) => {
+                            const deptId = row.original.profile?.department?.id;
+                            return (
+                                departmentFilter?.id ===
+                                    '00000000-0000-0000-0000-000000000000' ||
+                                deptId === departmentFilter?.id
+                            );
+                        }).length ? (
+                            table
+                                .getRowModel()
+                                .rows.filter((row) => {
+                                    const deptId =
+                                        row.original.profile?.department?.id;
+                                    return (
+                                        departmentFilter?.id ===
+                                            '00000000-0000-0000-0000-000000000000' ||
+                                        deptId === departmentFilter?.id
+                                    );
+                                })
+                                .map((row) => (
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={
+                                            row.getIsSelected() && 'selected'
+                                        }
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id}>
+                                                {flexRender(
+                                                    cell.column.columnDef.cell,
+                                                    cell.getContext()
+                                                )}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                ))
                         ) : (
                             <TableRow>
                                 <TableCell

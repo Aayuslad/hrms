@@ -23,6 +23,7 @@ import { useAccessChecker } from '@/hooks/use-has-access';
 import { Calendar, Dot, MapPin, Wallet } from 'lucide-react';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { NoContent } from '@/components/no-content';
 
 export function TravelPlanManagePage() {
     const canAccess = useAccessChecker();
@@ -58,10 +59,6 @@ export function TravelPlanManagePage() {
         },
     ];
 
-    if (!travelPlan) {
-        return <p>travel plan not found.</p>;
-    }
-
     if (isLoading) {
         return (
             <div className="w-full h-[80vh] flex items-center justify-center">
@@ -76,6 +73,10 @@ export function TravelPlanManagePage() {
                 Error fetching data
             </div>
         );
+    }
+
+    if (!isLoading && !isError && !travelPlan) {
+        return <NoContent />;
     }
 
     return (

@@ -69,7 +69,7 @@ export function NotificationsPage() {
                     >
                         {markAsReadMutation.isPending
                             ? 'Marking...'
-                            : `Mark All as Read (${unreadNotificationIds.length})`}
+                            : `Mark all as read (${unreadNotificationIds.length})`}
                     </Button>
                 )}
             </div>
@@ -121,14 +121,10 @@ export function NotificationsPage() {
                                             onClick={() => markAsReadMutation.mutate([notification.id!])}
                                             disabled={markAsReadMutation.isPending}
                                         >
-                                            Mark as Read
+                                            Mark as read
                                         </Button>
                                     )}
-                                    {!notification.isRead && (
-                                        <span className="shrink-0 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
-                                            New
-                                        </span>
-                                    )}
+                                  
                                 </div>
                             </div>
                         </CardContent>

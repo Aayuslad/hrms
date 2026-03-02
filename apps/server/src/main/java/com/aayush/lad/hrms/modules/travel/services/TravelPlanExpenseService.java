@@ -41,7 +41,7 @@ public class TravelPlanExpenseService {
     // utility helpers used by multiple endpoints
     private TravelPlan requirePlan(UUID id, boolean withAll) {
         return withAll
-                ? travelPlanRepository.findByIdWithAll(id)
+                ? travelPlanRepository.findByIdWithAllOrderByCreatedAtDesc(id)
                         .orElseThrow(() -> new NotFoundException("Travel plan not found"))
                 : travelPlanRepository.findById(id).orElseThrow(() -> new NotFoundException("Travel plan not found"));
     }
@@ -106,6 +106,10 @@ public class TravelPlanExpenseService {
         TravelPlan travelPlan = requirePlan(request.getTravelPlanId(), true);
         TravelPlanExpense target = requireExpense(travelPlan, request.getId());
 
+        if (target.getStatus() != ExpenseStatus.DRAFTING && target.getStatus() != ExpenseStatus.SUBMITTED) {
+            throw new ConflictException("Only expenses in drafting or submitted state can be updated");
+        }
+
         checkDailyExpenseLimit(travelPlan, target.getParticipant(), request.getDate(), request.getAmount(), target);
 
         target.setAmount(request.getAmount());
@@ -117,7 +121,18 @@ public class TravelPlanExpenseService {
 
         target.setExpenseCategory(category);
 
-        // TODO: delete the old proofs
+        if (request.getDeletedProofIds() != null && !request.getDeletedProofIds().isEmpty()) {
+            for (UUID id : request.getDeletedProofIds()) {
+                TravelPlanExpenseProof proof = target.getProofs().stream().filter(p -> p.getId().equals(id)).findFirst()
+                        .orElse(null);
+                if (proof != null) {
+                    fileUploadService.deleteFileByURL(proof.getDocUrl());
+                }
+            }
+
+            target.getProofs().removeIf(p -> request.getDeletedProofIds().contains(p.getId()));
+        }
+
         if (request.getProofs() != null && !request.getProofs().isEmpty()) {
             List<String> profUrls = request.getProofs().stream()
                     .map(fileUploadService::uploadFile).toList();
@@ -126,24 +141,29 @@ public class TravelPlanExpenseService {
                     .map(x -> TravelPlanExpenseProof.builder().docUrl(x).expense(target).build())
                     .toList();
 
-            target.getProofs().clear();
             target.getProofs().addAll(proofs);
         }
 
         travelPlanRepository.save(travelPlan);
     }
 
-    // TODO: delete the proofs from cloud as well
     public void deleteExpense(UUID travelPlanId, UUID participantId, UUID expenseId) {
         TravelPlan travelPlan = requirePlan(travelPlanId, false);
+        TravelPlanExpense target = requireExpense(travelPlan, expenseId);
 
-        boolean removed = travelPlan.getExpenses()
-                .removeIf(e -> e.getId().equals(expenseId) && e.getParticipant() != null &&
-                        e.getParticipant().getId().equals(participantId));
+        if (target.getStatus() != ExpenseStatus.DRAFTING && target.getStatus() != ExpenseStatus.SUBMITTED) {
+            throw new ConflictException("Only expenses in drafting or submitted state can be deleted");
+        }
 
-        if (!removed)
+        if (target.getParticipant() == null || !target.getParticipant().getId().equals(participantId)) {
             throw new NotFoundException("Expense not found");
+        }
 
+        if (target.getProofs() != null) {
+            target.getProofs().forEach(p -> fileUploadService.deleteFileByURL(p.getDocUrl()));
+        }
+
+        travelPlan.getExpenses().remove(target);
         travelPlanRepository.save(travelPlan);
     }
 

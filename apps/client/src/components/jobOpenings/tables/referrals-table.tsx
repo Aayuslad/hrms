@@ -16,6 +16,7 @@ import {
     flexRender,
 } from '@tanstack/react-table';
 import { UserProfileDialog } from '@/components/auth/user-profile-dialog';
+import { Button } from '@/components/ui/button';
 
 type Props = {
     readonly referrals: readonly JobOpeningReferralResponse[];
@@ -55,27 +56,27 @@ const columns = [
             );
         },
     }),
-    columnHelper.accessor('status', {
-        header: 'Status',
-        cell: (info) => {
-            const status = info.getValue() || 'NEW';
-            const getStatusColor = (status: string) => {
-                switch (status) {
-                    case 'NEW':
-                        return 'bg-blue-100 text-blue-800';
-                    case 'IN_REVIEW':
-                        return 'bg-yellow-100 text-yellow-800';
-                    case 'ACCEPTED':
-                        return 'bg-green-100 text-green-800';
-                    case 'REJECTED':
-                        return 'bg-red-100 text-red-800';
-                    default:
-                        return 'bg-gray-100 text-gray-800';
-                }
-            };
-            return <Badge className={getStatusColor(status)}>{status}</Badge>;
-        },
-    }),
+    // columnHelper.accessor('status', {
+    //     header: 'Status',
+    //     cell: (info) => {
+    //         const status = info.getValue() || 'NEW';
+    //         const getStatusColor = (status: string) => {
+    //             switch (status) {
+    //                 case 'NEW':
+    //                     return 'bg-blue-100 text-blue-800';
+    //                 case 'IN_REVIEW':
+    //                     return 'bg-yellow-100 text-yellow-800';
+    //                 case 'ACCEPTED':
+    //                     return 'bg-green-100 text-green-800';
+    //                 case 'REJECTED':
+    //                     return 'bg-red-100 text-red-800';
+    //                 default:
+    //                     return 'bg-gray-100 text-gray-800';
+    //             }
+    //         };
+    //         return <Badge className={getStatusColor(status)}>{status}</Badge>;
+    //     },
+    // }),
     columnHelper.accessor('cvUrl', {
         header: 'CV',
         cell: (info) => {
@@ -113,53 +114,79 @@ export function ReferralsTable({ referrals }: Props) {
     }
 
     return (
-        <div className="overflow-hidden rounded-md border">
-            <Table>
-                <TableHeader className="bg-border">
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => (
-                                <TableHead key={header.id}>
-                                    {header.isPlaceholder
-                                        ? null
-                                        : flexRender(
-                                              header.column.columnDef.header,
-                                              header.getContext()
-                                          )}
-                                </TableHead>
-                            ))}
-                        </TableRow>
-                    ))}
-                </TableHeader>
-                <TableBody>
-                    {table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
-                            <TableRow
-                                key={row.id}
-                                data-state={row.getIsSelected() && 'selected'}
-                            >
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>
-                                        {flexRender(
-                                            cell.column.columnDef.cell,
-                                            cell.getContext()
-                                        )}
-                                    </TableCell>
+        <div className="mt-5">
+            <div className="overflow-hidden rounded-md border">
+                <Table>
+                    <TableHeader className="bg-border">
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => (
+                                    <TableHead key={header.id}>
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(
+                                                  header.column.columnDef
+                                                      .header,
+                                                  header.getContext()
+                                              )}
+                                    </TableHead>
                                 ))}
                             </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell
-                                colSpan={columns.length}
-                                className="h-24 text-center"
-                            >
-                                No results.
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow
+                                    key={row.id}
+                                    data-state={
+                                        row.getIsSelected() && 'selected'
+                                    }
+                                >
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext()
+                                            )}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={columns.length}
+                                    className="h-24 text-center"
+                                >
+                                    No results.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+            {/* footer */}
+            <div className="flex items-center justify-end space-x-2 py-4">
+                <div className="space-x-2">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => table.previousPage()}
+                        disabled={!table.getCanPreviousPage()}
+                    >
+                        Previous
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => table.nextPage()}
+                        disabled={!table.getCanNextPage()}
+                    >
+                        Next
+                    </Button>
+                </div>
+            </div>
         </div>
     );
 }

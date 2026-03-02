@@ -29,7 +29,8 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { useAccessChecker } from '@/hooks/use-has-access';
-import { useNavigate } from 'react-router-dom';
+import { useAppStore } from '@/store';
+import { useShallow } from 'zustand/react/shallow';
 
 export function ExpenseCatrgoriesTable() {
     const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -40,7 +41,12 @@ export function ExpenseCatrgoriesTable() {
     const [rowSelection, setRowSelection] = React.useState({});
     const canAccess = useAccessChecker();
     const { data, isLoading, isError } = useGetExpenseCategories();
-    const navigate = useNavigate();
+    const { openConfigDialog } =
+        useAppStore(
+            useShallow((s) => ({
+                openConfigDialog: s.openConfigDialog,
+            }))
+        );
 
     const columns: ColumnDef<ExpenseCategory>[] = [
         {
@@ -74,9 +80,7 @@ export function ExpenseCatrgoriesTable() {
                                       className="text-gray-400 hover:cursor-pointer"
                                       onClick={(e) => {
                                           e.stopPropagation();
-                                          navigate(`update`, {
-                                              state: row.original,
-                                          });
+                                          openConfigDialog({ entity: 'expenseCategories', mode: 'update', payload: row.original });
                                       }}
                                   >
                                       Edit
@@ -85,9 +89,7 @@ export function ExpenseCatrgoriesTable() {
                                       className="text-destructive hover:cursor-pointer"
                                       onClick={(e) => {
                                           e.stopPropagation();
-                                          navigate(`delete`, {
-                                              state: row.original.id,
-                                          });
+                                          openConfigDialog({ entity: 'expenseCategories', mode: 'delete', payload: row.original.id });
                                       }}
                                   >
                                       Delete

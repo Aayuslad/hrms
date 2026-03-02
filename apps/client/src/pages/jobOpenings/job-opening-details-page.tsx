@@ -14,6 +14,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Spinner } from '@/components/ui/spinner';
 import { UserPill } from '@/components/user-pill';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+    Accordion,
+    AccordionItem,
+    AccordionTrigger,
+    AccordionContent,
+} from '@/components/ui/accordion';
 import { useAccessChecker } from '@/hooks/use-has-access';
 import { BriefcaseBusiness, Dot, ExternalLink, User } from 'lucide-react';
 import { useState } from 'react';
@@ -163,57 +170,82 @@ export function JobOpeningDetailsPage() {
                         </button>
                     </p>
 
-                    <div className="flex gap-8 pb-5 mx-10">
-                        <div className="flex-1">
-                            <h4 className="font-semibold mb-2 border-b">HRs</h4>
-                            <div className="flex flex-wrap gap-2">
-                                {jobOpening?.hrs?.map((hr) => (
-                                    <UserPill key={hr.id} user={hr} />
-                                ))}
-                                {!jobOpening.hrs ||
-                                jobOpening.hrs.length === 0 ? (
-                                    <span className="text-sm text-muted-foreground">
-                                        No HRs assigned
-                                    </span>
-                                ) : null}
-                            </div>
-                        </div>
+                    <div className="mx-10 ">
+                        <Tabs defaultValue="referrals" className="gap-4">
+                            <TabsList className="bg-background rounded-none border-b w-full p-0">
+                                <TabsTrigger
+                                    value="referrals"
+                                    className="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+                                >
+                                    Referrals
+                                </TabsTrigger>
+                                <TabsTrigger
+                                    value="shares"
+                                    className="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+                                >
+                                    Shares
+                                </TabsTrigger>
+                            </TabsList>
 
-                        <div className="flex-1">
-                            <h4 className="font-semibold mb-2 border-b">
-                                Reviewers
-                            </h4>
-                            <div className="flex flex-wrap gap-2">
-                                {jobOpening?.reviewers?.map((reviewer) => (
-                                    <UserPill
-                                        key={reviewer.id}
-                                        user={reviewer}
-                                    />
-                                ))}
-                                {!jobOpening.reviewers ||
-                                jobOpening.reviewers.length === 0 ? (
-                                    <span className="text-sm text-muted-foreground">
-                                        No reviewers assigned
-                                    </span>
-                                ) : null}
-                            </div>
-                        </div>
+                            <TabsContent value="referrals">
+                                <ReferralsTable
+                                    referrals={jobOpening.referrals || []}
+                                />
+                            </TabsContent>
+
+                            <TabsContent value="shares">
+                                <SharesTable
+                                    shares={jobOpening.shareAudits ?? []}
+                                />
+                            </TabsContent>
+                        </Tabs>
                     </div>
 
-                    {/* Referrals */}
                     <div className="mx-10">
-                        <h2 className="text-xl font-semibold mb-4 ">
-                            Referrals
-                        </h2>
-                        <ReferralsTable
-                            referrals={jobOpening.referrals || []}
-                        />
-                    </div>
+                        <Accordion type="multiple" className=" space-y-2">
+                            <AccordionItem value="hrs">
+                                <AccordionTrigger className="px-2 py-2">
+                                    HRs
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    <div className="flex flex-wrap gap-2">
+                                        {jobOpening?.hrs?.map((hr) => (
+                                            <UserPill key={hr.id} user={hr} />
+                                        ))}
+                                        {!jobOpening.hrs ||
+                                        jobOpening.hrs.length === 0 ? (
+                                            <span className="text-sm text-muted-foreground">
+                                                No HRs assigned
+                                            </span>
+                                        ) : null}
+                                    </div>
+                                </AccordionContent>
+                            </AccordionItem>
 
-                    {/* Shares */}
-                    <div className="mx-10">
-                        <h2 className="text-xl font-semibold mb-4 ">Shares</h2>
-                        <SharesTable shares={jobOpening.shareAudits ?? []} />
+                            <AccordionItem value="reviewers">
+                                <AccordionTrigger className="px-2 py-2">
+                                    Reviewers
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    <div className="flex flex-wrap gap-2">
+                                        {jobOpening?.reviewers?.map(
+                                            (reviewer) => (
+                                                <UserPill
+                                                    key={reviewer.id}
+                                                    user={reviewer}
+                                                />
+                                            )
+                                        )}
+                                        {!jobOpening.reviewers ||
+                                        jobOpening.reviewers.length === 0 ? (
+                                            <span className="text-sm text-muted-foreground">
+                                                No reviewers assigned
+                                            </span>
+                                        ) : null}
+                                    </div>
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
                     </div>
                 </div>
             </div>

@@ -112,7 +112,6 @@ export function useMarkNotificationsAsRead() {
             });
         },
         onSuccess: () => {
-            toast.success('Notifications marked as read!');
             queryClient.invalidateQueries({ queryKey: ['notifications'] });
         },
         onError: (error: AxiosError<{ message: string }>) =>
@@ -148,7 +147,6 @@ export function useLoginUser() {
             await axiosClient.post('/users/login', payload);
         },
         onSuccess: () => {
-            toast.success('Logged in!');
             queryClient.invalidateQueries({ queryKey: ['me'] });
             navigate('/home');
         },
@@ -166,7 +164,6 @@ export function useRegisterUser() {
             await axiosClient.post('/users/register', payload);
         },
         onSuccess: () => {
-            toast.success('Registered!');
             queryClient.invalidateQueries({ queryKey: ['me'] });
             navigate('/create-user-profile');
         },
@@ -186,7 +183,6 @@ export function useCreateUserProfile() {
             await axiosClient.post('/users/profile', payload);
         },
         onSuccess: () => {
-            toast.success('Profile created!');
             queryClient.invalidateQueries({ queryKey: ['me'] });
             navigate('/home');
         },
@@ -224,6 +220,7 @@ export function useUpdateUserByAdmin() {
         },
         onSuccess: () => {
             toast.success('User updated!');
+            queryClient.invalidateQueries({ queryKey: ['users-details'] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
         },
         onError: (error: AxiosError<{ message: string }>) =>
@@ -235,8 +232,12 @@ export function useUpdateUserBySelf() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (payload: UpdateUserBySelfRequest): Promise<void> => {
-            await axiosClient.put('/users/me', payload);
+        mutationFn: async (payload: FormData): Promise<void> => {
+            await axiosClient.put('/users/me', payload, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
         },
         onSuccess: () => {
             toast.success('Profile updated!');

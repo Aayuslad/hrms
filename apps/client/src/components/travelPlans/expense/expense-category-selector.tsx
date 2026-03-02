@@ -5,9 +5,9 @@ import { Check, ChevronsUpDown } from 'lucide-react';
 import * as React from 'react';
 
 import {
-    useGetDocumentTypes,
-    type DocumentType,
+    type DocumentType
 } from '@/api/document-type-api';
+import { useGetExpenseCategories } from '@/api/expense-category-api';
 import { Button } from '@/components/ui/button';
 import {
     Command,
@@ -23,13 +23,14 @@ import {
     PopoverTrigger,
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { useGetExpenseCategories } from '@/api/expense-category-api';
 
 type Props = {
+    selectedExpenseCategoryId?: string;
     setSelectedExpenseCategoryId: (id: string) => void;
 };
 
 export function ExpenseCategorySelector({
+    selectedExpenseCategoryId,
     setSelectedExpenseCategoryId,
 }: Props) {
     const [open, setOpen] = React.useState(false);
@@ -43,6 +44,16 @@ export function ExpenseCategorySelector({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedExpenseCatrgory]);
+
+    React.useEffect(() => {
+        if (selectedExpenseCategoryId) {
+            const selected = expenseCatrgories?.find(
+                (expenseCategory) =>
+                    expenseCategory.id === selectedExpenseCategoryId
+            );
+            setSelectedExpenseCategory(selected);
+        }
+    }, [selectedExpenseCategoryId, expenseCatrgories]);
 
     return (
         <Popover open={open} onOpenChange={setOpen}>

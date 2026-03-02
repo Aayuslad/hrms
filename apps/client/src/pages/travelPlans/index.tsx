@@ -23,6 +23,10 @@ export function Index() {
         );
     }
 
+    if (!isLoading && !isError && !travels) {
+        return <NoContent />;
+    }
+
     return (
         <div className=" h-full">
             <div className="bg-muted  h-[100px] w-full flex items-center">

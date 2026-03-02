@@ -30,30 +30,11 @@ import { ArrowUpDown, ExternalLink, MoreHorizontal } from 'lucide-react';
 import React from 'react';
 import UpdateDocumentDialog from '../documents/update-document-dialog';
 import { DeleteDocumentDialog } from '../documents/delete-document-dialog';
-import type { components } from '@/types/generated/api';
 import CreateDocumentDialog from '../documents/create-document-dialog';
-
-type Document = {
-    id?: string | undefined;
-    owner?:
-        | {
-              id?: string | undefined;
-              userName?: string | undefined;
-          }
-        | undefined;
-    docUrl?: string | undefined;
-    documentType?: string | undefined;
-    uploadedAt?: string | undefined;
-    uploadedBy?:
-        | {
-              id?: string | undefined;
-              userName?: string | undefined;
-          }
-        | undefined;
-};
+import type { TravelPlanDocument } from '@/api/travel-api';
 
 interface MyDocumentsTableProps {
-    documents: Document[];
+    documents: TravelPlanDocument[];
     travelPlanId: string;
     participantId?: string;
 }
@@ -73,15 +54,15 @@ export function MyDocumentsTable({
     const [updateDialogOpen, setUpdateDialogOpen] = React.useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
     const [selectedDocument, setSelectedDocument] =
-        React.useState<Document | null>(null);
+        React.useState<TravelPlanDocument | null>(null);
 
-    const columns: ColumnDef<Document>[] = [
+    const columns: ColumnDef<TravelPlanDocument>[] = [
         {
             accessorKey: 'type',
             header: () => <div className="ml-4">Type</div>,
             cell: ({ row }) => (
                 <div className="font-medium ml-4 w-[150px]">
-                    {row.original.documentType}
+                    {row.original.documentType?.name}
                 </div>
             ),
         },
@@ -96,7 +77,7 @@ export function MyDocumentsTable({
                         rel="noopener noreferrer"
                         className=""
                     >
-                        <Button variant={'link'} className="-ml-3">
+                        <Button variant={'link'} className="-ml-3 h-auto p-0">
                             <span className="text-sm">View Document</span>
                             <ExternalLink className="w-4 h-4" />
                         </Button>
@@ -130,7 +111,7 @@ export function MyDocumentsTable({
                 return (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
+                            <Button variant="ghost" className="h-auto w-8 p-0">
                                 <span className="sr-only">Open menu</span>
                                 <MoreHorizontal className="h-4 w-4" />
                             </Button>
@@ -283,7 +264,7 @@ export function MyDocumentsTable({
                 <UpdateDocumentDialog
                     travelPlanId={travelPlanId}
                     participantId={participantId!}
-                    document={selectedDocument as Document}
+                    document={selectedDocument}
                     open={updateDialogOpen}
                     onOpenChange={setUpdateDialogOpen}
                 />

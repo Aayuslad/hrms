@@ -1,5 +1,6 @@
 import { EmployeesTable } from '@/components/configurations/employees/employees-table';
-import { Outlet } from 'react-router';
+import { UpdateEmployeeDialog } from '@/components/configurations/employees/update-employee-dialog';
+import { UpdateEmployeeRolesDialog } from '@/components/configurations/employees/update-employee-roles-dialog';
 
 export function EmployeePage() {
     return (
@@ -18,12 +19,14 @@ export function EmployeePage() {
 
             <div className="w-full flex justify-evenly pt-10">
                 <div className="w-full flex flex-col items-center">
-                    <div className="mr-12 w-fit">
+                    <div className="w-fit">
                         <EmployeesTable />
-                        <Outlet />
                     </div>
                 </div>
             </div>
+
+            <UpdateEmployeeDialog />
+            <UpdateEmployeeRolesDialog />
         </div>
     );
 }
