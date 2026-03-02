@@ -1,36 +1,35 @@
 import { useCreatePost, type CreatePostRequest } from '@/api/engagement-api';
+import { TagSelector } from '@/components/engagement/tag-selector';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogClose,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
+    DialogTrigger
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import {
     FileUpload,
+    FileUploadDropzone,
     FileUploadItem,
     FileUploadItemDelete,
     FileUploadItemMetadata,
     FileUploadItemPreview,
     FileUploadList,
-    FileUploadDropzone,
     FileUploadTrigger,
 } from '@/components/ui/file-upload';
-import { CloudUpload, X, Plus, Loader2 } from 'lucide-react';
-import { TagSelector } from '@/components/engagement/tag-selector';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { CloudUpload, Loader2, Plus, X } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 const createPostFormSchema = z.object({
     title: z

@@ -1,3 +1,4 @@
+import { UserProfileDialog } from '@/components/auth/user-profile-dialog';
 import {
     Table,
     TableBody,
@@ -18,7 +19,6 @@ import {
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
-import { UserProfileDialog } from '@/components/auth/user-profile-dialog';
 
 import { useGetMe } from '@/api/user-api';
 import BookSlotDialog from './slotDialogs/book-slot-dialog';
@@ -259,23 +259,24 @@ export default function Schedule({
                                                                         slot
                                                                     </span>
 
-                                                                    {slot
-                                                                        .players
-                                                                        ?.length >
-                                                                        0 && (
-                                                                        <span className="text-muted-foreground">
-                                                                            with{' '}
-                                                                            {
-                                                                                slot
-                                                                                    .players
-                                                                                    .length
-                                                                            }
-                                                                            {
-                                                                                '  '
-                                                                            }
-                                                                            others
-                                                                        </span>
-                                                                    )}
+                                                                    {slot.players &&
+                                                                        slot
+                                                                            .players
+                                                                            ?.length >
+                                                                            0 && (
+                                                                            <span className="text-muted-foreground">
+                                                                                with{' '}
+                                                                                {
+                                                                                    slot
+                                                                                        .players
+                                                                                        .length
+                                                                                }
+                                                                                {
+                                                                                    '  '
+                                                                                }
+                                                                                others
+                                                                            </span>
+                                                                        )}
                                                                 </div>
                                                             ) : (
                                                                 ''

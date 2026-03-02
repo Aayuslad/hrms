@@ -9,10 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-/**
- * Concrete implementation of {@link CurrentUserService}.  Placed in the user module
- * so that the core package does not depend on user‑module classes.
- */
+
 @Component
 @AllArgsConstructor
 public class CurrentUserServiceImpl implements CurrentUserService {

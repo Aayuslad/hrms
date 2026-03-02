@@ -1,5 +1,6 @@
 import type { JobOpeningReferralResponse } from '@/api/jobs-api';
-import { Badge } from '@/components/ui/badge';
+import { UserProfileDialog } from '@/components/auth/user-profile-dialog';
+import { Button } from '@/components/ui/button';
 import {
     Table,
     TableBody,
@@ -8,15 +9,13 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { ExternalLink, Mail, User } from 'lucide-react';
 import {
-    useReactTable,
-    getCoreRowModel,
     createColumnHelper,
     flexRender,
+    getCoreRowModel,
+    useReactTable,
 } from '@tanstack/react-table';
-import { UserProfileDialog } from '@/components/auth/user-profile-dialog';
-import { Button } from '@/components/ui/button';
+import { ExternalLink, Mail, User } from 'lucide-react';
 
 type Props = {
     readonly referrals: readonly JobOpeningReferralResponse[];

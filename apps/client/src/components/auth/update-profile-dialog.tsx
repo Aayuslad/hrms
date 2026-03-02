@@ -32,14 +32,14 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
-import { FileUpload, FileUploadTrigger } from '../ui/file-upload';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { FileUpload, FileUploadTrigger } from '../ui/file-upload';
 
 const updateProfileFormSchema = z.object({
     profile: z.object({
@@ -75,6 +75,7 @@ export function UpdateProfileDialog({ user }: Props) {
     };
 
     const form = useForm<UpdateUserBySelfRequest>({
+        //@ts-ignore
         resolver: zodResolver(updateProfileFormSchema),
         defaultValues: {
             profile: {

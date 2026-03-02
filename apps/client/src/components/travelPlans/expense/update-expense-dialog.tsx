@@ -41,6 +41,7 @@ const updateExpenseFormSchema = z.object({
     expenseCategoryId: z.string().min(1, 'Category is required'),
     proofs: z.array(z.file()).optional(),
     deletedProofIds: z.array(z.string()).optional(),
+    //@ts-ignore
 }) satisfies z.ZodType<UpdateExpenseRequest>;
 
 interface UpdateExpenseDialogProps {

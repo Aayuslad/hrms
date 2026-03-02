@@ -1,14 +1,13 @@
-import { useGetTravelPlan } from '@/api/travel-api';
+import { useGetTravelPlan, type TravelPlan } from '@/api/travel-api';
 import { useGetMe } from '@/api/user-api';
 import DeleteTravelPlanDialog from '@/components/travelPlans/delete-travel-plan-dialog';
-import { ViewProofsDialog } from '@/components/travelPlans/expense/view-proofs-dialog';
 import { ApproveExpenseDialog } from '@/components/travelPlans/expense/approve-expense-dialog';
 import { RejectExpenseDialog } from '@/components/travelPlans/expense/reject-expense-dialog';
+import { ViewProofsDialog } from '@/components/travelPlans/expense/view-proofs-dialog';
 import { AllExpenses } from '@/components/travelPlans/tabContents/all-expenses';
-import { MyDocuments } from '@/components/travelPlans/tabContents/my-documents';
-import { MyExpenses } from '@/components/travelPlans/tabContents/my-expenses';
 import { Participants } from '@/components/travelPlans/tabContents/participants';
 
+import { NoContent } from '@/components/no-content';
 import UpdateTravelPlanDialog from '@/components/travelPlans/update-travel-plan-dialog';
 import { Button } from '@/components/ui/button';
 import {
@@ -23,7 +22,6 @@ import { useAccessChecker } from '@/hooks/use-has-access';
 import { Calendar, Dot, MapPin, Wallet } from 'lucide-react';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { NoContent } from '@/components/no-content';
 
 export function TravelPlanManagePage() {
     const canAccess = useAccessChecker();
@@ -91,7 +89,7 @@ export function TravelPlanManagePage() {
                         <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm text-muted-foreground">
                             <div className="flex items-center gap-2">
                                 <MapPin className="h-4 w-4 shrink-0" />
-                                <span>{travelPlan.destination}</span>
+                                <span>{travelPlan?.destination}</span>
                             </div>
 
                             <Dot />
@@ -100,11 +98,11 @@ export function TravelPlanManagePage() {
                                 <Calendar className="h-4 w-4 shrink-0" />
                                 <span>
                                     {new Date(
-                                        travelPlan.startAt as string
+                                        travelPlan?.startAt as string
                                     ).toLocaleString()}
                                     {' – '}
                                     {new Date(
-                                        travelPlan.endAt as string
+                                        travelPlan?.endAt as string
                                     ).toLocaleString()}
                                 </span>
                             </div>
@@ -114,7 +112,7 @@ export function TravelPlanManagePage() {
                             <div className="flex items-center gap-2">
                                 <Wallet className="h-4 w-4 shrink-0" />
                                 <span>
-                                    ₹{travelPlan.maxExpenseAmountPerDay} / day
+                                    ₹{travelPlan?.maxExpenseAmountPerDay} / day
                                 </span>
                             </div>
                         </div>
@@ -129,11 +127,11 @@ export function TravelPlanManagePage() {
 
                             <DropdownMenuContent align="end">
                                 <UpdateTravelPlanDialog
-                                    travelPlan={travelPlan}
+                                    travelPlan={travelPlan as TravelPlan}
                                 />
                                 <DropdownMenuSeparator />
                                 <DeleteTravelPlanDialog
-                                    travelPlanId={travelPlan.id}
+                                    travelPlanId={travelPlan?.id}
                                 />
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -145,8 +143,8 @@ export function TravelPlanManagePage() {
                 <div className="w-full mr-12 flex flex-col items-center px-8 space-y-10">
                     <p className="text-sm px-2 w-full text-foreground/90 leading-relaxed">
                         {descriptionView === 'short'
-                            ? travelPlan.description?.slice(0, 100) + '...'
-                            : travelPlan.description}
+                            ? travelPlan?.description?.slice(0, 100) + '...'
+                            : travelPlan?.description}
                         <button
                             className="ml-2 text-sm text-blue-500 hover:underline cursor-pointer"
                             onClick={() =>

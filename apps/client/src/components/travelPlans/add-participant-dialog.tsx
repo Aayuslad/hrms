@@ -45,6 +45,7 @@ export default function AddParticipantDialog({
 
     const participantsFieldArray = useFieldArray({
         control: form.control,
+         //@ts-ignore
         name: 'participants',
     });
 

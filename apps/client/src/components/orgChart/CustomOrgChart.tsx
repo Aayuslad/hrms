@@ -70,7 +70,7 @@ export function CustomOrgChart({ tree }: CustomOrgChartProps) {
                                 />
                             )
                         }
-                        {tree.children.map((child: ChartNode, idx: number) => {
+                        {tree.children.map((child: ChartNode) => {
                             const key = `${child.name}-${child.title}-${child.department}`;
                             return (
                                 <div

@@ -11,7 +11,6 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,11 +18,11 @@ import { useAccessChecker } from '@/hooks/use-has-access';
 import { zodResolver } from '@hookform/resolvers/zod';
 // no local react state required for store-controlled dialog
 import { useAppStore } from '@/store';
-import { useShallow } from 'zustand/react/shallow';
+import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
-import { Loader2 } from 'lucide-react';
+import { useShallow } from 'zustand/react/shallow';
 
 const createDesignationFormSchema = z.object({
     name: z
@@ -41,19 +40,14 @@ export function CreateDesignationDialog({ visibleTo }: Props) {
     const canAccess = useAccessChecker();
     const createDesignationMutation = useCreateDesignation();
 
-    const {
-        configDialogOpen,
-        configDialogTarget,
-        openConfigDialog,
-        closeConfigDialog,
-    } = useAppStore(
-        useShallow((s) => ({
-            configDialogOpen: s.configDialogOpen,
-            configDialogTarget: s.configDialogTarget,
-            openConfigDialog: s.openConfigDialog,
-            closeConfigDialog: s.closeConfigDialog,
-        }))
-    );
+    const { configDialogOpen, configDialogTarget, closeConfigDialog } =
+        useAppStore(
+            useShallow((s) => ({
+                configDialogOpen: s.configDialogOpen,
+                configDialogTarget: s.configDialogTarget,
+                closeConfigDialog: s.closeConfigDialog,
+            }))
+        );
 
     const controlledOpen =
         configDialogOpen &&

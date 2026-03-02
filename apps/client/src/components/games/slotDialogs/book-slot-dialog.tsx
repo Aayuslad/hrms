@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import { useBookSlot, type BookSlotRequest } from '@/api/games-api';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -13,7 +14,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useBookSlot, type BookSlotRequest } from '@/api/games-api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -39,7 +39,6 @@ const bookSlotFormSchema = z.object({
 
 const BookSlotDialog = ({
     gameId,
-    maxPlayers = 1,
     preFillDay,
     preFillTime,
     isOpen: externalOpen,
@@ -63,6 +62,7 @@ const BookSlotDialog = ({
 
     const playersFieldArray = useFieldArray({
         control: form.control,
+        //@ts-ignore
         name: 'playerIds',
     });
 

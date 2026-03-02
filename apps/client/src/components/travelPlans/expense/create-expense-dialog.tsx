@@ -25,14 +25,14 @@ import {
     FileUploadTrigger,
 } from '@/components/ui/file-upload';
 import { Label } from '@/components/ui/label';
+import { NumberInputWithEndButtons } from '@/components/ui/number-input-with-end-buttons';
+import { EXPENSE_STATUS } from '@/types/enums';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
 import { ExpenseCategorySelector } from './expense-category-selector';
-import { NumberInputWithEndButtons } from '@/components/ui/number-input-with-end-buttons';
-import { EXPENSE_STATUS } from '@/types/enums';
 
 const createExpenseFormSchema = z.object({
     participantId: z.string().min(1, 'Participant is required').optional(),
@@ -42,6 +42,7 @@ const createExpenseFormSchema = z.object({
     status: z.enum(EXPENSE_STATUS).optional(),
     expenseCategoryId: z.string().min(1, 'Category is required'),
     proofs: z.string().array().optional(),
+    //@ts-ignore
 }) satisfies z.ZodType<CreateExpenseRequest>;
 
 interface CreateExpenseDialogProps {

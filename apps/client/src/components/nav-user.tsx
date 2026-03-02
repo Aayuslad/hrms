@@ -1,4 +1,4 @@
-import { Bell, ChevronsUpDown, LogOut, Settings, User } from 'lucide-react';
+import { Bell, ChevronsUpDown, LogOut, User } from 'lucide-react';
 
 import { useGetMe, useLogoutUser } from '@/api/user-api';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

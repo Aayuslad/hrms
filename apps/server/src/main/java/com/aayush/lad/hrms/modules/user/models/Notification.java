@@ -19,8 +19,7 @@ import java.time.LocalDateTime;
 public class Notification extends BaseModel {
 
     @Lob
-
-    @Column(nullable = false, columnDefinition = "NVARCHAR(MAX)")
+    @Column(nullable = false)
     private String content;
 
     private Boolean isRead = Boolean.FALSE;

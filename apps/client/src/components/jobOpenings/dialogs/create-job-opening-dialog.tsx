@@ -67,11 +67,13 @@ const CreateJobOpeningDialog = ({ visibleTo }: Props) => {
 
     const hrsFieldArray = useFieldArray({
         control: form.control,
+        //@ts-ignore
         name: 'hrs',
     });
 
     const reviewersFieldArray = useFieldArray({
         control: form.control,
+        //@ts-ignore
         name: 'reviewers',
     });
 

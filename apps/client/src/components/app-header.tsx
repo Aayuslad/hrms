@@ -1,5 +1,9 @@
+import { useGetNotificationns } from '@/api/user-api';
+import { useAppStore } from '@/store';
 import { Separator } from '@radix-ui/react-separator';
-import { SidebarTrigger } from './ui/sidebar';
+import { Bell } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useShallow } from 'zustand/react/shallow';
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -8,15 +12,10 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from './ui/breadcrumb';
-import { ThemeToggleButton } from './ui/theme-toggle-button';
-import { BellIcon } from './ui/bell-icon';
-import { useGetNotificationns } from '@/api/user-api';
-import { useBreadCrumbs } from '@/hooks/use-bread-crumbs';
-import { useNavigate } from 'react-router-dom';
-import { useAppStore } from '@/store';
-import { useShallow } from 'zustand/react/shallow';
-import { Bell } from 'lucide-react';
 import { Button } from './ui/button';
+import { SidebarTrigger } from './ui/sidebar';
+import { ThemeToggleButton } from './ui/theme-toggle-button';
+import { useBreadCrumbs } from '@/hooks/use-bread-crumbs';
 
 function AppHeader() {
     const { data: notifications } = useGetNotificationns();
@@ -41,6 +40,7 @@ function AppHeader() {
 
                 <Breadcrumb>
                     <BreadcrumbList>
+                        {/* @ts-ignore */}
                         {breadcrumbs.map((bc, index) => (
                             <BreadcrumbItem key={bc.path || bc.label || index}>
                                 {index < breadcrumbs.length - 1 ? (

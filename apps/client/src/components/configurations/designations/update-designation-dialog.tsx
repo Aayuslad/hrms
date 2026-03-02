@@ -1,7 +1,6 @@
 import {
     useUpdateDesignation,
-    type Designation,
-    type UpdateDesignationRequest,
+    type UpdateDesignationRequest
 } from '@/api/designation-api';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,14 +13,14 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
 import { useAppStore } from '@/store';
-import { useShallow } from 'zustand/react/shallow';
-import { toast } from 'sonner';
-import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import z from 'zod';
+import { useShallow } from 'zustand/react/shallow';
 
 const updateDesignationFormSchema = z.object({
     id: z.string().nonempty('Designation ID is required'),

@@ -14,17 +14,16 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Loader2 } from 'lucide-react';
 
 import {
-    useCreateDocument,
-    type CreateDocumentRequest,
+    useCreateDocument
 } from '@/api/travel-api';
+import { useGetMe } from '@/api/user-api';
+import { Label } from '@/components/ui/label';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
 import { DocumentTypeSelector } from './documentTypeSelector';
-import { Label } from '@/components/ui/label';
-import { useGetMe } from '@/api/user-api';
 
 const createDocumentFormSchema = z.object({
     documentTypeId: z.string().min(1, 'Type is required'),
