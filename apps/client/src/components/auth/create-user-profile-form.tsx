@@ -13,10 +13,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { GENDER } from '@/types/enums';
+import { GENDER, type Gender } from '@/types/enums';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
@@ -138,18 +138,23 @@ export function CreateUserProfileForm({
 
                             <div className="grid gap-3">
                                 <Label htmlFor="gender">Gender</Label>
-                                <Select {...form.register('gender')}>
+                                <Select
+                                    value={form.watch('gender')}
+                                    onValueChange={(value: Gender) =>
+                                        form.setValue('gender', value)
+                                    }
+                                >
                                     <SelectTrigger className="w-[180px]">
                                         <SelectValue placeholder="Gender" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="MALE">
+                                        <SelectItem value={GENDER.MALE}>
                                             Male
                                         </SelectItem>
-                                        <SelectItem value="FEMALE">
+                                        <SelectItem value={GENDER.FEMALE}>
                                             Female
                                         </SelectItem>
-                                        <SelectItem value="OTHER">
+                                        <SelectItem value={GENDER.OTHER}>
                                             Other
                                         </SelectItem>
                                     </SelectContent>
