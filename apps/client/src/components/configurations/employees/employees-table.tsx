@@ -1,5 +1,6 @@
 import { useGetDepartmentes, type Department } from '@/api/department-api';
 import { useGetAllUsersDetails, type User } from '@/api/user-api';
+import { UserProfileDialog } from '@/components/auth/user-profile-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -65,12 +66,16 @@ export function EmployeesTable() {
                 } as Department,
                 ...departments,
             ]);
+        }
+    }, [departments]);
+
+    useEffect(() => {
+        if (departments)
             setDepartmentFilter(
                 departments.find(
                     (x) => x.id == '00000000-0000-0000-0000-000000000000'
                 )
             );
-        }
     }, [departments]);
 
     const columns: ColumnDef<User>[] = [
@@ -89,7 +94,9 @@ export function EmployeesTable() {
             ),
             cell: ({ row }) => (
                 <div className="font-medium pl-4 w-[150px]">
-                    {row.getValue('userName')}
+                    <UserProfileDialog userId={row.original.id as string}>
+                        {row.getValue('userName')}
+                    </UserProfileDialog>
                 </div>
             ),
         },
