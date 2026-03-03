@@ -1,10 +1,6 @@
 import { Send } from 'lucide-react';
 
-import {
-    useCreateComment,
-    useGetPost,
-    type Post
-} from '@/api/engagement-api';
+import { useCreateComment, useGetPost, type Post } from '@/api/engagement-api';
 import { useGetMe } from '@/api/user-api';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -19,6 +15,7 @@ import { Textarea } from '../ui/textarea';
 import { CommentCard } from './comment-card';
 import { DeleteCommentDialog } from './dialogs/delete-comment-dialog';
 import { UpdateCommentDialog } from './dialogs/update-comment-dialog';
+import { Spinner } from '../ui/spinner';
 
 type Comment = NonNullable<Post['comments']>[number];
 
@@ -36,7 +33,7 @@ export function CommentsSheet({
     const { data: currentUser } = useGetMe();
     const createCommentMutation = useCreateComment();
     const [newComment, setNewComment] = useState('');
-    const { data: post } = useGetPost(postId);
+    const { data: post, isLoading } = useGetPost(postId);
     const [selectedComment, setSelectedComment] = useState<Comment | null>(
         null
     );
@@ -83,10 +80,15 @@ export function CommentsSheet({
                                 onDeleteClick={handleDeleteComment}
                             />
                         ))}
-                        {(!post?.comments || post.comments.length === 0) && (
+                        {!post?.comments && !isLoading && (
                             <p className="text-center text-muted-foreground py-8">
                                 No comments yet. Be the first to comment!
                             </p>
+                        )}
+                        {isLoading && !post && (
+                            <div className="flex items-center justify-center py-10">
+                                <Spinner />
+                            </div>
                         )}
                     </div>
 

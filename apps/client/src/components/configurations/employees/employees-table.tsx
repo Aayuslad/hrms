@@ -263,6 +263,9 @@ export function EmployeesTable() {
                     <TableBody>
                         {table.getRowModel().rows?.filter((row) => {
                             const deptId = row.original.profile?.department?.id;
+
+                            if (!departmentFilter) return true;
+
                             return (
                                 departmentFilter?.id ===
                                     '00000000-0000-0000-0000-000000000000' ||
@@ -274,6 +277,9 @@ export function EmployeesTable() {
                                 .rows.filter((row) => {
                                     const deptId =
                                         row.original.profile?.department?.id;
+
+                                    if (!departmentFilter) return true;
+
                                     return (
                                         departmentFilter?.id ===
                                             '00000000-0000-0000-0000-000000000000' ||
