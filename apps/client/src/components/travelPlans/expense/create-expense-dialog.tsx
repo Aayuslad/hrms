@@ -75,7 +75,7 @@ const CreateExpenseDialog = ({
 
         formData.append('travelPlanId', data.travelPlanId);
         formData.append('participantId', data.participantId ?? '');
-        formData.append('amount', data.amount);
+        formData.append('amount', data.amount.toString());
         data.date && formData.append('date', data.date);
         formData.append('status', status);
         formData.append('expenseCategoryId', data.expenseCategoryId);
