@@ -37,7 +37,7 @@ import { ExpenseCategorySelector } from './expense-category-selector';
 const createExpenseFormSchema = z.object({
     participantId: z.string().min(1, 'Participant is required').optional(),
     travelPlanId: z.string().min(1, 'Travel Plan is required'),
-    amount: z.string().min(0, 'Amount must be positive'),
+    amount: z.coerce.number().int().positive(),
     date: z.string().optional(),
     status: z.enum(EXPENSE_STATUS).optional(),
     expenseCategoryId: z.string().min(1, 'Category is required'),

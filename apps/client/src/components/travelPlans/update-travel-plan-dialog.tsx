@@ -35,7 +35,7 @@ const updateTravelPlanFormSchema = z.object({
     description: z.string().optional(),
     startAt: z.string().optional(),
     endAt: z.string().optional(),
-    maxExpenseAmountPerDay: z.number().optional(),
+    maxExpenseAmountPerDay: z.coerce.number().int().positive().optional(),
     participants: z.array(z.string()).optional(),
 }) satisfies z.ZodType<UpdateTravelPlanRequest>;
 

@@ -37,7 +37,7 @@ const updateExpenseFormSchema = z.object({
     id: z.string(),
     travelPlanId: z.string(),
     date: z.string().optional(),
-    amount: z.string().min(0, 'Amount must be positive'),
+    amount: z.coerce.number().int().positive(),
     expenseCategoryId: z.string().min(1, 'Category is required'),
     proofs: z.array(z.file()).optional(),
     deletedProofIds: z.array(z.string()).optional(),
@@ -159,7 +159,7 @@ const UpdateExpenseDialog = ({
         formData.append('id', data.id);
         if (data.date) formData.append('date', data.date);
         formData.append('travelPlanId', travelPlanId);
-        formData.append('amount', data.amount);
+        formData.append('amount', data.amount.toString());
         formData.append('expenseCategoryId', data.expenseCategoryId);
 
         // Add new proofs

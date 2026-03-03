@@ -35,7 +35,7 @@ import { ReviewersSelector } from '../internal/reviewers-selector';
 const createJobOpeningFormSchema = z.object({
     description: z.string().optional(),
     designationId: z.string().min(1),
-    requiredExperience: z.number().optional(),
+    requiredExperience: z.coerce.number().int().positive(),
     jd: z.string().optional(),
     defaultHrId: z.string(),
     hrs: z.string().array().optional(),
@@ -57,7 +57,7 @@ const CreateJobOpeningDialog = ({ visibleTo }: Props) => {
         defaultValues: {
             description: '',
             designationId: '',
-            requiredExperience: 0,
+            requiredExperience: '0',
             jd: '',
             defaultHrId: '',
             hrs: [],

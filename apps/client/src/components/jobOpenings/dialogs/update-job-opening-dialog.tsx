@@ -31,7 +31,7 @@ import { ReviewersSelector } from '../internal/reviewers-selector';
 const updateJobOpeningFormSchema = z.object({
     description: z.string().optional(),
     designationId: z.string().min(1),
-    requiredExperience: z.number().min(0).optional(),
+    requiredExperience: z.coerce.number().int().positive().optional(),
     jd: z.string().optional(),
     defaultHrId: z.string(),
     hrs: z.array(z.string()).optional(),
