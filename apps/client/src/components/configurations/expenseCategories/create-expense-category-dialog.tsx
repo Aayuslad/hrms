@@ -88,9 +88,10 @@ export function CreateExpenseCatrgoryDialog({ visibleTo }: Props) {
                     className="grid gap-7"
                 >
                     <DialogHeader>
-                        <DialogTitle>Create Expense Catrgory</DialogTitle>
+                        <DialogTitle>Create Expense Categories</DialogTitle>
                         <DialogDescription>
-                            Enter the expense catrgory details and click Create.
+                            Enter the expense categories details and click
+                            Create.
                         </DialogDescription>
                     </DialogHeader>
 

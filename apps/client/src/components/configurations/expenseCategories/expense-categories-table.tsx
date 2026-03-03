@@ -58,7 +58,7 @@ export function ExpenseCatrgoriesTable() {
                         column.toggleSorting(column.getIsSorted() === 'asc')
                     }
                 >
-                    Expense catrgory
+                    Expense category
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             ),
@@ -130,7 +130,7 @@ export function ExpenseCatrgoriesTable() {
     if (isError)
         return (
             <div className="w-full h-[50vh] flex justify-center items-center">
-                Error Loading Expense catrgory
+                Error Loading Expense category
             </div>
         );
 

@@ -1,7 +1,6 @@
 import { useGetJobOpenings } from '@/api/jobs-api';
 import CreateJobOpeningDialog from '@/components/jobOpenings/dialogs/create-job-opening-dialog';
 import JobOpeningCard from '@/components/jobOpenings/job-opening-card';
-import { NoContent } from '@/components/no-content';
 import { Spinner } from '@/components/ui/spinner';
 
 export function Index() {
@@ -21,10 +20,6 @@ export function Index() {
                 Error fetching data...!
             </div>
         );
-    }
-
-    if (!isLoading && !isError && !jobOpenings?.length) {
-        return <NoContent />;
     }
 
     return (

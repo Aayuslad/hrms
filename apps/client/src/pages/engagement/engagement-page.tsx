@@ -1,12 +1,11 @@
 import { useGetPosts } from '@/api/engagement-api';
 import { CreatePostDialog } from '@/components/engagement/dialogs/create-post-dialog';
 import { PostsList } from '@/components/engagement/posts-list';
-import { NoContent } from '@/components/no-content';
 import { Spinner } from '@/components/ui/spinner';
 import { Outlet } from 'react-router';
 
 export function EngagementPage() {
-    const { data: posts, isLoading, isError } = useGetPosts();
+    const {  isLoading, isError } = useGetPosts();
 
     if (isLoading) {
         return (
@@ -22,10 +21,6 @@ export function EngagementPage() {
                 Error fetching data...!
             </div>
         );
-    }
-
-    if (!isLoading && !isError && !posts?.length) {
-        return <NoContent />;
     }
 
     return (

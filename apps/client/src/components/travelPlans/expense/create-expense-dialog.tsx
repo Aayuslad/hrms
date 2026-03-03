@@ -138,7 +138,7 @@ const CreateExpenseDialog = ({
 
                                 <div className="grid gap-3">
                                     <Label htmlFor="date">
-                                        Expense Catrgory*
+                                        Expense category*
                                     </Label>
                                     <ExpenseCategorySelector
                                         setSelectedExpenseCategoryId={(

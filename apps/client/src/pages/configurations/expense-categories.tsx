@@ -35,7 +35,7 @@ export function ExpenseCatrgoryPage() {
                             })
                         }
                     >
-                        + Create Expense Catrgory
+                        + Create Expense category
                     </Button>
                 </div>
             </div>

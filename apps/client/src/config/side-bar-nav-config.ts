@@ -72,7 +72,7 @@ export const sidebarNavConfig = {
                     url: 'configuration/document-types',
                 },
                 {
-                    title: 'Expense Catrgories',
+                    title: 'Expense Categories',
                     url: 'configuration/expense-categories',
                 },
                 {
