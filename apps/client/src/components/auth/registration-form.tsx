@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { useRegisterUser, useLoginUser, type RegisterUserRequest } from '@/api/user-api';
 import { cn } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
+import { useState } from 'react';
 
 const registerFormSchema = z.object({
     userName: z.string().min(1, 'Username is required'),

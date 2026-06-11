@@ -21,77 +21,77 @@ function LandingPage() {
     }, [loginMutation]);
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-950 text-zinc-100 px-4">
-            <header className="mb- text-center">
-                <h1 className="text-5xl font-extrabold mb-3 drop-shadow-lg">
-                    HR Management System
-                </h1>
-                <p className="text-lg text-zinc-300 font-medium">
-                    Your all-in-one platform for modern HR management
-                </p>
-            </header>
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-zinc-900 px-8">
 
-            <main className="max-w-2xl w-full text-center space-y-6   shadow-xl p-8 ">
-                <p className="text-zinc-400 mb-6">
-                    Manage employees, roles, departments, travel, games, and
-                    more with a seamless and intuitive experience.
-                </p>
-                <div className="flex flex-wrap justify-center gap-4 mt-8">
-                    <div className="w-full flex flex-col items-center">
-                        <h3 className="text-xl font-semibold mb-2">Explore the demo</h3>
-                        <div className="text-sm text-zinc-400 mb-4">These demo accounts let you explore features without registering.</div>
-                    </div>
+            <div className="w-full max-w-[530px] flex flex-col">
 
-                    {/* Demo explore buttons - primary and prominent */}
-                    <Button
-                        size={"lg"}
-                        variant={"default"}
-                        className="text-white text-lg hover:scale-105 transition-all shadow-2xl px-10 py-4 rounded-lg ring-2 ring-offset-2 ring-fuchsia-500"
-                        onClick={() => loginAsDemo('admin')}
-                    >
-                        {loadingDemo === 'admin' ? (
-                            <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Loading...
-                            </>
-                        ) : (
-                            'Explore as Admin/HR'
-                        )}
-                    </Button>
-
-                    <Button
-                        size={"lg"}
-                        variant={"default"}
-                        className="text-white text-lg hover:scale-105 transition-all shadow-2xl px-10 py-4 rounded-lg ring-2 ring-offset-2 ring-fuchsia-500"
-                        onClick={() => loginAsDemo('employee')}
-                    >
-                        {loadingDemo === 'employee' ? (
-                            <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Loading...
-                            </>
-                        ) : (
-                            'Explore as Employee'
-                        )}
-                    </Button>
-
-                    {/* faded secondary actions */}
-                    <Button
-                        size={'lg'}
-                        className="text-white text-lg opacity-60 hover:opacity-70 transition-all shadow-sm px-8 py-2 rounded-lg"
-                        onClick={() => navigate('/login')}
-                    >
-                        Login
-                    </Button>
-                    <Button
-                        size={'lg'}
-                        className=" text-white text-lg opacity-60 hover:opacity-70 transition-all shadow-sm px-8 py-2 rounded-lg"
-                        onClick={() => navigate('/register')}
-                    >
-                        Register
-                    </Button>
+                {/* Identity */}
+                <div className="text-center pb-10 border-b border-zinc-200">
+                    <h1 className="text-5xl font-bold tracking-tight text-zinc-900 mb-3">
+                        HR Management System
+                    </h1>
+                    <p className="text-base text-zinc-500 mb-4">
+                        Your all-in-one platform for modern HR management
+                    </p>
+                    <p className="text-sm text-zinc-400 leading-relaxed">
+                        Manage employees, roles, departments, travel, games, and more with a seamless and intuitive experience.
+                    </p>
                 </div>
-            </main>
+
+                {/* Demo */}
+                <div className="mt-9 px-6 py-6 bg-white border border-zinc-200 border-l-2 border-l-fuchsia-500 rounded-r-md">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-fuchsia-500 mb-1.5">
+                        Try it now
+                    </p>
+                    <p className="text-base font-semibold text-zinc-800 mb-1.5">Explore the demo</p>
+                    <p className="text-sm text-zinc-400 mb-5 leading-relaxed">
+                        These demo accounts let you explore features without registering.
+                    </p>
+                    <div className="flex gap-3">
+                        <Button
+                            className="flex-1 bg-indigo-700 hover:bg-indigo-600 text-white text-sm font-medium rounded-md h-11 px-4 shadow-none"
+                            onClick={() => loginAsDemo('admin')}
+                            disabled={loadingDemo !== null}
+                        >
+                            {loadingDemo === 'admin' ? (
+                                <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Loading...</>
+                            ) : 'Explore as Admin / HR'}
+                        </Button>
+                        <Button
+                            className="flex-1 bg-indigo-700 hover:bg-indigo-600 text-white text-sm font-medium rounded-md h-11 px-4 shadow-none"
+                            onClick={() => loginAsDemo('employee')}
+                            disabled={loadingDemo !== null}
+                        >
+                            {loadingDemo === 'employee' ? (
+                                <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Loading...</>
+                            ) : 'Explore as Employee'}
+                        </Button>
+                    </div>
+                </div>
+
+                {/* Auth */}
+                <div className="mt-7 flex items-center gap-3">
+                    <div className="flex-1 h-px bg-zinc-200" />
+                    <span className="text-sm text-zinc-400">or</span>
+                    <div className="flex gap-2">
+                        <Button
+                            variant="outline"
+                            className="h-9 px-5 text-sm text-zinc-500 border-zinc-200 bg-white hover:bg-zinc-50 hover:text-zinc-700 rounded-md shadow-none"
+                            onClick={() => navigate('/login')}
+                        >
+                            Login
+                        </Button>
+                        <Button
+                            variant="outline"
+                            className="h-9 px-5 text-sm text-zinc-500 border-zinc-200 bg-white hover:bg-zinc-50 hover:text-zinc-700 rounded-md shadow-none"
+                            onClick={() => navigate('/register')}
+                        >
+                            Register
+                        </Button>
+                    </div>
+                </div>
+
+            </div>
 
             <footer className="mt-12 text-sm text-zinc-400">
                 © {new Date().getFullYear()} HRMS Project
