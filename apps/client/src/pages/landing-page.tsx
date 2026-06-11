@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
 import { useLoginUser } from '@/api/user-api';
+import { Loader2 } from 'lucide-react';
 
 function LandingPage() {
     const navigate = useNavigate();
@@ -36,38 +37,46 @@ function LandingPage() {
                     <Button
                         size={"lg"}
                         variant={"default"}
-                        className="text-white text-lg hover:scale-105 transition-all shadow-xl px-8 py-3 rounded-lg"
+                        className="text-white text-lg hover:scale-105 transition-all shadow-2xl px-10 py-4 rounded-lg ring-2 ring-offset-2 ring-fuchsia-500"
                         onClick={() => loginAsDemo('admin')}
                     >
-                        Explore as Admin/HR
+                        {loginMutation.isPending ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Loading...
+                            </>
+                        ) : (
+                            'Explore as Admin/HR'
+                        )}
                     </Button>
 
                     <Button
                         size={"lg"}
                         variant={"default"}
-                        className="text-white text-lg hover:scale-105 transition-all shadow-xl px-8 py-3 rounded-lg"
+                        className="text-white text-lg hover:scale-105 transition-all shadow-2xl px-10 py-4 rounded-lg ring-2 ring-offset-2 ring-fuchsia-500"
                         onClick={() => loginAsDemo('employee')}
                     >
-                        Explore as Employee
+                        {loginMutation.isPending ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Loading...
+                            </>
+                        ) : (
+                            'Explore as Employee'
+                        )}
                     </Button>
 
+                    {/* faded secondary actions */}
                     <Button
                         size={'lg'}
-                        className="text-white text-lg  hover:scale-105 transition-all shadow-md px-8 py-2 rounded-lg"
-                        onClick={() => navigate('/home')}
-                    >
-                        Home
-                    </Button>
-                    <Button
-                        size={'lg'}
-                        className=" text-white text-lg  hover:scale-105 transition-all shadow-md px-8 py-2 rounded-lg"
+                        className="text-white text-lg opacity-60 hover:opacity-70 transition-all shadow-sm px-8 py-2 rounded-lg"
                         onClick={() => navigate('/login')}
                     >
                         Login
                     </Button>
                     <Button
                         size={'lg'}
-                        className=" text-white text-lg  hover:scale-105 transition-all shadow-md px-8 py-2 rounded-lg"
+                        className=" text-white text-lg opacity-60 hover:opacity-70 transition-all shadow-sm px-8 py-2 rounded-lg"
                         onClick={() => navigate('/register')}
                     >
                         Register

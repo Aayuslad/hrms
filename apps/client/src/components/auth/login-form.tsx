@@ -109,12 +109,43 @@ export function LoginForm({
                             </div>
                         </div>
                     </form>
-                    <div className="bg-muted relative hidden md:block">
-                        <img
-                            src="/placeholder.svg"
-                            alt="Image"
-                            className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-                        />
+                    <div className="bg-muted relative hidden md:flex flex-col items-center justify-center p-6">
+                        <div className="space-y-4 w-[320px]">
+                            <h3 className="text-xl font-semibold text-center">Explore the demo</h3>
+                            <Button
+                                size={"lg"}
+                                variant={"default"}
+                                className="w-full text-white text-lg hover:scale-105 transition-all shadow-2xl px-6 py-3 rounded-lg ring-2 ring-offset-2 ring-fuchsia-500"
+                                onClick={() => loginUserMutation.mutate({ emailOrUserName: 'admin.user@example.com', password: '123###' })}
+                            >
+                                {loginUserMutation.isPending ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Loading...
+                                    </>
+                                ) : (
+                                    'Explore as Admin/HR'
+                                )}
+                            </Button>
+
+                            <Button
+                                size={"lg"}
+                                variant={"default"}
+                                className="w-full text-white text-lg hover:scale-105 transition-all shadow-2xl px-6 py-3 rounded-lg ring-2 ring-offset-2 ring-fuchsia-500"
+                                onClick={() => loginUserMutation.mutate({ emailOrUserName: 'employee.one@example.com', password: '123###' })}
+                            >
+                                {loginUserMutation.isPending ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Loading...
+                                    </>
+                                ) : (
+                                    'Explore as Employee'
+                                )}
+                            </Button>
+
+                            <div className="text-sm text-center text-muted-foreground">These demo accounts let you explore features without registering.</div>
+                        </div>
                     </div>
                 </CardContent>
             </Card>
