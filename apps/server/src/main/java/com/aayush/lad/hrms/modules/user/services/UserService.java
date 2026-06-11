@@ -57,6 +57,13 @@ public class UserService {
         User newUser = userMapper.create(request);
         newUser.setPasswordHash(passwordEncoder.encode(request.getPassword()));
 
+        // Attempt to assign default 'Employee' role to newly created users
+        try {
+            roleRepository.findByName("Employee").ifPresent(role -> newUser.getRoles().add(role));
+        } catch (Exception ignored) {
+            // If role lookup fails for any reason, proceed without blocking registration
+        }
+
         User savedUser = userRepository.save(newUser);
 
         return userMapper.toDetailResponse(savedUser);

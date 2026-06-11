@@ -111,7 +111,7 @@ export function UpdateEmployeeRolesDialog() {
                     <div className="grid gap-4 px-6 py-6">
                         <div className="grid gap-3">
                             <div className="space-y-2">
-                                {roles?.map((role) => (
+                                {roles?.filter((r) => r.name !== 'Admin').map((role) => (
                                     <div
                                         key={role.id!}
                                         className="flex items-center justify-between space-x-2"
