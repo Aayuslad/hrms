@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { Loader2 } from 'lucide-react';
+import { useState } from 'react';
 
 const loginFormSchema = z.object({
     emailOrUserName: z.string().min(1, 'Username or Email is required'),
@@ -30,6 +31,7 @@ export function LoginForm({
 }: React.ComponentProps<'div'>) {
     const navigate = useNavigate();
     const loginUserMutation = useLoginUser();
+    const [loadingDemo, setLoadingDemo] = useState<null | 'admin' | 'employee'>(null);
 
     const form = useForm<LoginUserRequest>({
         resolver: zodResolver(loginFormSchema),
@@ -112,37 +114,43 @@ export function LoginForm({
                     <div className="bg-muted relative hidden md:flex flex-col items-center justify-center p-6">
                         <div className="space-y-4 w-[320px]">
                             <h3 className="text-xl font-semibold text-center">Explore the demo</h3>
-                            <Button
+                                    <Button
                                 size={"lg"}
                                 variant={"default"}
                                 className="w-full text-white text-lg hover:scale-105 transition-all shadow-2xl px-6 py-3 rounded-lg ring-2 ring-offset-2 ring-fuchsia-500"
-                                onClick={() => loginUserMutation.mutate({ emailOrUserName: 'admin.user@example.com', password: '123###' })}
-                            >
-                                {loginUserMutation.isPending ? (
-                                    <>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        Loading...
-                                    </>
-                                ) : (
-                                    'Explore as Admin/HR'
-                                )}
-                            </Button>
+                                        onClick={() => {
+                                            setLoadingDemo('admin');
+                                            loginUserMutation.mutate({ emailOrUserName: 'admin.user@example.com', password: '123###' }, { onSettled: () => setLoadingDemo(null) });
+                                        }}
+                                    >
+                                        {loadingDemo === 'admin' ? (
+                                            <>
+                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                Loading...
+                                            </>
+                                        ) : (
+                                            'Explore as Admin/HR'
+                                        )}
+                                    </Button>
 
-                            <Button
-                                size={"lg"}
-                                variant={"default"}
-                                className="w-full text-white text-lg hover:scale-105 transition-all shadow-2xl px-6 py-3 rounded-lg ring-2 ring-offset-2 ring-fuchsia-500"
-                                onClick={() => loginUserMutation.mutate({ emailOrUserName: 'employee.one@example.com', password: '123###' })}
-                            >
-                                {loginUserMutation.isPending ? (
-                                    <>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        Loading...
-                                    </>
-                                ) : (
-                                    'Explore as Employee'
-                                )}
-                            </Button>
+                                    <Button
+                                        size={"lg"}
+                                        variant={"default"}
+                                        className="w-full text-white text-lg hover:scale-105 transition-all shadow-2xl px-6 py-3 rounded-lg ring-2 ring-offset-2 ring-fuchsia-500"
+                                        onClick={() => {
+                                            setLoadingDemo('employee');
+                                            loginUserMutation.mutate({ emailOrUserName: 'employee.one@example.com', password: '123###' }, { onSettled: () => setLoadingDemo(null) });
+                                        }}
+                                    >
+                                        {loadingDemo === 'employee' ? (
+                                            <>
+                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                Loading...
+                                            </>
+                                        ) : (
+                                            'Explore as Employee'
+                                        )}
+                                    </Button>
 
                             <div className="text-sm text-center text-muted-foreground">These demo accounts let you explore features without registering.</div>
                         </div>

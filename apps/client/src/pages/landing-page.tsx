@@ -1,19 +1,23 @@
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useLoginUser } from '@/api/user-api';
 import { Loader2 } from 'lucide-react';
 
 function LandingPage() {
     const navigate = useNavigate();
     const loginMutation = useLoginUser();
+    const [loadingDemo, setLoadingDemo] = useState<null | 'admin' | 'employee'>(null);
 
     const loginAsDemo = useCallback((type: 'admin' | 'employee') => {
         const creds =
             type === 'admin'
                 ? { emailOrUserName: 'admin.user@example.com', password: '123###' }
                 : { emailOrUserName: 'employee.one@example.com', password: '123###' };
-        loginMutation.mutate(creds as any);
+        setLoadingDemo(type);
+        loginMutation.mutate(creds as any, {
+            onSettled: () => setLoadingDemo(null),
+        });
     }, [loginMutation]);
 
     return (
@@ -33,6 +37,11 @@ function LandingPage() {
                     more with a seamless and intuitive experience.
                 </p>
                 <div className="flex flex-wrap justify-center gap-4 mt-8">
+                    <div className="w-full flex flex-col items-center">
+                        <h3 className="text-xl font-semibold mb-2">Explore the demo</h3>
+                        <div className="text-sm text-zinc-400 mb-4">These demo accounts let you explore features without registering.</div>
+                    </div>
+
                     {/* Demo explore buttons - primary and prominent */}
                     <Button
                         size={"lg"}
@@ -40,7 +49,7 @@ function LandingPage() {
                         className="text-white text-lg hover:scale-105 transition-all shadow-2xl px-10 py-4 rounded-lg ring-2 ring-offset-2 ring-fuchsia-500"
                         onClick={() => loginAsDemo('admin')}
                     >
-                        {loginMutation.isPending ? (
+                        {loadingDemo === 'admin' ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                 Loading...
@@ -56,7 +65,7 @@ function LandingPage() {
                         className="text-white text-lg hover:scale-105 transition-all shadow-2xl px-10 py-4 rounded-lg ring-2 ring-offset-2 ring-fuchsia-500"
                         onClick={() => loginAsDemo('employee')}
                     >
-                        {loginMutation.isPending ? (
+                        {loadingDemo === 'employee' ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                 Loading...

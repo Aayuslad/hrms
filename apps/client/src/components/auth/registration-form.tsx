@@ -32,6 +32,7 @@ export function RegistrationForm({
     const navigate = useNavigate();
     const registerUserMutation = useRegisterUser();
     const loginUserMutation = useLoginUser();
+    const [loadingDemo, setLoadingDemo] = useState<null | 'admin' | 'employee'>(null);
 
     const form = useForm<RegisterUserRequest>({
         resolver: zodResolver(registerFormSchema),
@@ -131,9 +132,12 @@ export function RegistrationForm({
                                 size={"lg"}
                                 variant={"default"}
                                 className="w-full text-white text-lg hover:scale-105 transition-all shadow-2xl px-6 py-3 rounded-lg ring-2 ring-offset-2 ring-fuchsia-500"
-                                onClick={() => loginUserMutation.mutate({ emailOrUserName: 'admin.user@example.com', password: '123###' })}
+                                onClick={() => {
+                                    setLoadingDemo('admin');
+                                    loginUserMutation.mutate({ emailOrUserName: 'admin.user@example.com', password: '123###' }, { onSettled: () => setLoadingDemo(null) });
+                                }}
                             >
-                                {loginUserMutation.isPending ? (
+                                {loadingDemo === 'admin' ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                         Loading...
@@ -147,9 +151,12 @@ export function RegistrationForm({
                                 size={"lg"}
                                 variant={"default"}
                                 className="w-full text-white text-lg hover:scale-105 transition-all shadow-2xl px-6 py-3 rounded-lg ring-2 ring-offset-2 ring-fuchsia-500"
-                                onClick={() => loginUserMutation.mutate({ emailOrUserName: 'employee.one@example.com', password: '123###' })}
+                                onClick={() => {
+                                    setLoadingDemo('employee');
+                                    loginUserMutation.mutate({ emailOrUserName: 'employee.one@example.com', password: '123###' }, { onSettled: () => setLoadingDemo(null) });
+                                }}
                             >
-                                {loginUserMutation.isPending ? (
+                                {loadingDemo === 'employee' ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                         Loading...
