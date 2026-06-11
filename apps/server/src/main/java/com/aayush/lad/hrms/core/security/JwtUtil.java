@@ -72,7 +72,7 @@ public class JwtUtil {
     private Cookie buildAccessTokenCookie(String token) {
         Cookie cookie = new Cookie("ACCESS_TOKEN", token);
         cookie.setHttpOnly(true);
-        cookie.setSecure(false); // true in prod
+        cookie.setSecure(true); // true in prod
         cookie.setPath("/");
         cookie.setMaxAge((int) (jwtExpirationMs / 1000));
         return cookie;
@@ -81,7 +81,7 @@ public class JwtUtil {
     private Cookie buildRemovalAccessTokenCookie() {
         Cookie cookie = new Cookie("ACCESS_TOKEN", null);
         cookie.setHttpOnly(true);
-        cookie.setSecure(false); // true in prod
+        cookie.setSecure(true); // true in prod
         cookie.setPath("/");
         cookie.setMaxAge(0);
         return cookie;
