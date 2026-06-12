@@ -4,6 +4,9 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +22,8 @@ public class JwtUtil {
 
     @Value("${app.jwt.expirationMs}")
     private long jwtExpirationMs;
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
 
     private Key key;
 
@@ -53,6 +58,7 @@ public class JwtUtil {
             getClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException ex) {
+            logger.error("Invalid JWT token: {}", ex.getMessage());
             return false;
         }
     }
